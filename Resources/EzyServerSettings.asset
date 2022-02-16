@@ -1,0 +1,23 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ac0715d58fef74b4cbbd3c85d60ddacc, type: 3}
+  m_Name: EzyServerSettings
+  m_EditorClassIdentifier: 
+  _socketHost: ws.stackask.com
+  _socketTCPPort: 23005
+  _socketUDPPort: 22611
+  _webSocketHost: ws://ws.stackask.com:22208/ws
+  _zoneName: EUN
+  _appName: EUN
+  _sendRate: 10
+  _sendRateSynchronizationData: 10
+  _sendRateVoiceChat: 10
