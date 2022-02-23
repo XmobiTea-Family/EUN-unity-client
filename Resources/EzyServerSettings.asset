@@ -12,9 +12,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ac0715d58fef74b4cbbd3c85d60ddacc, type: 3}
   m_Name: EzyServerSettings
   m_EditorClassIdentifier: 
-  _socketHost: ws.stackask.com
-  _socketTCPPort: 23005
-  _socketUDPPort: 22611
+  _socketHost: 192.168.1.151
+  _socketTCPPort: 3005
+  _socketUDPPort: 2611
   _webSocketHost: ws://ws.stackask.com:22208/ws
   _zoneName: EUN
   _appName: EUN

@@ -26,11 +26,13 @@
             EzyClientJsBride.EzyInit(this.gameObject.name, _zoneName, _appName);
         }
 
-        public override void Connect(string userId, string host, int port, int udpPort)
+        public override void Connect(string username, string password, EzyData data, string host, int port, int udpPort)
         {
-            base.Connect(userId, host, port, udpPort);
+            base.Connect(username, password, data, host, port, udpPort);
 
-            EzyClientJsBride.EzyConnect(userId, host);
+            var data1 = data == null ? EzyEntityFactory.EMPTY_ARRAY : (EzyArray)data;
+
+            EzyClientJsBride.EzyConnect(username, password, data1.ToString(), host);
         }
 
         public override void Send(EzyObject request, bool reliable = true)

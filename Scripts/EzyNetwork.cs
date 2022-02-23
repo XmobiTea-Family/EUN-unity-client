@@ -1,5 +1,6 @@
 ﻿namespace EUN
 {
+    using com.tvd12.ezyfoxserver.client.entity;
     using EUN.Common;
     using EUN.Config;
     using EUN.Networking;
@@ -31,11 +32,11 @@
             peer.InitPeer();
         }
 
-        public static void Connect(string userId)
+        public static void Connect(string userId, EzyData data)
         {
             UserId = userId;
 
-            peer.Connect(UserId);
+            peer.Connect(UserId, string.Empty, data);
         }
 
         public static void Send(OperationRequest request, Action<OperationResponse> onResponse = null)

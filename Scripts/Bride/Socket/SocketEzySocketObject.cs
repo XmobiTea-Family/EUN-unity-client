@@ -46,9 +46,9 @@
             EzyClients.getInstance().addClient(socketClient);
         }
 
-        public override void Connect(string userId, string host, int port, int udpPort)
+        public override void Connect(string username, string password, EzyData data, string host, int port, int udpPort)
         {
-            base.Connect(userId, host, port, udpPort);
+            base.Connect(username, password, data, host, port, udpPort);
 
             SocketEzySocketObject.udpPort = udpPort;
 
@@ -133,8 +133,9 @@
             {
                 return new EzyLoginRequest(
                     zoneName,
-                    userId,
-                    string.Empty);
+                    username,
+                    password,
+                    data);
                 //,
                 //    EzyEntityFactory.newArrayBuilder()
                 //        //.append("gameName", appName)

@@ -10,7 +10,7 @@
     public interface IEzySocketObject
     {
         void Init(string _zoneName, string _appName);
-        void Connect(string userId, string host, int port, int udpPort);
+        void Connect(string username, string password, EzyData data, string host, int port, int udpPort);
         void Send(EzyObject request, bool reliable = true);
         void SubscriberConnectionSuccessHandler(Action _onConnectionSuccess);
         void SubscriberConnectionFailureHandler(Action<EzyConnectionFailedReason> _onConnectionFailure);

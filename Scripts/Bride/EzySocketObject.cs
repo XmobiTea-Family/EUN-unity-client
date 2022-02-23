@@ -22,7 +22,10 @@
 
         internal static string zoneName;
         internal static string appName;
-        internal static string userId;
+        internal static string username;
+        internal static string password;
+        internal static EzyData data;
+
 
         void Start()
         {
@@ -34,9 +37,11 @@
             EzyLoggerFactory.setLoggerSupply(type => new UnityLogger(type));
         }
 
-        public virtual void Connect(string userId, string host, int port, int udpPort)
+        public virtual void Connect(string username, string password, EzyData data, string host, int port, int udpPort)
         {
-            EzySocketObject.userId = userId;
+            EzySocketObject.username = username;
+            EzySocketObject.password = password;
+            EzySocketObject.data = data;
         }
 
         public virtual void Init(string _zoneName, string _appName)

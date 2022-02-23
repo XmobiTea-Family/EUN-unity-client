@@ -11,7 +11,7 @@
         public static extern void EzyInit(string gameObjectName, string zoneName, string appName);
 
         [DllImport("__Internal")]
-        public static extern void EzyConnect(string userId, string host);
+        public static extern void EzyConnect(string username, string password, string dataJson, string host);
 
         [DllImport("__Internal")]
         public static extern bool EzySend(string requestData);

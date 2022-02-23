@@ -8,6 +8,7 @@
     using System.Collections.Generic;
     using EUN.Entity.Response;
     using com.tvd12.ezyfoxserver.client.factory;
+    using com.tvd12.ezyfoxserver.client.entity;
 
     public partial class NetworkingPeer
     {
@@ -91,15 +92,15 @@
             perVoiceChatMsgTimer = 1f / sendRateVoiceChat;
         }
 
-        internal void Connect(string userId)
+        internal void Connect(string username, string password, EzyData data)
         {
             var ezyServerSettings = EzyNetwork.ezyServerSettings;
             if (ezyServerSettings == null) throw new NullReferenceException("Null Ezy Server Settings, please find it now");
 
 #if !UNITY_EDITOR && UNITY_WEBGL
-            ezySocketObject.Connect(userId, ezyServerSettings.webSocketHost, 0, 0);
+            ezySocketObject.Connect(username, password, data, ezyServerSettings.webSocketHost, 0, 0);
 #else
-            ezySocketObject.Connect(userId, ezyServerSettings.socketHost, ezyServerSettings.socketTCPPort, ezyServerSettings.socketUDPPort);
+            ezySocketObject.Connect(username, password, data, ezyServerSettings.socketHost, ezyServerSettings.socketTCPPort, ezyServerSettings.socketUDPPort);
 #endif
         }
 

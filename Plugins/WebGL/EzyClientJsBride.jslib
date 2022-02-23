@@ -70,7 +70,7 @@ mergeInto(LibraryManager.library, {
 
             var handshakeHandler = new EzyHandshakeHandler();
             handshakeHandler.getLoginRequest = function() {
-                return [window.ezyConfig.zoneName, window.ezyConfig.userId, "", []];
+                return [window.ezyConfig.zoneName, window.ezyConfig.username, window.ezyConfig.password, window.ezyConfig.data];
 		    }
 
             var loginSuccessHandler = new EzyLoginSuccessHandler();
@@ -128,11 +128,15 @@ mergeInto(LibraryManager.library, {
         else window.onEzyClientJsLoaded = afterInitDone;
 	},
 
-    EzyConnect: function(userId, host) {
-        userId = Pointer_stringify(userId);
+    EzyConnect: function(username, password, dataJson, host) {
+        username = Pointer_stringify(username);
         host = Pointer_stringify(host);
 
-        window.ezyConfig.userId = userId;
+		var jsonD = JSON.parse(dataJson);
+		
+        window.ezyConfig.username = username;
+        window.ezyConfig.password = password;
+        window.ezyConfig.data = jsonD;
 
         var afterInitDone = function() {
             window.ezyClient.connect(host);
