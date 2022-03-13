@@ -14,19 +14,19 @@
         public const string ResourcesPath = "EzyServerSettings";
 
         [SerializeField]
-        private string _socketHost = "127.0.0.1";
+        private string _socketHost = "ws.stackask.com";
         public string socketHost => _socketHost;
 
         [SerializeField]
-        private int _socketTCPPort = 3005;
+        private int _socketTCPPort = 23005;
         public int socketTCPPort => _socketTCPPort;
 
         [SerializeField]
-        private int _socketUDPPort = 2611;
+        private int _socketUDPPort = 22611;
         public int socketUDPPort => _socketUDPPort;
 
         [SerializeField]
-        private string _webSocketHost = "ws://127.0.0.1:2208/ws";
+        private string _webSocketHost = "ws://ws.stackask.com:22208/ws";
         public string webSocketHost => _webSocketHost;
 
         [SerializeField]
