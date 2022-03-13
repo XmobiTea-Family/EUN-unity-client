@@ -12,14 +12,13 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var ezyArray = parameters.GetEzyArray(ParameterCode.Data);
+            var customArray = parameters.GetCustomArray(ParameterCode.Data);
 
-            var objectId = ezyArray.get<int>(0);
-            var voiceChatData = ezyArray.get<object>(1);
+            var objectId = customArray.GetInt(0);
+            var voiceChatData = customArray.GetObject(1);
 
             if (peer.ezyViewDic.ContainsKey(objectId))
             {
@@ -32,7 +31,6 @@
                     }
                 }
             }
-#endif
         }
     }
 }

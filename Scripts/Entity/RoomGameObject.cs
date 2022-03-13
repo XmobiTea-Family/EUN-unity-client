@@ -1,8 +1,5 @@
 ﻿namespace EUN.Entity
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
     using EUN.Common;
     using System;
     using UnityEngine;
@@ -76,16 +73,14 @@
             }
         }
 
-#if EUN
-        public RoomGameObject(EzyArray ezyArray)
+        public RoomGameObject(CustomArray customArray)
         {
-            ObjectId = ezyArray.get<int>(0);
-            OwnerId = ezyArray.get<int>(1);
-            PrefabPath = ezyArray.get<string>(2);
-            SynchronizationData = ezyArray.get<object>(3);
-            InitializeData = ezyArray.get<object>(4);
-            CustomProperties = new CustomHashtable(ezyArray.get<EzyObject>(5));
+            ObjectId = customArray.GetInt(0);
+            OwnerId = customArray.GetInt(1);
+            PrefabPath = customArray.GetString(2);
+            SynchronizationData = customArray.GetObject(3);
+            InitializeData = customArray.GetObject(4);
+            CustomProperties = customArray.GetCustomHashtable(5);
         }
-#endif
     }
 }

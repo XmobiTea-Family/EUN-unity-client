@@ -12,7 +12,6 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             if (peer.room == null) return;
             var currentRoom = peer.room;
 
@@ -59,12 +58,12 @@
 
             if (parameters.ContainsKey(ParameterCode.CustomRoomPropertiesForLobby))
             {
-                var data = parameters.GetEzyArray(ParameterCode.CustomRoomPropertiesForLobby);
+                var data = parameters.GetCustomArray(ParameterCode.CustomRoomPropertiesForLobby);
                 currentRoom.CustomRoomPropertiesForLobby.Clear();
                 {
-                    for (var i = 0; i < data.size(); i++)
+                    for (var i = 0; i < data.Count(); i++)
                     {
-                        currentRoom.CustomRoomPropertiesForLobby.Add(data.get<int>(i));
+                        currentRoom.CustomRoomPropertiesForLobby.Add(data.GetInt(i));
                     }
                 }
 
@@ -129,7 +128,6 @@
                     if (behaviour) behaviour.OnEzyRoomInfoChange(parameters);
                 }
             }
-#endif
         }
     }
 }

@@ -1,8 +1,5 @@
 ﻿namespace EUN.Entity
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
     using EUN.Common;
 
     public class RoomPlayer
@@ -11,13 +8,11 @@
         public string UserId { get; private set; }
         public CustomHashtable CustomProperties { get; private set; }
 
-#if EUN
-        public RoomPlayer(EzyArray ezyArray)
+        public RoomPlayer(CustomArray customArray)
         {
-            PlayerId = ezyArray.get<int>(0);
-            UserId = ezyArray.get<string>(1);
-            CustomProperties = new CustomHashtable(ezyArray.get<EzyObject>(2));
+            PlayerId = customArray.GetInt(0);
+            UserId = customArray.GetString(1);
+            CustomProperties = customArray.GetCustomHashtable(2);
         }
-#endif
     }
 }

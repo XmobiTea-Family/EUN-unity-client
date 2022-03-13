@@ -13,11 +13,10 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var roomPlayer = new RoomPlayer(parameters.GetEzyArray(ParameterCode.Data));
+            var roomPlayer = new RoomPlayer(parameters.GetCustomArray(ParameterCode.Data));
 
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(roomPlayer.UserId));
             if (thisRoomPlayer == null)
@@ -41,7 +40,6 @@
                     if (behaviour) behaviour.OnEzyOtherPlayerJoinRoom(thisRoomPlayer);
                 }
             }
-#endif
         }
     }
 }

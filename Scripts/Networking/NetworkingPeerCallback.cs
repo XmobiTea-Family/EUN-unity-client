@@ -1,9 +1,11 @@
 ﻿namespace EUN.Networking
 {
 #if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.constant;
+#else
+    using EUN.Entity.Support;
 #endif
+
     using EUN.Common;
 
     using System;
@@ -19,7 +21,6 @@
         internal List<EzyView> ezyViewLst;
         internal List<EzyManagerBehaviour> ezyManagerBehaviourLst;
 
-#if EUN
         void SubscriberServerEventHandler()
         {
             var type = typeof(IServerEventHandler);
@@ -34,15 +35,15 @@
             }
         }
 
-        void OnEventHandler(EzyArray obj)
+        void OnEventHandler(CustomArray obj)
         {
-            var eventCode = obj.get<int>(0);
+            var eventCode = obj.GetInt(0);
             if (!serverEventHandlerDic.ContainsKey(eventCode))
             {
                 return;
             }
 
-            var operationEvent = new OperationEvent(eventCode, new CustomHashtable(obj.get<EzyObject>(1)));
+            var operationEvent = new OperationEvent(eventCode, obj.GetCustomHashtable(1));
 
             Debug.Log("[EVENT] " + operationEvent.ToString());
 
@@ -50,19 +51,19 @@
             serverEventHandler.Handle(operationEvent, this);
         }
 
-        void OnResponseHandler(EzyArray obj)
+        void OnResponseHandler(CustomArray obj)
         {
-            var responseId = obj.get<int>(2);
+            var responseId = obj.GetInt(2);
 
             if (operationWaitingResponseDic.ContainsKey(responseId))
             {
-                var returnCode = obj.get<int>(0);
+                var returnCode = obj.GetInt(0);
 
                 CustomHashtable parameters = null;
                 string debugMessage = null;
 
-                if (returnCode == 0) parameters = new CustomHashtable(obj.get<EzyObject>(1));
-                else debugMessage = obj.get<string>(1);
+                if (returnCode == 0) parameters = obj.GetCustomHashtable(1);
+                else debugMessage = obj.GetString(1);
 
                 var operationPending = operationWaitingResponseDic[responseId];
 
@@ -80,7 +81,7 @@
             }
         }
 
-        void OnLoginErrorHandler(EzyArray obj)
+        void OnLoginErrorHandler(CustomArray obj)
         {
             isConnected = false;
 
@@ -124,19 +125,18 @@
             }
         }
 
-        void OnAppAccessHandler(EzyArray obj)
+        void OnAppAccessHandler(CustomArray obj)
         {
             isConnected = true;
 
-            var outputEzyArray = obj.get<EzyArray>(2);
-            serverTimeStamp = outputEzyArray.get<long>(0);
+            var outputCustomArray = obj.GetCustomArray(2);
+            serverTimeStamp = outputCustomArray.GetLong(0);
 
             foreach (var behaviour in ezyManagerBehaviourLst)
             {
                 if (behaviour) behaviour.OnEzyConnected();
             }
         }
-#endif
 
         internal void SubscriberEzyView(EzyView view)
         {

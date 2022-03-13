@@ -1,22 +1,25 @@
-﻿#if EUN
-namespace EUN.Bride.Socket
+﻿namespace EUN.Bride.Socket
 {
+#if EUN
     using com.tvd12.ezyfoxserver.client;
     using com.tvd12.ezyfoxserver.client.config;
     using com.tvd12.ezyfoxserver.client.constant;
     using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.evt;
-    using com.tvd12.ezyfoxserver.client.factory;
     using com.tvd12.ezyfoxserver.client.handler;
     using com.tvd12.ezyfoxserver.client.request;
+#else
+    using EUN.Entity.Support;
+#endif
 
+    using EUN.Common;
     using EUN.Constant;
-
-    using System;
 
     public class SocketEzySocketObject : EzySocketObject
     {
+#if EUN
         private EzyClient socketClient;
+#endif
         internal static int udpPort;
 
         protected override void OnCustomStart()
@@ -27,7 +30,7 @@ namespace EUN.Bride.Socket
         public override void Init(string _zoneName, string _appName)
         {
             base.Init(_zoneName, _appName);
-
+#if EUN
             var config = EzyClientConfig.builder().clientName(zoneName).build();
 
             socketClient = new EzyUTClient(config);
@@ -47,34 +50,20 @@ namespace EUN.Bride.Socket
             appSetup.addDataHandler(Commands.EventCmd, new EventHandler());
 
             EzyClients.getInstance().addClient(socketClient);
+#endif
         }
 
-        public override void Connect(string username, string password, EzyData data, string host, int port, int udpPort)
+        public override void Connect(string username, string password, CustomData data, string host, int port, int udpPort)
         {
             base.Connect(username, password, data, host, port, udpPort);
 
-            if (EzyNetwork.Mode == Config.EzyServerSettings.Mode.OfflineMode)
-            {
-                var obj = EzyEntityFactory.newArrayBuilder()
-                    .append(null)
-                    .append(null)
-                    .append(
-                        EzyEntityFactory.newArrayBuilder()
-                        .append(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
-                        .build())
-                    .build();
-
-                onAppAccess?.Invoke(obj);
-                onConnectionSuccess?.Invoke();
-
-                return;
-            }
-
             SocketEzySocketObject.udpPort = udpPort;
-
+#if EUN
             socketClient.connect(host, port);
+#endif
         }
 
+#if EUN
         public override void Send(EzyObject request, bool reliable = true)
         {
             var app = socketClient.getApp();
@@ -85,27 +74,36 @@ namespace EUN.Bride.Socket
             }
             else
             {
-                var data = request.get<EzyArray>("d");
+                var data = request.get<EzyArray>(Commands.Data);
 
-                var ezyData = EzyEntityFactory.newArray();
-                ezyData.add((int)ReturnCode.AppNullRequest);
-                ezyData.add((string)null);
-                if (data.size() > 2) ezyData.add(data.get<int>(2));
+                var customArray = new CustomArray();
+                customArray.Add((int)ReturnCode.AppNullRequest);
+                customArray.Add((string)null);
+                if (data.size() > 2) customArray.Add(data.get<int>(2));
 
-                onResponse?.Invoke(ezyData);
+                //var ezyData = EzyEntityFactory.newArray();
+                //ezyData.add((int)ReturnCode.AppNullRequest);
+                //ezyData.add((string)null);
+                //if (data.size() > 2) ezyData.add(data.get<int>(2));
+
+                onResponse?.Invoke(customArray);
             }
         }
+#endif
 
+#if EUN
         void Update()
         {
             if (socketClient != null) socketClient.processEvents();
         }
+#endif
 
+#if EUN
         internal class ResponseHandler : EzyAbstractAppDataHandler<EzyArray>
         {
             protected override void process(EzyApp app, EzyArray data)
             {
-                onResponse?.Invoke(data);
+                onResponse?.Invoke(new CustomArray.Builder().AddAll(data.toList<object>()).Build());
             }
         }
 
@@ -113,7 +111,7 @@ namespace EUN.Bride.Socket
         {
             protected override void process(EzyApp app, EzyArray data)
             {
-                onEvent?.Invoke(data);
+                onEvent?.Invoke(new CustomArray.Builder().AddAll(data.toList<object>()).Build());
             }
         }
 
@@ -155,7 +153,7 @@ namespace EUN.Bride.Socket
                     zoneName,
                     username,
                     password,
-                    data);
+                    (EzyData)data.ToEzyData());
                 //,
                 //    EzyEntityFactory.newArrayBuilder()
                 //        //.append("gameName", appName)
@@ -187,7 +185,7 @@ namespace EUN.Bride.Socket
             {
                 base.handleLoginError(data);
 
-                onLoginError?.Invoke(data);
+                onLoginError?.Invoke(new CustomArray.Builder().AddAll(data.toList<object>()).Build());
             }
         }
 
@@ -195,9 +193,9 @@ namespace EUN.Bride.Socket
         {
             protected override void postHandle(EzyApp app, EzyArray data)
             {
-                onAppAccess?.Invoke(data);
+                onAppAccess?.Invoke(new CustomArray.Builder().AddAll(data.toList<object>()).Build());
             }
         }
+#endif
     }
 }
-#endif

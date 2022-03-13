@@ -1,21 +1,18 @@
 ﻿namespace EUN.Entity
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
+    using EUN.Common;
+
     public class LobbyStats
     {
         public int LobbyId { get; private set; }
         public int PlayerSize { get; private set; }
         public int RoomSize { get; private set; }
 
-#if EUN
-        public LobbyStats(EzyArray ezyArray)
+        public LobbyStats(CustomArray customArray)
         {
-            LobbyId = ezyArray.get<int>(0);
-            PlayerSize = ezyArray.get<int>(1);
-            RoomSize = ezyArray.get<int>(2);
+            LobbyId = customArray.GetInt(0);
+            PlayerSize = customArray.GetInt(1);
+            RoomSize = customArray.GetInt(2);
         }
-#endif
     }
 }

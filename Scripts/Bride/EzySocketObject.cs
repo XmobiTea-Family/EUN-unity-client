@@ -1,31 +1,34 @@
-﻿#if EUN
-namespace EUN.Bride
+﻿namespace EUN.Bride
 {
     using UnityEngine;
-
-    using com.tvd12.ezyfoxserver.client.constant;
+#if EUN
     using com.tvd12.ezyfoxserver.client.entity;
+    using com.tvd12.ezyfoxserver.client.constant;
     using com.tvd12.ezyfoxserver.client.logger;
+#else
+    using EUN.Entity.Support;
+#endif
 
     using EUN.Logger;
 
     using System;
+    using EUN.Common;
 
     public class EzySocketObject : MonoBehaviour, IEzySocketObject
     {
         internal static Action onConnectionSuccess;
         internal static Action<EzyConnectionFailedReason> onConnectionFailure;
         internal static Action<EzyDisconnectReason> onDisconnection;
-        internal static Action<EzyArray> onAppAccess;
-        internal static Action<EzyArray> onLoginError;
-        internal static Action<EzyArray> onEvent;
-        internal static Action<EzyArray> onResponse;
+        internal static Action<CustomArray> onAppAccess;
+        internal static Action<CustomArray> onLoginError;
+        internal static Action<CustomArray> onEvent;
+        internal static Action<CustomArray> onResponse;
 
         internal static string zoneName;
         internal static string appName;
         internal static string username;
         internal static string password;
-        internal static EzyData data;
+        internal static CustomData data;
 
 
         void Start()
@@ -35,10 +38,12 @@ namespace EUN.Bride
 
         protected virtual void OnCustomStart()
         {
+#if EUN
             EzyLoggerFactory.setLoggerSupply(type => new UnityLogger(type));
+#endif
         }
 
-        public virtual void Connect(string username, string password, EzyData data, string host, int port, int udpPort)
+        public virtual void Connect(string username, string password, CustomData data, string host, int port, int udpPort)
         {
             EzySocketObject.username = username;
             EzySocketObject.password = password;
@@ -51,7 +56,7 @@ namespace EUN.Bride
             appName = _appName;
         }
 
-        public void SubscriberAppAccessHandler(Action<EzyArray> _onAppAccess)
+        public void SubscriberAppAccessHandler(Action<CustomArray> _onAppAccess)
         {
             onAppAccess = _onAppAccess;
         }
@@ -71,22 +76,23 @@ namespace EUN.Bride
             onDisconnection = _onDisconnection;
         }
 
-        public void SubscriberLoginErrorHandler(Action<EzyArray> _onLoginError)
+        public void SubscriberLoginErrorHandler(Action<CustomArray> _onLoginError)
         {
             onLoginError = _onLoginError;
         }
 
-        public void SubscriberEventHandler(Action<EzyArray> _onEvent)
+        public void SubscriberEventHandler(Action<CustomArray> _onEvent)
         {
             onEvent = _onEvent;
         }
 
-        public void SubscriberResponseHandler(Action<EzyArray> _onResponse)
+        public void SubscriberResponseHandler(Action<CustomArray> _onResponse)
         {
             onResponse = _onResponse;
         }
 
+#if EUN
         public virtual void Send(EzyObject request, bool reliable = true) { }
+#endif
     }
 }
-#endif

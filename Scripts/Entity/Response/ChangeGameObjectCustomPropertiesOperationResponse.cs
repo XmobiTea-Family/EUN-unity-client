@@ -8,12 +8,10 @@ namespace EUN.Entity.Response
 
         public ChangeGameObjectRoomOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
-#if EUN
             if (!HasError)
             {
                 Success = true;
             }
-#endif
         }
     }
 }

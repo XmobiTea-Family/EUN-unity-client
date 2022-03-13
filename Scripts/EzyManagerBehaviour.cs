@@ -2,11 +2,11 @@
 {
 #if EUN
     using com.tvd12.ezyfoxserver.client.constant;
+#else
+    using EUN.Entity.Support;
 #endif
     using EUN.Common;
     using EUN.Entity;
-
-    using System.Collections.Generic;
 
     using UnityEngine;
 

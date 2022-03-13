@@ -1,13 +1,13 @@
 ﻿namespace EUN.Networking
 {
 #if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.factory;
+#endif
 
     using EUN.Bride;
     using EUN.Bride.Socket;
     using EUN.Bride.WebSocket;
-#endif
+
     using EUN.Common;
     using EUN.Constant;
 
@@ -40,9 +40,8 @@
                 return onOperationResponse;
             }
         }
-#if EUN
+
         private IEzySocketObject ezySocketObject;
-#endif
 
         private int requestId;
 
@@ -64,7 +63,6 @@
 
         internal void InitPeer()
         {
-#if EUN
             serverTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
             if (operationWaitingResponseDic == null) operationWaitingResponseDic = new Dictionary<int, OperationPending>();
@@ -87,12 +85,10 @@
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             SubscriberServerEventHandler();
-#endif
         }
 
         private void InitSendRate()
         {
-#if EUN
             var ezyServerSettings = EzyNetwork.ezyServerSettings;
             if (ezyServerSettings == null) throw new NullReferenceException("Null Ezy Server Settings, please find it now");
 
@@ -101,12 +97,10 @@
             var sendRateVoiceChat = ezyServerSettings.sendRateVoiceChat;
 
             SetSendRate(sendRate, sendRateSynchronizationData, sendRateVoiceChat);
-#endif
         }
 
         private void InitEzySocketObject()
         {
-#if EUN
             var ezyServerSettings = EzyNetwork.ezyServerSettings;
 
             if (ezyServerSettings == null) throw new NullReferenceException("Where is Ezy Server Settings");
@@ -121,12 +115,10 @@
             var appName = ezyServerSettings.appName;
 
             ezySocketObject.Init(zoneName, appName);
-#endif
         }
 
         private void SubscriberHandler()
         {
-#if EUN
             ezySocketObject.SubscriberConnectionSuccessHandler(OnConnectionSuccessHandler);
             ezySocketObject.SubscriberConnectionFailureHandler(OnConnectionFailureHandler);
             ezySocketObject.SubscriberDisconnectionHandler(OnDisconnectionHandler);
@@ -134,9 +126,8 @@
             ezySocketObject.SubscriberAppAccessHandler(OnAppAccessHandler);
             ezySocketObject.SubscriberResponseHandler(OnResponseHandler);
             ezySocketObject.SubscriberEventHandler(OnEventHandler);
-#endif
         }
-#if EUN
+
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             StartCoroutine(IEOnSceneLoaded(scene, loadSceneMode));
@@ -167,13 +158,11 @@
                 }
             }
         }
-#endif
-#if EUN
+
         float checkTimeoutOperationPending = 0;
-#endif
+
         internal void Enqueue(OperationRequest operationRequest, Action<OperationResponse> onOperationResponse)
         {
-#if EUN
             var operationPending = new OperationPending(operationRequest, onOperationResponse);
 
             if (operationRequest.IsSynchronizationRequest())
@@ -182,22 +171,20 @@
                 else syncOperationPendingQueue.Enqueue(operationPending);
             }
             else operationPendingQueue.Enqueue(operationPending);
-#endif
         }
 
         private void Send(OperationPending operationPending)
         {
-#if EUN
             var onOperationResponse = operationPending.GetCallback();
             var operationRequest = operationPending.GetOperationRequest();
 
             if (onOperationResponse != null) operationRequest.SetRequestId(requestId++);
             else operationRequest.SetRequestId(-1);
-
+#if EUN
             var request = EzyEntityFactory.newObject();
             var data = EzyEntityFactory.newArray();
             data.add((int)operationRequest.GetOperationCode());
-            data.add(operationRequest.GetParameters() == null ? null : operationRequest.GetParameters().toData());
+            data.add(operationRequest.GetParameters() == null ? null : operationRequest.GetParameters().ToEzyData());
 
             if (operationRequest.GetRequestId() != -1)
             {
@@ -211,15 +198,15 @@
             request.put(Commands.Data, data);
 
             ezySocketObject.Send(request, operationRequest.IsReliable());
+#endif
 
             if (operationRequest.IsSynchronizationRequest()) Debug.Log("[SEND SYNC] " + operationRequest.ToString());
             else Debug.Log("[SEND] " + operationRequest.ToString());
-#endif
+
         }
 
         private void Update()
         {
-#if EUN
             serverTimeStamp += Time.deltaTime * 1000;
 
             if (checkTimeoutOperationPending < Time.time)
@@ -228,7 +215,7 @@
 
                 if (operationWaitingResponseDic.Count != 0)
                 {
-                    var ezyArrayLst = new List<EzyArray>();
+                    var customArrayLst = new List<CustomArray>();
 
                     foreach (var operationPendingPair in operationWaitingResponseDic)
                     {
@@ -237,19 +224,19 @@
 
                         if (operationRequest.GetEndTimeOut() < Time.time)
                         {
-                            var ezyData = EzyEntityFactory.newArray();
+                            var customArray = new CustomArray();
 
-                            ezyData.add((int)ReturnCode.OperationTimeout);
-                            ezyData.add((string)null);
-                            ezyData.add(operationRequest.GetRequestId());
+                            customArray.Add((int)ReturnCode.OperationTimeout);
+                            customArray.Add((string)null);
+                            customArray.Add(operationRequest.GetRequestId());
 
-                            ezyArrayLst.Add(ezyData);
+                            customArrayLst.Add(customArray);
                         }
                     }
 
-                    if (ezyArrayLst.Count == 0)
+                    if (customArrayLst.Count == 0)
                     {
-                        foreach (var ezyData in ezyArrayLst)
+                        foreach (var ezyData in customArrayLst)
                         {
                             OnResponseHandler(ezyData);
                         }
@@ -321,8 +308,7 @@
                         Send(voiceChatOperationPendingQueue.Dequeue());
                     }
                 }
-            }  
-#endif
+            }
         }
     }
 }

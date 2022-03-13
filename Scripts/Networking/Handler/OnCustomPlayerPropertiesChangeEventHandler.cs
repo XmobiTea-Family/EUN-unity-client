@@ -1,8 +1,5 @@
 ﻿namespace EUN.Networking
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
     using EUN.Common;
     using EUN.Constant;
 
@@ -15,17 +12,16 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var ezyArray = parameters.GetEzyArray(ParameterCode.Data);
-            var playerId = ezyArray.get<int>(0);
+            var customArray = parameters.GetCustomArray(ParameterCode.Data);
+            var playerId = customArray.GetInt(0);
 
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.PlayerId == playerId);
             if (thisRoomPlayer != null)
             {
-                var customPlayerProperties = new CustomHashtable(ezyArray.get<EzyObject>(1));
+                var customPlayerProperties = customArray.GetCustomHashtable(1);
                 var keySet = customPlayerProperties.Keys();
                 foreach (int key in keySet)
                 {
@@ -57,7 +53,6 @@
                     if (behaviour) behaviour.OnEzyCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
                 }
             }
-#endif
         }
     }
 }

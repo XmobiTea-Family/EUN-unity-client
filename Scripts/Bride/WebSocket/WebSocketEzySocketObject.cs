@@ -1,10 +1,14 @@
-﻿#if EUN
-namespace EUN.Bride.WebSocket
+﻿namespace EUN.Bride.WebSocket
 {
+#if EUN
     using com.tvd12.ezyfoxserver.client.constant;
     using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.factory;
+#else
+    using EUN.Entity.Support;
+#endif
 
+    using EUN.Common;
     using EUN.Constant;
     using EUN.Helper;
     using EUN.Plugin.WebGL;
@@ -17,25 +21,30 @@ namespace EUN.Bride.WebSocket
         {
             base.OnCustomStart();
 
+#if EUN
             EzyClientJsBride.EzyLibrary();
+#endif
         }
 
         public override void Init(string _zoneName, string _appName)
         {
             base.Init(_zoneName, _appName);
-
+#if EUN
             EzyClientJsBride.EzyInit(this.gameObject.name, _zoneName, _appName);
+#endif
         }
 
-        public override void Connect(string username, string password, EzyData data, string host, int port, int udpPort)
+        public override void Connect(string username, string password, CustomData data, string host, int port, int udpPort)
         {
             base.Connect(username, password, data, host, port, udpPort);
-
-            var data1 = data == null ? EzyEntityFactory.EMPTY_ARRAY : (EzyArray)data;
+#if EUN
+            var data1 = data == null ? EzyEntityFactory.EMPTY_ARRAY : data.ToEzyData();
 
             EzyClientJsBride.EzyConnect(username, password, data1.ToString(), host);
+#endif
         }
 
+#if EUN
         public override void Send(EzyObject request, bool reliable = true)
         {
             if (EzyClientJsBride.EzySend(Serializer.Serialize(request.toDict<object, object>())))
@@ -45,16 +54,21 @@ namespace EUN.Bride.WebSocket
             }
             else
             {
-                var data = request.get<EzyArray>("d");
+                var data = request.get<EzyArray>(Commands.Data);
 
-                var ezyData = EzyEntityFactory.newArray();
-                ezyData.add((int)ReturnCode.AppNullRequest);
-                ezyData.add((string)null);
-                if (data.size() > 2) ezyData.add(data.get<int>(2));
+                var customArray = new CustomArray();
+                customArray.Add((int)ReturnCode.AppNullRequest);
+                customArray.Add((string)null);
+                if (data.size() > 2) customArray.Add(data.get<int>(2));
+                //var ezyData = EzyEntityFactory.newArray();
+                //ezyData.add((int)ReturnCode.AppNullRequest);
+                //ezyData.add((string)null);
+                //if (data.size() > 2) ezyData.add(data.get<int>(2));
 
-                onResponse?.Invoke(ezyData);
+                onResponse?.Invoke(customArray);
             }
         }
+#endif
 
         private void handleOnConnectionSuccess()
         {
@@ -73,38 +87,22 @@ namespace EUN.Bride.WebSocket
 
         private void handleOnLoginError(string jsonArr)
         {
-            var ezyArray = EzyEntityFactory.newArrayBuilder()
-                .appendAll(getObjectLstFromJsonArr(jsonArr))
-                .build();
-
-            onLoginError?.Invoke(ezyArray);
+            onLoginError?.Invoke(new CustomArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
         }
 
         private void handleOnAppAccess(string jsonArr)
         {
-            var ezyArray = EzyEntityFactory.newArrayBuilder()
-                .appendAll(getObjectLstFromJsonArr(jsonArr))
-                .build();
-
-            onAppAccess?.Invoke(ezyArray);
+            onAppAccess?.Invoke(new CustomArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
         }
 
         private void handleOnResponse(string jsonArr)
         {
-            var ezyArray = EzyEntityFactory.newArrayBuilder()
-                .appendAll(getObjectLstFromJsonArr(jsonArr))
-                .build();
-
-            onResponse?.Invoke(ezyArray);
+            onResponse?.Invoke(new CustomArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
         }
 
         private void handleOnEvent(string jsonArr)
         {
-            var ezyArray = EzyEntityFactory.newArrayBuilder()
-                .appendAll(getObjectLstFromJsonArr(jsonArr))
-                .build();
-
-            onEvent?.Invoke(ezyArray);
+            onEvent?.Invoke(new CustomArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
         }
 
         private IList<object> getObjectLstFromJsonArr(string jsonArr)
@@ -115,4 +113,3 @@ namespace EUN.Bride.WebSocket
         }
     }
 }
-#endif

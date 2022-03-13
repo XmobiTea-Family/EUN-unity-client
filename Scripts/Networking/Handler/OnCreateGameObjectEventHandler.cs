@@ -13,11 +13,10 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             if (peer.room == null) return;
             var parameters = operationEvent.GetParameters();
 
-            var roomGameObject = new RoomGameObject(parameters.GetEzyArray(ParameterCode.Data));
+            var roomGameObject = new RoomGameObject(parameters.GetCustomArray(ParameterCode.Data));
             peer.room.GameObjectDic[roomGameObject.ObjectId] = roomGameObject;
 
             foreach (var behaviour in peer.ezyManagerBehaviourLst)
@@ -32,7 +31,6 @@
                     }
                 }
             }
-#endif
         }
     }
 }

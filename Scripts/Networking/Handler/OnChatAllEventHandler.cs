@@ -13,15 +13,13 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             var parameters = operationEvent.GetParameters();
-            var message = new ChatMessage(parameters.GetEzyArray(ParameterCode.Message));
+            var message = new ChatMessage(parameters.GetCustomArray(ParameterCode.Message));
 
             foreach (var behaviour in peer.ezyManagerBehaviourLst)
             {
                 if (behaviour) behaviour.OnEzyReceiveChatAll(message);
             }
-#endif
         }
     }
 }

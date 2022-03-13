@@ -1,12 +1,12 @@
-﻿#if EUN
-namespace EUN.Logger
+﻿namespace EUN.Logger
 {
-    using com.tvd12.ezyfoxserver.client.logger;
-
     using System;
     using UnityEngine;
 
-    public class UnityLogger : EzyLogger
+    public class UnityLogger
+#if EUN
+        : com.tvd12.ezyfoxserver.client.logger.EzyLogger
+#endif
     {
         private readonly object type;
 
@@ -66,4 +66,3 @@ namespace EUN.Logger
         }
     }
 }
-#endif

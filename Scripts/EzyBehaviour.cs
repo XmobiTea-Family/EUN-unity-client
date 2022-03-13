@@ -1,9 +1,5 @@
 ﻿namespace EUN
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
-
     using EUN.Common;
     using EUN.Entity;
     using System;
@@ -19,18 +15,14 @@
 
         protected virtual void Awake()
         {
-#if EUN
             if (ezyView == null) ezyView = GetComponent<EzyView>();
-#endif
         }
 
         private List<MethodInfo> methodInfoLst;
 
         protected virtual void Start()
         {
-#if EUN
             if (ezyView != null) ezyView.SubscriberEzyBehaviour(this);
-#endif
         }
 
         protected virtual void OnDisable()
@@ -43,8 +35,7 @@
             if (ezyView != null) ezyView.UnSubscriberEzyBehaviour(this);
         }
 
-#if EUN
-        public void EzyRPC(int eunRPCCommand, EzyArray rpcData)
+        public void EzyRPC(int eunRPCCommand, CustomArray rpcDataArray)
         {
 
             if (methodInfoLst == null) methodInfoLst = GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EzyRPCAttribute), true).Length > 0).ToList();
@@ -60,7 +51,7 @@
                 {
                     var parameterInfos = methodInfo.GetParameters();
 
-                    if (parameterInfos.Length == rpcData.size())
+                    if (parameterInfos.Length == rpcDataArray.Count())
                     {
                         if (parameterInfos.Length == 0)
                         {
@@ -76,130 +67,123 @@
                                 {
                                     var parameterInfo = parameterInfos[i];
 
-                                    if (parameterInfo.ParameterType == typeof(sbyte))
+                                    if (parameterInfo.ParameterType == typeof(bool))
                                     {
-                                        tempParameters[i] = rpcData.get<sbyte>(i);
+                                        tempParameters[i] = rpcDataArray.GetBool(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(bool))
+                                    else if (parameterInfo.ParameterType == typeof(sbyte))
                                     {
-                                        tempParameters[i] = rpcData.get<bool>(i);
+                                        tempParameters[i] = rpcDataArray.GetSByte(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(byte))
                                     {
-                                        tempParameters[i] = rpcData.get<byte>(i);
+                                        tempParameters[i] = rpcDataArray.GetByte(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(int))
                                     {
-                                        tempParameters[i] = rpcData.get<int>(i);
+                                        tempParameters[i] = rpcDataArray.GetInt(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(short))
                                     {
-                                        tempParameters[i] = rpcData.get<short>(i);
+                                        tempParameters[i] = rpcDataArray.GetShort(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(long))
                                     {
-                                        tempParameters[i] = rpcData.get<long>(i);
+                                        tempParameters[i] = rpcDataArray.GetLong(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(float))
                                     {
-                                        tempParameters[i] = rpcData.get<float>(i);
+                                        tempParameters[i] = rpcDataArray.GetFloat(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(double))
                                     {
-                                        tempParameters[i] = rpcData.get<double>(i);
+                                        tempParameters[i] = rpcDataArray.GetDouble(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(string))
                                     {
-                                        tempParameters[i] = rpcData.get<string>(i);
+                                        tempParameters[i] = rpcDataArray.GetString(i);
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(CustomArray))
+                                    {
+                                        tempParameters[i] = rpcDataArray.GetCustomArray(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(CustomHashtable))
                                     {
-                                        var obj = rpcData.get<object>(i);
-                                        if (obj is EzyObject objEzyObject)
-                                        {
-                                            tempParameters[i] = new CustomHashtable(objEzyObject);
-                                        }
-                                        else if (obj is CustomHashtable customHashtable)
-                                        {
-                                            tempParameters[i] = customHashtable;
-                                        }
-                                        else
-                                        {
-                                            continue;
-                                        }
+                                        tempParameters[i] = rpcDataArray.GetCustomHashtable(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(EzyArray))
-                                    {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(EzyObject))
-                                    {
-                                        tempParameters[i] = rpcData.get<EzyObject>(i);
-                                    }
+
                                     else if (parameterInfo.ParameterType == typeof(bool[]))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<bool>().ToArray();
+                                        tempParameters[i] = rpcDataArray.GetArray<bool>(i);
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(sbyte[]))
+                                    {
+                                        tempParameters[i] = rpcDataArray.GetArray<sbyte>(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(byte[]))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<byte>().ToArray();
+                                        tempParameters[i] = rpcDataArray.GetArray<byte>(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(int[]))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<int>().ToArray();
+                                        tempParameters[i] = rpcDataArray.GetArray<int>(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(short[]))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<short>().ToArray();
+                                        tempParameters[i] = rpcDataArray.GetArray<short>(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(long[]))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<long>().ToArray();
+                                        tempParameters[i] = rpcDataArray.GetArray<long>(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(float[]))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<float>().ToArray();
+                                        tempParameters[i] = rpcDataArray.GetArray<float>(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(double[]))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<double>().ToArray();
+                                        tempParameters[i] = rpcDataArray.GetArray<double>(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(string[]))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<string>().ToArray();
+                                        tempParameters[i] = rpcDataArray.GetArray<string>(i);
                                     }
 
-                                    else if (parameterInfo.ParameterType == typeof(List<bool>))
+                                    else if (parameterInfo.ParameterType == typeof(IList<bool>))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<bool>();
+                                        tempParameters[i] = rpcDataArray.GetList<bool>(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(List<byte>))
+                                    else if (parameterInfo.ParameterType == typeof(IList<sbyte>))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<byte>();
+                                        tempParameters[i] = rpcDataArray.GetList<sbyte>(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(List<int>))
+                                    else if (parameterInfo.ParameterType == typeof(IList<byte>))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<int>();
+                                        tempParameters[i] = rpcDataArray.GetList<byte>(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(List<short>))
+                                    else if (parameterInfo.ParameterType == typeof(IList<int>))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<short>();
+                                        tempParameters[i] = rpcDataArray.GetList<int>(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(List<long>))
+                                    else if (parameterInfo.ParameterType == typeof(IList<short>))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<long>();
+                                        tempParameters[i] = rpcDataArray.GetList<short>(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(List<float>))
+                                    else if (parameterInfo.ParameterType == typeof(IList<long>))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<float>();
+                                        tempParameters[i] = rpcDataArray.GetList<long>(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(List<double>))
+                                    else if (parameterInfo.ParameterType == typeof(IList<float>))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<double>();
+                                        tempParameters[i] = rpcDataArray.GetList<float>(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(List<string>))
+                                    else if (parameterInfo.ParameterType == typeof(IList<double>))
                                     {
-                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<string>();
+                                        tempParameters[i] = rpcDataArray.GetList<double>(i);
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(IList<string>))
+                                    {
+                                        tempParameters[i] = rpcDataArray.GetList<string>(i);
                                     }
                                     else continue;
                                 }
@@ -225,8 +209,7 @@
             {
                 Debug.LogError("Method " + ezyRPCMethodName + " with parameters " + parameters + " not found");
             }
-    }
-#endif
+        }
 
         [EzyRPC]
         private void None() { }

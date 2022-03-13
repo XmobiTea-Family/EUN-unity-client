@@ -19,6 +19,7 @@ namespace EUN.Config.Editor
     {
         private const string EzyRPC_Parent_Path = "/EUN-unity-client-custom/Scripts/Constant";
         private const string EzyRPC_Path = EzyRPC_Parent_Path + "/EzyRPCCommand.cs";
+        private const string EzyRPC_Disable_Path = "/EUN-unity-client/Scripts/Constant/EzyRPCCommand.cs";
         private const string EzyServerSettings_Path = "Assets/EUN-unity-client-custom/Resources";
         private const string EzyfoxServerCsharpClientLink = "https://github.com/youngmonkeys/ezyfox-server-csharp-client.git";
 
@@ -395,28 +396,46 @@ namespace EUN.Config.Editor
 
             if (needModifier)
             {
-                var stringBuilder = new StringBuilder();
+                var enableStringBuilder = new StringBuilder();
+                var disableStringBuilder = new StringBuilder();
 
-                stringBuilder.AppendLine("#if EUN");
-                stringBuilder.AppendLine("// dont modifier this, this file will auto generate by EUN");
-                stringBuilder.AppendLine("public enum EzyRPCCommand");
-                stringBuilder.AppendLine("{");
+                enableStringBuilder.AppendLine("#if EUN");
+                disableStringBuilder.AppendLine("#if !EUN");
+
+                enableStringBuilder.AppendLine("// dont modifier this, this file will auto generate by EUN");
+                disableStringBuilder.AppendLine("// dont modifier this, this file will auto generate by EUN");
+                
+                enableStringBuilder.AppendLine("public enum EzyRPCCommand");
+                disableStringBuilder.AppendLine("public enum EzyRPCCommand");
+
+                enableStringBuilder.AppendLine("{");
+                disableStringBuilder.AppendLine("{");
+
                 foreach (var c in dic)
                 {
-                    stringBuilder.AppendLine("    " + c.Value + " = " + c.Key + ",");
+                    enableStringBuilder.AppendLine("    " + c.Value + " = " + c.Key + ",");
+                    disableStringBuilder.AppendLine("    " + c.Value + " = " + c.Key + ",");
+
                     Debug.Log("EzyRPCCommand add " + c.Value + " = " + c.Key);
                 }
-                stringBuilder.AppendLine("}");
-                stringBuilder.AppendLine("#endif");
+
+                enableStringBuilder.AppendLine("}");
+                disableStringBuilder.AppendLine("}");
+
+                enableStringBuilder.AppendLine("#endif");
+                disableStringBuilder.AppendLine("#endif");
 
                 var dirPath = Application.dataPath + EzyRPC_Parent_Path;
                 if (!System.IO.Directory.Exists(dirPath)) System.IO.Directory.CreateDirectory(dirPath);
 
                 // generate this file
-                var path = Application.dataPath + EzyRPC_Path;
-                if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
+                var enableFilePath = Application.dataPath + EzyRPC_Path;
+                var disableFilePath = Application.dataPath + EzyRPC_Disable_Path;
 
-                System.IO.File.WriteAllText(path, stringBuilder.ToString());
+                if (System.IO.File.Exists(enableFilePath)) System.IO.File.Delete(enableFilePath);
+
+                System.IO.File.WriteAllText(enableFilePath, enableStringBuilder.ToString());
+                System.IO.File.WriteAllText(disableFilePath, disableStringBuilder.ToString());
 
                 UnityEditor.AssetDatabase.Refresh();
             }

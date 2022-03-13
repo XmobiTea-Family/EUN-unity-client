@@ -1,71 +1,39 @@
 ﻿namespace EUN.Common
 {
 #if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.factory;
 #endif
 
+    using System;
     using System.Collections.Generic;
+    using System.Text;
 
-    public class CustomHashtable
+    public class CustomHashtable : CustomData
     {
         public class Builder
         {
-#if EUN
-            private EzyObject ezyObject;
-#endif
+            private IDictionary<int, object> originObject;
+
             public Builder Add(int key, object value)
             {
-#if EUN
-                if (value is CustomHashtable customHashtable)
-                {
-                    ezyObject.put(key, customHashtable.toData());
+                originObject.Add(key, value);
 
-                    return this;
-                }
-
-                ezyObject.put(key, value);
-#endif
                 return this;
             }
 
             public Builder AddAll(IDictionary<int, object> dict)
             {
-#if EUN
-                ezyObject.putAll(dict);
-#endif
+                foreach (var d in dict)
+                {
+                    Add(d.Key, d.Value);
+                }
+
                 return this;
             }
 
-            public CustomHashtable Build()
+            public Builder AddAll(IDictionary<object, object> dict)
             {
-#if EUN
-                return new CustomHashtable(ezyObject);
-#else
-                return null;
-#endif
-            }
-
-            public Builder()
-            {
-#if EUN
-                ezyObject = EzyEntityFactory.newObject();
-#endif
-            }
-        }
-
-#if EUN
-        private EzyObject ezyObject;
-#endif
-
-#if EUN
-        public CustomHashtable(EzyObject ezyObject)
-        {
-            this.ezyObject = EzyEntityFactory.newObject();
-
-            if (ezyObject != null)
-            {
-                var keys = ezyObject.keys();
+                var keys = dict.Keys;
                 foreach (var key in keys)
                 {
                     if (key is string keyStr)
@@ -73,214 +41,118 @@
                         int keyInt;
                         if (int.TryParse(keyStr, out keyInt))
                         {
-                            this.ezyObject.put(keyInt, ezyObject.get<object>(key));
+                            Add(keyInt, dict[key]);
                         }
                     }
                     else if (key is int keyInt)
                     {
-                        this.ezyObject.put(keyInt, ezyObject.get<object>(key));
+                        Add(keyInt, dict[key]);
                     }
                 }
+
+                return this;
+            }
+
+            public CustomHashtable Build()
+            {
+                var awnser = new CustomHashtable();
+
+                var keys = originObject.Keys;
+                foreach (var key in keys)
+                {
+                    awnser.Add(key, originObject[key]);
+                }
+
+                return awnser;
+            }
+
+            public Builder()
+            {
+                originObject = new Dictionary<int, object>();
             }
         }
-#endif
+
+        private IDictionary<int, object> originObject;
 
         public CustomHashtable()
         {
-#if EUN
-            this.ezyObject = EzyEntityFactory.newObject();
-#endif
+            this.originObject = new Dictionary<int, object>();
         }
 
         public void Add(int key, object value)
         {
-#if EUN
-            if (value is CustomHashtable customHashtable)
-            {
-                ezyObject.put(key, customHashtable.toData());
-                return;
-            }
-
-            ezyObject.put(key, value);
-#endif
+            originObject.Add(key, CreateUseDataFromOriginData(value));
         }
 
         public ICollection<object> Values()
         {
-#if EUN
-            return ezyObject.values();
-#else 
-            return null;
-#endif
+            return originObject.Values;
         }
 
-        public ICollection<object> Keys()
+        public ICollection<int> Keys()
         {
-#if EUN
-            return ezyObject.keys();
-#else
-            return null;
-#endif
-        }
-
-        public bool Remove(int key)
-        {
-            return false;
-        }
-
-        public void Clear()
-        {
-#if EUN
-            ezyObject.clear();
-#endif
+            return originObject.Keys;
         }
 
         public bool ContainsKey(int key)
         {
-#if EUN
-            return ezyObject.containsKey(key);
-#else
-            return false;
-#endif
+            return originObject.ContainsKey(key);
         }
 
-        private T Get<T>(int key, T defaultValue = default(T))
+        public override void Clear()
         {
-#if EUN
-            return ezyObject.get<T>(key);
-#else
-            return defaultValue;
-#endif
+            originObject.Clear();
         }
 
-        public byte GetByte(int key, byte defaultValue = 0)
+        public override bool Remove(int key)
         {
-            return Get(key, defaultValue);
+            return originObject.Remove(key);
         }
 
-        public byte[] GetByteArr(int key, byte[] defaultValue = null)
+        public override int Count()
         {
-            return Get(key, defaultValue);
+            return originObject.Count;
         }
 
-        public short GetShort(int key, short defaultValue = 0)
+        protected override T Get<T>(int k, T defaultValue = default(T))
         {
-            return Get(key, defaultValue);
-        }
+            if (originObject.ContainsKey(k))
+            {
+                var value = originObject[k];
 
-        public short[] GetShortArr(int key, short[] defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public int GetInt(int key, int defaultValue = 0)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public int[] GetIntArr(int key, int[] defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public float GetFloat(int key, float defaultValue = 0)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public float[] GetFloatArr(int key, float[] defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public long GetLong(int key, long defaultValue = 0)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public long[] GetLongArr(int key, long[] defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public double GetDouble(int key, double defaultValue = 0)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public double[] GetDoubleArr(int key, double[] defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public bool GetBool(int key, bool defaultValue = false)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public bool[] GetBoolArr(int key, bool[] defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public string GetString(int key, string defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public string[] GetStringArr(int key, string[] defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-
-#if EUN
-        public EzyArray GetEzyArray(int key, EzyArray defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-#endif
-
-        public object GetObject(int key, object defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-
-#if EUN
-        public EzyObject GetEzyObject(int key, EzyObject defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-#endif
-
-        public object[] GetObjectArr(int key, object[] defaultValue = null)
-        {
-            return Get(key, defaultValue);
-        }
-
-        public CustomHashtable GetCustomHashtable(int key, CustomHashtable defaultValue = null)
-        {
-#if EUN
-            var ezyObject = Get<EzyObject>(key);
-            if (ezyObject != null) return new CustomHashtable(ezyObject);
+                if (value is T t)
+                {
+                    return t;
+                }
+            }
 
             return defaultValue;
-#else
-            return null;
-#endif
         }
 
-        public object toData()
+        public override object ToEzyData()
         {
 #if EUN
+            var ezyObject = EzyEntityFactory.newObject();
+
+            var keys = originObject.Keys;
+            foreach (var key in keys)
+            {
+                ezyObject.put(key, CreateEzyDataFromUseData(originObject[key]));
+            }
+
             return ezyObject;
 #else
-            return null;
+            return base.ToEzyData();
 #endif
         }
 
         public override string ToString()
         {
-            return toData().ToString();
+            return new StringBuilder()
+                .Append("[")
+                .Append(String.Join(",", originObject))
+                .Append("]")
+                .ToString();
         }
     }
 }

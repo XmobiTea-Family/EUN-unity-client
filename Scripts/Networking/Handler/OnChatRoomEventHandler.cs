@@ -13,11 +13,10 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var message = new ChatMessage(parameters.GetEzyArray(ParameterCode.Message));
+            var message = new ChatMessage(parameters.GetCustomArray(ParameterCode.Message));
 
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(message.SenderId));
             if (thisRoomPlayer != null)
@@ -38,7 +37,6 @@
                     if (behaviour) behaviour.OnEzyReceiveChatRoom(message, thisRoomPlayer);
                 }
             }
-#endif
         }
     }
 }

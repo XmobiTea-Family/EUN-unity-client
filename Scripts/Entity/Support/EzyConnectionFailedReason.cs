@@ -1,5 +1,5 @@
 ﻿#if !EUN
-namespace EUN
+namespace EUN.Entity.Support
 {
 	public enum EzyConnectionFailedReason
 	{
