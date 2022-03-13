@@ -168,10 +168,16 @@ namespace EUN.Config.Editor
             Selection.SetActiveObjectWithContext(ezyServerSettings, ezyServerSettings);
         }
 
-        [MenuItem("EUN/Docs")]
-        private static void OpenDocs()
+        [MenuItem("EUN/About Ezyfox")]
+        private static void AboutEzyfox()
         {
             Application.OpenURL("https://youngmonkeys.org/ezyfox-sever/");
+        }
+
+        [MenuItem("EUN/Go to EUN-server")]
+        private static void GotoEUNserver()
+        {
+            Application.OpenURL("https://github.com/XmobiTea-Family/EUN-server");
         }
 
         [MenuItem("EUN/About")]

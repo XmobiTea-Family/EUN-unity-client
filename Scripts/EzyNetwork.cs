@@ -16,7 +16,7 @@
     public static partial class EzyNetwork
     {
         public const string Version = "1.0.0";
-        public static EzyServerSettings.Mode Mode => EzyServerSettings.Mode.OfflineMode;
+        public static EzyServerSettings.Mode Mode => ezyServerSettings != null ? ezyServerSettings.mode : EzyServerSettings.Mode.OfflineMode;
 
         public static string UserId { get; private set; }
 
