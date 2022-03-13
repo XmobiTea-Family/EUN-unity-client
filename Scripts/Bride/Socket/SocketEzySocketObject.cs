@@ -1,4 +1,5 @@
-﻿namespace EUN.Bride.Socket
+﻿#if EUN
+namespace EUN.Bride.Socket
 {
     using com.tvd12.ezyfoxserver.client;
     using com.tvd12.ezyfoxserver.client.config;
@@ -10,6 +11,8 @@
     using com.tvd12.ezyfoxserver.client.request;
 
     using EUN.Constant;
+
+    using System;
 
     public class SocketEzySocketObject : EzySocketObject
     {
@@ -49,6 +52,23 @@
         public override void Connect(string username, string password, EzyData data, string host, int port, int udpPort)
         {
             base.Connect(username, password, data, host, port, udpPort);
+
+            if (EzyNetwork.Mode == Config.EzyServerSettings.Mode.OfflineMode)
+            {
+                var obj = EzyEntityFactory.newArrayBuilder()
+                    .append(null)
+                    .append(null)
+                    .append(
+                        EzyEntityFactory.newArrayBuilder()
+                        .append(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
+                        .build())
+                    .build();
+
+                onAppAccess?.Invoke(obj);
+                onConnectionSuccess?.Invoke();
+
+                return;
+            }
 
             SocketEzySocketObject.udpPort = udpPort;
 
@@ -180,3 +200,4 @@
         }
     }
 }
+#endif

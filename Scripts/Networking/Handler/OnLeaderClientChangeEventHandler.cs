@@ -13,6 +13,7 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
+#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
@@ -58,6 +59,7 @@
             }
 
             peer.room.LeaderClientUserId = thisRoomPlayer.UserId;
+#endif
         }
     }
 }

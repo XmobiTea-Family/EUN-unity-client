@@ -1,14 +1,64 @@
 ﻿namespace EUN.Common
 {
+#if EUN
     using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.factory;
+#endif
 
     using System.Collections.Generic;
 
     public class CustomHashtable
     {
-        private EzyObject ezyObject;
+        public class Builder
+        {
+#if EUN
+            private EzyObject ezyObject;
+#endif
+            public Builder Add(int key, object value)
+            {
+#if EUN
+                if (value is CustomHashtable customHashtable)
+                {
+                    ezyObject.put(key, customHashtable.toData());
 
+                    return this;
+                }
+
+                ezyObject.put(key, value);
+#endif
+                return this;
+            }
+
+            public Builder AddAll(IDictionary<int, object> dict)
+            {
+#if EUN
+                ezyObject.putAll(dict);
+#endif
+                return this;
+            }
+
+            public CustomHashtable Build()
+            {
+#if EUN
+                return new CustomHashtable(ezyObject);
+#else
+                return null;
+#endif
+            }
+
+            public Builder()
+            {
+#if EUN
+                ezyObject = EzyEntityFactory.newObject();
+#endif
+            }
+        }
+
+#if EUN
+        private EzyObject ezyObject;
+#endif
+
+#if EUN
         public CustomHashtable(EzyObject ezyObject)
         {
             this.ezyObject = EzyEntityFactory.newObject();
@@ -33,31 +83,44 @@
                 }
             }
         }
+#endif
 
         public CustomHashtable()
         {
+#if EUN
             this.ezyObject = EzyEntityFactory.newObject();
+#endif
         }
 
         public void Add(int key, object value)
         {
+#if EUN
             if (value is CustomHashtable customHashtable)
             {
-                ezyObject.put(key, customHashtable.ezyObject);
+                ezyObject.put(key, customHashtable.toData());
                 return;
             }
 
             ezyObject.put(key, value);
+#endif
         }
 
         public ICollection<object> Values()
         {
+#if EUN
             return ezyObject.values();
+#else 
+            return null;
+#endif
         }
 
         public ICollection<object> Keys()
         {
+#if EUN
             return ezyObject.keys();
+#else
+            return null;
+#endif
         }
 
         public bool Remove(int key)
@@ -67,17 +130,47 @@
 
         public void Clear()
         {
+#if EUN
             ezyObject.clear();
+#endif
         }
 
         public bool ContainsKey(int key)
         {
+#if EUN
             return ezyObject.containsKey(key);
+#else
+            return false;
+#endif
         }
 
         private T Get<T>(int key, T defaultValue = default(T))
         {
+#if EUN
             return ezyObject.get<T>(key);
+#else
+            return defaultValue;
+#endif
+        }
+
+        public byte GetByte(int key, byte defaultValue = 0)
+        {
+            return Get(key, defaultValue);
+        }
+
+        public byte[] GetByteArr(int key, byte[] defaultValue = null)
+        {
+            return Get(key, defaultValue);
+        }
+
+        public short GetShort(int key, short defaultValue = 0)
+        {
+            return Get(key, defaultValue);
+        }
+
+        public short[] GetShortArr(int key, short[] defaultValue = null)
+        {
+            return Get(key, defaultValue);
         }
 
         public int GetInt(int key, int defaultValue = 0)
@@ -140,20 +233,24 @@
             return Get(key, defaultValue);
         }
 
+#if EUN
         public EzyArray GetEzyArray(int key, EzyArray defaultValue = null)
         {
             return Get(key, defaultValue);
         }
+#endif
 
         public object GetObject(int key, object defaultValue = null)
         {
             return Get(key, defaultValue);
         }
 
+#if EUN
         public EzyObject GetEzyObject(int key, EzyObject defaultValue = null)
         {
             return Get(key, defaultValue);
         }
+#endif
 
         public object[] GetObjectArr(int key, object[] defaultValue = null)
         {
@@ -162,15 +259,23 @@
 
         public CustomHashtable GetCustomHashtable(int key, CustomHashtable defaultValue = null)
         {
+#if EUN
             var ezyObject = Get<EzyObject>(key);
             if (ezyObject != null) return new CustomHashtable(ezyObject);
 
             return defaultValue;
+#else
+            return null;
+#endif
         }
 
         public object toData()
         {
+#if EUN
             return ezyObject;
+#else
+            return null;
+#endif
         }
 
         public override string ToString()

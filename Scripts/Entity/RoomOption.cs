@@ -29,7 +29,7 @@
             public CustomHashtable customRoomProperties;
             public List<int> customRoomPropertiesForLobby;
             public string password;
-            public int maxPlayer= 4;
+            public int maxPlayer = 4;
             public bool isVisible = true;
             public bool isOpen = true;
             public int ttl = 15000;

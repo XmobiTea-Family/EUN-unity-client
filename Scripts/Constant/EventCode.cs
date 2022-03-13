@@ -17,6 +17,7 @@
         OnSynchronizationDataGameObject = 12,
         OnRpcGameObject = 13,
         OnTransferOwnerGameObject = 14,
-        OnVoiceChat = 15
+        OnVoiceChat = 15,
+        OnCustomGameObjectPropertiesChange = 16,
     }
 }

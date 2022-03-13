@@ -8,10 +8,12 @@
 
         public ChangeLeaderClientOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
+#if EUN
             if (!HasError)
             {
                 Success = true;
             }
+#endif
         }
     }
 }

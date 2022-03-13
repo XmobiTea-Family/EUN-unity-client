@@ -11,7 +11,7 @@
 
         public EzyMicRecord(string device, int suggestedFrequency)
         {
-#if EZY_VOICE_CHAT
+#if EUN_VOICE_CHAT && EUN
             if (Microphone.devices.Length < 1)
             {
                 return;
@@ -41,7 +41,7 @@
 
         public bool Read(float[] buffer)
         {
-#if EZY_VOICE_CHAT
+#if EUN_VOICE_CHAT && EUN
             int micPos = Microphone.GetPosition(this.device);
             // loop detection
             if (micPos < micPrevPos)
@@ -72,7 +72,7 @@
 
         public static bool DetectedVoice(float[] buffer)
         {
-#if EZY_VOICE_CHAT
+#if EUN_VOICE_CHAT && EUN
             const int activityDelayValuesCount = 44100 / 1000 * 100;
 
             var detected = false;
@@ -104,7 +104,7 @@
 
         public void Dispose()
         {
-#if EZY_VOICE_CHAT
+#if EUN_VOICE_CHAT && EUN
             Microphone.End(this.device);
 #endif
         }

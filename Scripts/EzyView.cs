@@ -10,11 +10,24 @@
     [DisallowMultipleComponent]
     public sealed class EzyView : MonoBehaviour
     {
-        public RoomGameObject RoomGameObject { get; private set; }
+        [SerializeField]
+        private RoomGameObject roomObjectGame;
+        public RoomGameObject RoomGameObject
+        {
+            get { return roomObjectGame; }
+            private set
+            {
+                roomObjectGame = value;
+            }
+        }
 
         internal List<EzyBehaviour> ezyBehaviourLst { get; private set; } = new List<EzyBehaviour>();
 
         internal List<EzyVoiceChatBehaviour> ezyVoiceChatBehaviourLst { get; private set; } = new List<EzyVoiceChatBehaviour>();
+
+        public RoomPlayer Owner => EzyNetwork.GetRoomPlayer(RoomGameObject.OwnerId);
+
+        public bool IsMine => RoomGameObject != null && RoomGameObject.OwnerId == EzyNetwork.PlayerId;
 
         private void Awake()
         {
@@ -59,10 +72,6 @@
         {
             if (ezyVoiceChatBehaviourLst.Contains(behaviour)) ezyVoiceChatBehaviourLst.Remove(behaviour);
         }
-
-        public RoomPlayer Owner => EzyNetwork.GetRoomPlayer(RoomGameObject.OwnerId);
-
-        public bool IsMine => RoomGameObject != null && RoomGameObject.OwnerId == EzyNetwork.PlayerId;
 
         public void RPC(EzyTargets targets, EzyRPCCommand command, params object[] rpcData)
         {

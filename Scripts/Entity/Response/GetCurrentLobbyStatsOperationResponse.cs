@@ -1,6 +1,8 @@
 ﻿namespace EUN.Entity.Response
 {
+#if EUN
     using com.tvd12.ezyfoxserver.client.entity;
+#endif
 
     using EUN.Common;
     using EUN.Constant;
@@ -12,6 +14,7 @@
 
         public GetCurrentLobbyStatsOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
+#if EUN
             if (!HasError)
             {
                 var parameters = operationResponse.GetParameters();
@@ -29,6 +32,7 @@
                     LobbyRoomStatss[i] = new LobbyRoomStats(array1.get<EzyArray>(i));
                 }
             }
+#endif
         }
     }
 }

@@ -5,6 +5,12 @@
     //[CreateAssetMenu(fileName = EzyServerSettings.ResourcesPath, menuName = "EUN/EzyServerSettings", order = 1)]
     public class EzyServerSettings : ScriptableObject
     {
+        public enum Mode
+        {
+            SelfHost = 0,
+            OfflineMode = 1,
+        }
+
         public const string ResourcesPath = "EzyServerSettings";
 
         [SerializeField]
@@ -40,7 +46,15 @@
         public int sendRateSynchronizationData => _sendRateSynchronizationData;
 
         [SerializeField]
+        private bool _useVoiceChat;
+        public bool useVoiceChat => _useVoiceChat;
+
+        [SerializeField]
         private int _sendRateVoiceChat = 20;
         public int sendRateVoiceChat => _sendRateVoiceChat;
+
+        [SerializeField]
+        private Mode _mode = Mode.SelfHost;
+        public Mode mode => _mode;
     }
 }

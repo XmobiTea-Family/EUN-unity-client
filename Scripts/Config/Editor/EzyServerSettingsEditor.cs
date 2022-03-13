@@ -3,70 +3,168 @@ namespace EUN.Config.Editor
 {
     using System;
     using System.Collections.Generic;
+    using System.Diagnostics;
     using System.Linq;
+    using System.Text;
 
     using UnityEditor;
     using UnityEditor.Callbacks;
 
     using UnityEngine;
 
+    using Debug = UnityEngine.Debug;
+
     [CustomEditor(typeof(EzyServerSettings))]
     public class EzyServerSettingsEditor : Editor
     {
-        SerializedProperty damageProp;
-        SerializedProperty armorProp;
-        SerializedProperty gunProp;
+        private const string EzyRPC_Parent_Path = "/EUN-unity-client-custom/Scripts/Constant";
+        private const string EzyRPC_Path = EzyRPC_Parent_Path + "/EzyRPCCommand.cs";
+        private const string EzyServerSettings_Path = "Assets/EUN-unity-client-custom/Resources";
+        private const string EzyfoxServerCsharpClientLink = "https://github.com/youngmonkeys/ezyfox-server-csharp-client.git";
 
-        void OnEnable()
+        Vector2 scrollPos = new Vector2(0, 0);
+
+        SerializedProperty socketHost;
+        SerializedProperty socketTCPPort;
+        SerializedProperty socketUDPPort;
+        SerializedProperty webSocketHost;
+        SerializedProperty zoneName;
+        SerializedProperty appName;
+        SerializedProperty sendRate;
+        SerializedProperty sendRateSynchronizationData;
+        SerializedProperty sendRateVoiceChat;
+        SerializedProperty mode;
+        SerializedProperty useVoiceChat;
+
+        bool useVoiceChatLastValue;
+
+        private static BuildTargetGroup[] buildTargetGroups = new BuildTargetGroup[]
         {
-            // Setup the SerializedProperties.
-            damageProp = serializedObject.FindProperty("damage");
-            armorProp = serializedObject.FindProperty("armor");
-            gunProp = serializedObject.FindProperty("gun");
-        }
+            BuildTargetGroup.Standalone,
+            BuildTargetGroup.iOS,
+            BuildTargetGroup.Android,
+            BuildTargetGroup.WebGL,
+            BuildTargetGroup.WSA,
+        };
 
+        private void OnEnable()
+        {
+            socketHost = serializedObject.FindProperty("_socketHost");
+            socketTCPPort = serializedObject.FindProperty("_socketTCPPort");
+            socketUDPPort = serializedObject.FindProperty("_socketUDPPort");
+            webSocketHost = serializedObject.FindProperty("_webSocketHost");
+            zoneName = serializedObject.FindProperty("_zoneName");
+            appName = serializedObject.FindProperty("_appName");
+            sendRate = serializedObject.FindProperty("_sendRate");
+            sendRateSynchronizationData = serializedObject.FindProperty("_sendRateSynchronizationData");
+            sendRateVoiceChat = serializedObject.FindProperty("_sendRateVoiceChat");
+            mode = serializedObject.FindProperty("_mode");
+            useVoiceChat = serializedObject.FindProperty("_useVoiceChat");
+
+            useVoiceChatLastValue = useVoiceChat.boolValue;
+        }
 
         public override void OnInspectorGUI()
         {
-            base.OnInspectorGUI();
+            var boldStyle = new GUIStyle();
+            boldStyle.fontStyle = FontStyle.Bold;
 
-            // Update the serializedProperty - always do this in the beginning of OnInspectorGUI.
+            var italicStyle = new GUIStyle();
+            italicStyle.fontStyle = FontStyle.Italic;
+
+            if (!IsEUNSetup())
+            {
+                if (GUILayout.Button("Setup EUN"))
+                {
+                    SetupEUN();
+                }
+            }
+
             serializedObject.Update();
 
-            //// Show the custom GUI controls.
-            //EditorGUILayout.IntSlider(damageProp, 0, 100, new GUIContent("Damage"));
+            EditorGUILayout.PropertyField(mode);
 
-            //// Only show the damage progress bar if all the objects have the same damage value:
-            //if (!damageProp.hasMultipleDifferentValues)
-            //    ProgressBar(damageProp.intValue / 100.0f, "Damage");
+            var ezyMode = (EzyServerSettings.Mode)mode.intValue;
+            if (ezyMode == EzyServerSettings.Mode.SelfHost)
+            {
+                EditorGUILayout.LabelField("This is online mode, you will connect to your host with info:", italicStyle);
+                EditorGUILayout.Space(2);
 
-            //EditorGUILayout.IntSlider(armorProp, 0, 100, new GUIContent("Armor"));
+                EditorGUILayout.PropertyField(socketHost);
+                EditorGUILayout.PropertyField(socketTCPPort);
+                EditorGUILayout.PropertyField(socketUDPPort);
+                EditorGUILayout.PropertyField(webSocketHost);
+                EditorGUILayout.PropertyField(zoneName);
+                EditorGUILayout.PropertyField(appName);
+                EditorGUILayout.PropertyField(sendRate);
+                EditorGUILayout.PropertyField(sendRateSynchronizationData);
 
-            //// Only show the armor progress bar if all the objects have the same armor value:
-            //if (!armorProp.hasMultipleDifferentValues)
-            //    ProgressBar(armorProp.intValue / 100.0f, "Armor");
+                EditorGUILayout.Space(2);
+                EditorGUILayout.PropertyField(useVoiceChat);
+                if (useVoiceChat.boolValue)
+                {
+                    if (useVoiceChatLastValue != useVoiceChat.boolValue)
+                    {
+                        useVoiceChatLastValue = useVoiceChat.boolValue;
+                        SetScriptingDefineSymbols("EUN_VOICE_CHAT");
+                    }
 
-            //EditorGUILayout.PropertyField(gunProp, new GUIContent("Gun Object"));
+                    EditorGUILayout.PropertyField(sendRateVoiceChat);
+                }
+                else
+                {
+                    if (useVoiceChatLastValue != useVoiceChat.boolValue)
+                    {
+                        useVoiceChatLastValue = useVoiceChat.boolValue;
+                        RemoveScriptingDefineSymbols("EUN_VOICE_CHAT");
+                    }
+                }
+            }
+            else
+            {
+                EditorGUILayout.LabelField("This is offline mode, you can not play with other player.", italicStyle);
+            }
 
-            // Apply changes to the serializedProperty - always do this in the end of OnInspectorGUI.
             serializedObject.ApplyModifiedProperties();
+
+            var ezyRPCCommandValues = Enum.GetValues(typeof(EzyRPCCommand));
+
+            EditorGUILayout.Space(20);
+            EditorGUILayout.LabelField("All EzyRPC Command (" + ezyRPCCommandValues.Length + ")", boldStyle);
+            EditorGUILayout.Space(5);
+            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, true, GUILayout.Height(150));
+            EditorGUILayout.BeginVertical();
+
+            foreach (EzyRPCCommand ezyRPCCommandValue in ezyRPCCommandValues)
+            {
+                GUILayout.BeginHorizontal();
+
+                EditorGUILayout.LabelField(ezyRPCCommandValue.ToString(), GUILayout.Width(200));
+                EditorGUILayout.LabelField(((int)ezyRPCCommandValue).ToString(), GUILayout.Width(150));
+
+                GUILayout.EndHorizontal();
+            }
+            
+            EditorGUILayout.EndVertical();
+            EditorGUILayout.EndScrollView();
         }
 
-        [MenuItem("EUN/Ezy Server Settings")]
+        [MenuItem("EUN/EUN Settings")]
         private static void OpenEzyServerSettings()
         {
             var ezyServerSettings = Resources.Load(EzyServerSettings.ResourcesPath) as EzyServerSettings;
             if (ezyServerSettings == null)
             {
+                if (!System.IO.Directory.Exists(EzyServerSettings_Path))
+                    System.IO.Directory.CreateDirectory(EzyServerSettings_Path);
+
                 ezyServerSettings = ScriptableObject.CreateInstance<EzyServerSettings>();
-                var path = "Assets/Ezy Unity Networking/Resources/" + EzyServerSettings.ResourcesPath + ".asset";
+                var path = EzyServerSettings_Path + "/" + EzyServerSettings.ResourcesPath + ".asset";
                 AssetDatabase.CreateAsset(ezyServerSettings, path);
 
                 Debug.Log(ezyServerSettings + " ezyServerSettings create success at path " + path);
             }
 
-            //Selection.activeObject = ezyServerSettings;
-            //Selection.objects = new Object[] { ezyServerSettings };
             Selection.SetActiveObjectWithContext(ezyServerSettings, ezyServerSettings);
         }
 
@@ -80,6 +178,161 @@ namespace EUN.Config.Editor
         private static void OpenAbout()
         {
             EditorWindow.GetWindow(typeof(AboutEUNEditorWindow));
+        }
+
+        [MenuItem("EUN/Setup EUN")]
+        private static void SetupEUN()
+        {
+            if (EditorUtility.DisplayDialog("Confirm", "Setup EUN", "Yes", "No"))
+            {
+                if (IsEUNSetup())
+                {
+                    EditorUtility.DisplayDialog("Notice", "EUN has setup!", "Ok");
+
+                    return;
+                }
+
+                if (!CloneEzyFoxServerCsharpClient())
+                {
+                    EditorUtility.DisplayDialog("Error", "Please use terminal to execute on the Assets path: git clone https://github.com/youngmonkeys/ezyfox-server-csharp-client.git", "Ok");
+
+                    return;
+                }
+
+                SetScriptingDefineSymbols("EUN");
+
+                EditorUtility.DisplayDialog("Notice", "EUN setup successfully!", "Ok");
+            }
+        }
+
+        private static bool CloneEzyFoxServerCsharpClient()
+        {
+            if (!IsEzyfoxServerCsharpClone())
+            {
+                if (Application.platform == RuntimePlatform.WindowsEditor)
+                {
+                    CommandOutput("git clone " + EzyfoxServerCsharpClientLink, Application.dataPath);
+
+                    AssetDatabase.Refresh();
+
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static bool IsEUNSetup()
+        {
+            foreach (var buildTargetGroup in buildTargetGroups)
+            {
+                if (!HasScriptingDefineSymbols(buildTargetGroup, "EUN")) return false;
+            }
+
+            if (!IsEzyfoxServerCsharpClone()) return false;
+
+            return true;
+        }
+
+        private static bool HasScriptingDefineSymbols(BuildTargetGroup buildTargetGroup, string symbol)
+        {
+            var scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
+            return scriptingDefineSymbols.Equals(symbol) || scriptingDefineSymbols.Contains(symbol + ";") || scriptingDefineSymbols.Contains(";" + symbol);
+        }
+
+        private static void SetScriptingDefineSymbols(string symbol)
+        {
+            foreach (var buildTargetGroup in buildTargetGroups)
+            {
+                SetScriptingDefineSymbols(buildTargetGroup, symbol);
+            }
+        }
+
+        private static void RemoveScriptingDefineSymbols(string symbol)
+        {
+            foreach (var buildTargetGroup in buildTargetGroups)
+            {
+                RemoveScriptingDefineSymbols(buildTargetGroup, symbol);
+            }
+        }
+
+        private static void SetScriptingDefineSymbols(BuildTargetGroup buildTargetGroup, string symbol)
+        {
+            if (HasScriptingDefineSymbols(buildTargetGroup, symbol)) return;
+
+            var scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
+            scriptingDefineSymbols += ";" + symbol + ";";
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, scriptingDefineSymbols);
+        }
+
+        private static void RemoveScriptingDefineSymbols(BuildTargetGroup buildTargetGroup, string symbol)
+        {
+            if (!HasScriptingDefineSymbols(buildTargetGroup, symbol)) return;
+
+            var scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
+            if (scriptingDefineSymbols.Equals(symbol))
+            {
+                scriptingDefineSymbols = string.Empty;
+            }
+            else if (scriptingDefineSymbols.Contains(symbol + ";"))
+            {
+                scriptingDefineSymbols = scriptingDefineSymbols.Replace(symbol + ";", string.Empty);
+            }
+            else if (scriptingDefineSymbols.Contains(";" + symbol))
+            {
+                scriptingDefineSymbols = scriptingDefineSymbols.Replace(";" + symbol, string.Empty);
+            }
+
+            PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, scriptingDefineSymbols);
+        }
+
+        private static bool IsEzyfoxServerCsharpClone()
+        {
+            var ezyfoxServerCsharpClient = Application.dataPath + "/ezyfox-server-csharp-client";
+            return System.IO.Directory.Exists(ezyfoxServerCsharpClient);
+        }
+
+        private static string CommandOutput(string command, string workingDirectory = null)
+        {
+            try
+            {
+                var procStartInfo = new ProcessStartInfo("cmd", "/c " + command);
+
+                procStartInfo.RedirectStandardError = procStartInfo.RedirectStandardInput = procStartInfo.RedirectStandardOutput = true;
+                procStartInfo.UseShellExecute = false;
+                procStartInfo.CreateNoWindow = true;
+                if (null != workingDirectory)
+                {
+                    procStartInfo.WorkingDirectory = workingDirectory;
+                }
+
+                Process proc = new Process();
+                proc.StartInfo = procStartInfo;
+                proc.Start();
+
+                var sb = new StringBuilder();
+                proc.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e)
+                {
+                    sb.AppendLine(e.Data);
+                };
+                proc.ErrorDataReceived += delegate (object sender, DataReceivedEventArgs e)
+                {
+                    sb.AppendLine(e.Data);
+                };
+
+                proc.BeginOutputReadLine();
+                proc.BeginErrorReadLine();
+                proc.WaitForExit();
+                return sb.ToString();
+            }
+            catch (Exception objException)
+            {
+                return $"Error in command: {command}, {objException.Message}";
+            }
         }
 
         [DidReloadScripts]
@@ -100,7 +353,7 @@ namespace EUN.Config.Editor
 
             foreach (var type in types)
             {
-                var methodInfos = type.GetMethods(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EzyRPC), false).Length > 0);
+                var methodInfos = type.GetMethods(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EzyRPCAttribute), false).Length > 0);
 
                 foreach (var methodInfo in methodInfos)
                 {
@@ -125,12 +378,8 @@ namespace EUN.Config.Editor
                 if (!dicValues.Contains(methodName))
                 {
                     var dicKeys = dic.Keys.ToList();
-
-                    var key = 0;
-                    while (dicKeys.Contains(key))
-                    {
-                        key++;
-                    }
+                    
+                    var key = dicKeys.Max() + 1;
 
                     dic.Add(key, methodName);
 
@@ -140,9 +389,10 @@ namespace EUN.Config.Editor
 
             if (needModifier)
             {
-                var stringBuilder = new System.Text.StringBuilder();
+                var stringBuilder = new StringBuilder();
 
-                stringBuilder.AppendLine("// dont modifier this, this file will auto generate");
+                stringBuilder.AppendLine("#if EUN");
+                stringBuilder.AppendLine("// dont modifier this, this file will auto generate by EUN");
                 stringBuilder.AppendLine("public enum EzyRPCCommand");
                 stringBuilder.AppendLine("{");
                 foreach (var c in dic)
@@ -151,9 +401,13 @@ namespace EUN.Config.Editor
                     Debug.Log("EzyRPCCommand add " + c.Value + " = " + c.Key);
                 }
                 stringBuilder.AppendLine("}");
+                stringBuilder.AppendLine("#endif");
+
+                var dirPath = Application.dataPath + EzyRPC_Parent_Path;
+                if (!System.IO.Directory.Exists(dirPath)) System.IO.Directory.CreateDirectory(dirPath);
 
                 // generate this file
-                var path = Application.dataPath + "/Ezy Unity Networking/Scripts/Constant/EzyRPCCommand.cs";
+                var path = Application.dataPath + EzyRPC_Path;
                 if (System.IO.File.Exists(path)) System.IO.File.Delete(path);
 
                 System.IO.File.WriteAllText(path, stringBuilder.ToString());

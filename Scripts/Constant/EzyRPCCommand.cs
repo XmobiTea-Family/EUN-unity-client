@@ -1,5 +1,6 @@
-// dont modifier this, this file will auto generate
+#if !EUN
 public enum EzyRPCCommand
 {
-    None = 0,
+    None = 0
 }
+#endif

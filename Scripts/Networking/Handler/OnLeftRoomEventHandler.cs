@@ -12,12 +12,14 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
+#if EUN
             peer.room = null;
 
             foreach (var behaviour in peer.ezyManagerBehaviourLst)
             {
                 if (behaviour) behaviour.OnEzyLeftRoom();
             }
+#endif
         }
     }
 }

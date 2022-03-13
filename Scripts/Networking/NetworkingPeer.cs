@@ -1,11 +1,13 @@
 ﻿namespace EUN.Networking
 {
+#if EUN
     using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.factory;
 
     using EUN.Bride;
     using EUN.Bride.Socket;
     using EUN.Bride.WebSocket;
+#endif
     using EUN.Common;
     using EUN.Constant;
 
@@ -17,8 +19,6 @@
 
     public partial class NetworkingPeer : MonoBehaviour
     {
-        public const string Version = "1.0.0";
-
         public struct OperationPending
         {
             private OperationRequest operationRequest;
@@ -40,8 +40,10 @@
                 return onOperationResponse;
             }
         }
-
+#if EUN
         private IEzySocketObject ezySocketObject;
+#endif
+
         private int requestId;
 
         private Queue<OperationPending> operationPendingQueue;
@@ -62,6 +64,7 @@
 
         internal void InitPeer()
         {
+#if EUN
             serverTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
             if (operationWaitingResponseDic == null) operationWaitingResponseDic = new Dictionary<int, OperationPending>();
@@ -84,10 +87,12 @@
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             SubscriberServerEventHandler();
+#endif
         }
 
         private void InitSendRate()
         {
+#if EUN
             var ezyServerSettings = EzyNetwork.ezyServerSettings;
             if (ezyServerSettings == null) throw new NullReferenceException("Null Ezy Server Settings, please find it now");
 
@@ -96,10 +101,12 @@
             var sendRateVoiceChat = ezyServerSettings.sendRateVoiceChat;
 
             SetSendRate(sendRate, sendRateSynchronizationData, sendRateVoiceChat);
+#endif
         }
 
         private void InitEzySocketObject()
         {
+#if EUN
             var ezyServerSettings = EzyNetwork.ezyServerSettings;
 
             if (ezyServerSettings == null) throw new NullReferenceException("Where is Ezy Server Settings");
@@ -114,10 +121,12 @@
             var appName = ezyServerSettings.appName;
 
             ezySocketObject.Init(zoneName, appName);
+#endif
         }
 
         private void SubscriberHandler()
         {
+#if EUN
             ezySocketObject.SubscriberConnectionSuccessHandler(OnConnectionSuccessHandler);
             ezySocketObject.SubscriberConnectionFailureHandler(OnConnectionFailureHandler);
             ezySocketObject.SubscriberDisconnectionHandler(OnDisconnectionHandler);
@@ -125,8 +134,9 @@
             ezySocketObject.SubscriberAppAccessHandler(OnAppAccessHandler);
             ezySocketObject.SubscriberResponseHandler(OnResponseHandler);
             ezySocketObject.SubscriberEventHandler(OnEventHandler);
+#endif
         }
-
+#if EUN
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             StartCoroutine(IEOnSceneLoaded(scene, loadSceneMode));
@@ -157,11 +167,13 @@
                 }
             }
         }
-
+#endif
+#if EUN
         float checkTimeoutOperationPending = 0;
-
+#endif
         internal void Enqueue(OperationRequest operationRequest, Action<OperationResponse> onOperationResponse)
         {
+#if EUN
             var operationPending = new OperationPending(operationRequest, onOperationResponse);
 
             if (operationRequest.IsSynchronizationRequest())
@@ -170,10 +182,12 @@
                 else syncOperationPendingQueue.Enqueue(operationPending);
             }
             else operationPendingQueue.Enqueue(operationPending);
+#endif
         }
 
         private void Send(OperationPending operationPending)
         {
+#if EUN
             var onOperationResponse = operationPending.GetCallback();
             var operationRequest = operationPending.GetOperationRequest();
 
@@ -200,10 +214,12 @@
 
             if (operationRequest.IsSynchronizationRequest()) Debug.Log("[SEND SYNC] " + operationRequest.ToString());
             else Debug.Log("[SEND] " + operationRequest.ToString());
+#endif
         }
 
         private void Update()
         {
+#if EUN
             serverTimeStamp += Time.deltaTime * 1000;
 
             if (checkTimeoutOperationPending < Time.time)
@@ -306,6 +322,7 @@
                     }
                 }
             }  
+#endif
         }
     }
 }

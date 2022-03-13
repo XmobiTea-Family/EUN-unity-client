@@ -13,6 +13,7 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
+#if EUN
             var parameters = operationEvent.GetParameters();
             var room = new Room(parameters.GetEzyArray(ParameterCode.Data));
             peer.room = room;
@@ -25,6 +26,7 @@
             var roomPlayer = room.RoomPlayerLst.Find(x => x.UserId.Equals(EzyNetwork.UserId));
 
             peer.playerId = roomPlayer == null ? -1 : roomPlayer.PlayerId;
+#endif
         }
     }
 }

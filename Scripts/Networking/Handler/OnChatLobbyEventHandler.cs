@@ -13,6 +13,7 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
+#if EUN
             var parameters = operationEvent.GetParameters();
             var message = new ChatMessage(parameters.GetEzyArray(ParameterCode.Message));
 
@@ -20,6 +21,7 @@
             {
                 if (behaviour) behaviour.OnEzyReceiveChatLobby(message);
             }
+#endif
         }
     }
 }

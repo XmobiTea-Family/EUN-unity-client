@@ -12,6 +12,7 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
+#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
@@ -19,6 +20,7 @@
             var objectId = ezyArray.get<int>(0);
 
             if (peer.room.GameObjectDic.ContainsKey(objectId)) peer.room.GameObjectDic.Remove(objectId);
+#endif
         }
     }
 }

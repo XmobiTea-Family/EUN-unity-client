@@ -35,5 +35,8 @@
         public const int EunRPCCommand = 29;
         public const int RpcData = 30;
         public const int EzyTargets = 31;
+        public const int TargetPlayerIds = 32;
+
+        public const int CustomGameObjectProperties = 33;
     }
 }

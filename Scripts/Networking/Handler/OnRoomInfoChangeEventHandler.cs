@@ -12,6 +12,7 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
+#if EUN
             if (peer.room == null) return;
             var currentRoom = peer.room;
 
@@ -128,6 +129,7 @@
                     if (behaviour) behaviour.OnEzyRoomInfoChange(parameters);
                 }
             }
+#endif
         }
     }
 }

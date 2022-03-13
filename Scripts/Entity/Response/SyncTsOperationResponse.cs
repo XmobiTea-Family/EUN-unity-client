@@ -9,12 +9,14 @@
 
         public SyncTsOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
+#if EUN
             if (!HasError)
             {
                 var parameters = operationResponse.GetParameters();
 
                 ServerTimeStamp = parameters.GetLong(ParameterCode.Ts);
             }
+#endif
         }
     }
 }

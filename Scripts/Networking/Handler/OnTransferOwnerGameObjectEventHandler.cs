@@ -12,6 +12,7 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
+#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
@@ -22,8 +23,32 @@
 
             if (peer.room.GameObjectDic.ContainsKey(objectId))
             {
-                peer.room.GameObjectDic[objectId].OwnerId = newOwnerId;
+                var roomGameObject = peer.room.GameObjectDic[objectId];
+
+                roomGameObject.OwnerId = newOwnerId;
+
+                var newOwner = peer.room.RoomPlayerLst.Find(x => x.PlayerId == newOwnerId);
+
+                foreach (var view in peer.ezyViewLst)
+                {
+                    if (view)
+                    {
+                        if (objectId == view.RoomGameObject.ObjectId)
+                        {
+                            foreach (var behaviour in view.ezyBehaviourLst)
+                            {
+                                if (behaviour) behaviour.OnEzyTransferOwnerGameObject(newOwner);
+                            }
+                        }
+                    }
+                }
+
+                foreach (var behaviour in peer.ezyManagerBehaviourLst)
+                {
+                    if (behaviour) behaviour.OnEzyTransferOwnerGameObject(roomGameObject, newOwner);
+                }
             }
+#endif
         }
     }
 }

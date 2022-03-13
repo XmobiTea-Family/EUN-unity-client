@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class EzyRPC : Attribute
+    public class EzyRPCAttribute : Attribute
     {
 
     }

@@ -1,7 +1,8 @@
 ﻿namespace EUN.Entity
 {
+#if EUN
     using com.tvd12.ezyfoxserver.client.entity;
-
+#endif
     using EUN.Common;
 
     using System.Collections.Generic;
@@ -26,6 +27,7 @@
             return new List<RoomPlayer>(RoomPlayerLst).ToArray();
         }
 
+#if EUN
         public Room(EzyArray ezyArray)
         {
             this.RoomPlayerLst = new List<RoomPlayer>();
@@ -69,5 +71,6 @@
             this.TsCreate = ezyArray.get<long>(9);
             this.Ttl = ezyArray.get<int>(10);
         }
+#endif
     }
 }

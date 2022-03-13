@@ -3,6 +3,8 @@ namespace EUN.Config.Editor
 {
     using UnityEditor;
 
+    using UnityEngine;
+
     public class AboutEUNEditorWindow : EditorWindow
     {
         private void OnEnable()
@@ -12,7 +14,7 @@ namespace EUN.Config.Editor
 
         void OnGUI()
         {
-            
+            GUILayout.Label("Copyright XmobiTea");
         }
     }
 }

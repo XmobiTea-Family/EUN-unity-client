@@ -1,4 +1,5 @@
-﻿namespace EUN.Logger
+﻿#if EUN
+namespace EUN.Logger
 {
     using com.tvd12.ezyfoxserver.client.logger;
 
@@ -65,3 +66,4 @@
         }
     }
 }
+#endif

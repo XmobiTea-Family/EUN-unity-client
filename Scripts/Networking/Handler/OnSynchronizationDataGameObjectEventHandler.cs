@@ -12,6 +12,7 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
+#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
@@ -36,6 +37,7 @@
                     }
                 }
             }
+#endif
         }
     }
 }

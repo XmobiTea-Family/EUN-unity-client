@@ -4,6 +4,7 @@
 
     public class EzyClientJsBride
     {
+#if EUN
         [DllImport("__Internal")]
         public static extern void EzyLibrary();
 
@@ -15,5 +16,6 @@
 
         [DllImport("__Internal")]
         public static extern bool EzySend(string requestData);
+#endif
     }
 }

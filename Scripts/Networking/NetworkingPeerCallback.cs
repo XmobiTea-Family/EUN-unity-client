@@ -1,6 +1,9 @@
 ﻿namespace EUN.Networking
 {
+#if EUN
     using com.tvd12.ezyfoxserver.client.entity;
+    using com.tvd12.ezyfoxserver.client.constant;
+#endif
     using EUN.Common;
 
     using System;
@@ -8,7 +11,6 @@
 
     using UnityEngine;
     using System.Linq;
-    using com.tvd12.ezyfoxserver.client.constant;
 
     public partial class NetworkingPeer
     {
@@ -17,6 +19,7 @@
         internal List<EzyView> ezyViewLst;
         internal List<EzyManagerBehaviour> ezyManagerBehaviourLst;
 
+#if EUN
         void SubscriberServerEventHandler()
         {
             var type = typeof(IServerEventHandler);
@@ -133,6 +136,7 @@
                 if (behaviour) behaviour.OnEzyConnected();
             }
         }
+#endif
 
         internal void SubscriberEzyView(EzyView view)
         {

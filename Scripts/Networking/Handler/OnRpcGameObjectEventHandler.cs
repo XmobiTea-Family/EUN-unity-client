@@ -1,6 +1,8 @@
 ﻿namespace EUN.Networking
 {
+#if EUN
     using com.tvd12.ezyfoxserver.client.entity;
+#endif
 
     using EUN.Common;
     using EUN.Constant;
@@ -14,6 +16,7 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
+#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
@@ -39,6 +42,7 @@
                     }
                 }
             }
+#endif
         }
     }
 }

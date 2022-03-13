@@ -1,4 +1,5 @@
-﻿namespace EUN.Bride.WebSocket
+﻿#if EUN
+namespace EUN.Bride.WebSocket
 {
     using com.tvd12.ezyfoxserver.client.constant;
     using com.tvd12.ezyfoxserver.client.entity;
@@ -114,3 +115,4 @@
         }
     }
 }
+#endif

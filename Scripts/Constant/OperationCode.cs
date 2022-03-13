@@ -27,5 +27,8 @@
         SynchronizationDataGameObjectRoom = 20,
         TransferGameObjectRoom = 21,
         VoiceChat = 22,
+        RpcGameObjectRoomTo = 23,
+
+        ChangeGameObjectCustomProperties = 24,
     }
 }

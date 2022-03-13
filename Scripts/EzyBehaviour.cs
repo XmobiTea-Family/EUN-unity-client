@@ -1,6 +1,8 @@
 ﻿namespace EUN
 {
+#if EUN
     using com.tvd12.ezyfoxserver.client.entity;
+#endif
 
     using EUN.Common;
     using EUN.Entity;
@@ -17,14 +19,18 @@
 
         protected virtual void Awake()
         {
+#if EUN
             if (ezyView == null) ezyView = GetComponent<EzyView>();
+#endif
         }
 
         private List<MethodInfo> methodInfoLst;
 
         protected virtual void Start()
         {
+#if EUN
             if (ezyView != null) ezyView.SubscriberEzyBehaviour(this);
+#endif
         }
 
         protected virtual void OnDisable()
@@ -37,9 +43,11 @@
             if (ezyView != null) ezyView.UnSubscriberEzyBehaviour(this);
         }
 
+#if EUN
         public void EzyRPC(int eunRPCCommand, EzyArray rpcData)
         {
-            if (methodInfoLst == null) methodInfoLst = GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EzyRPC), true).Length > 0).ToList();
+
+            if (methodInfoLst == null) methodInfoLst = GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EzyRPCAttribute), true).Length > 0).ToList();
 
             var ezyRPCMethodName = ((EzyRPCCommand)eunRPCCommand).ToString();
 
@@ -71,6 +79,10 @@
                                     if (parameterInfo.ParameterType == typeof(sbyte))
                                     {
                                         tempParameters[i] = rpcData.get<sbyte>(i);
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(bool))
+                                    {
+                                        tempParameters[i] = rpcData.get<bool>(i);
                                     }
                                     else if (parameterInfo.ParameterType == typeof(byte))
                                     {
@@ -124,33 +136,70 @@
                                     {
                                         tempParameters[i] = rpcData.get<EzyObject>(i);
                                     }
+                                    else if (parameterInfo.ParameterType == typeof(bool[]))
+                                    {
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<bool>().ToArray();
+                                    }
                                     else if (parameterInfo.ParameterType == typeof(byte[]))
                                     {
-                                        tempParameters[i] = rpcData.get<byte[]>(i);
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<byte>().ToArray();
                                     }
                                     else if (parameterInfo.ParameterType == typeof(int[]))
                                     {
-                                        tempParameters[i] = rpcData.get<int[]>(i);
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<int>().ToArray();
                                     }
                                     else if (parameterInfo.ParameterType == typeof(short[]))
                                     {
-                                        tempParameters[i] = rpcData.get<short[]>(i);
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<short>().ToArray();
                                     }
                                     else if (parameterInfo.ParameterType == typeof(long[]))
                                     {
-                                        tempParameters[i] = rpcData.get<long[]>(i);
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<long>().ToArray();
                                     }
                                     else if (parameterInfo.ParameterType == typeof(float[]))
                                     {
-                                        tempParameters[i] = rpcData.get<float[]>(i);
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<float>().ToArray();
                                     }
                                     else if (parameterInfo.ParameterType == typeof(double[]))
                                     {
-                                        tempParameters[i] = rpcData.get<double[]>(i);
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<double>().ToArray();
                                     }
                                     else if (parameterInfo.ParameterType == typeof(string[]))
                                     {
-                                        tempParameters[i] = rpcData.get<string[]>(i);
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<string>().ToArray();
+                                    }
+
+                                    else if (parameterInfo.ParameterType == typeof(List<bool>))
+                                    {
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<bool>();
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(List<byte>))
+                                    {
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<byte>();
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(List<int>))
+                                    {
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<int>();
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(List<short>))
+                                    {
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<short>();
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(List<long>))
+                                    {
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<long>();
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(List<float>))
+                                    {
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<float>();
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(List<double>))
+                                    {
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<double>();
+                                    }
+                                    else if (parameterInfo.ParameterType == typeof(List<string>))
+                                    {
+                                        tempParameters[i] = rpcData.get<EzyArray>(i).toList<string>();
                                     }
                                     else continue;
                                 }
@@ -176,12 +225,15 @@
             {
                 Debug.LogError("Method " + ezyRPCMethodName + " with parameters " + parameters + " not found");
             }
-        }
+    }
+#endif
 
         [EzyRPC]
         private void None() { }
 
         public virtual void OnEzyCustomPlayerPropertiesChange(RoomPlayer player, CustomHashtable customPropertiesChange) { }
+
+        public virtual void OnEzyCustomGameObjectPropertiesChange(CustomHashtable customPropertiesChange) { }
 
         public virtual void OnEzyCustomRoomPropertiesChange(CustomHashtable customPropertiesChange) { }
 
@@ -200,5 +252,7 @@
         public virtual void OnEzySynchronization(object synchronizationData) { }
 
         public virtual object GetSynchronizationData() { return null; }
+
+        public virtual void OnEzyTransferOwnerGameObject(RoomPlayer newOwner) { }
     }
 }

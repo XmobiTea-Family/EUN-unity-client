@@ -1,4 +1,5 @@
-﻿namespace EUN.Bride
+﻿#if EUN
+namespace EUN.Bride
 {
     using UnityEngine;
 
@@ -88,3 +89,4 @@
         public virtual void Send(EzyObject request, bool reliable = true) { }
     }
 }
+#endif

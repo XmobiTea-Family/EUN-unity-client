@@ -1,4 +1,5 @@
-﻿namespace EUN.Bride
+﻿#if EUN
+namespace EUN.Bride
 {
     using com.tvd12.ezyfoxserver.client.constant;
     using com.tvd12.ezyfoxserver.client.entity;
@@ -21,3 +22,4 @@
         void SubscriberEventHandler(Action<EzyArray> _onEvent);
     }
 }
+#endif
