@@ -75,7 +75,7 @@
 
             return networkStats.getReadBytes();
 #else
-            return base.GetRecvByte();
+            return base.GetTotalRecvBytes();
 #endif
         }
 
@@ -86,7 +86,7 @@
 
             return networkStats.getWrittenBytes();
 #else
-            return base.GetSendBytes();
+            return base.GetTotalSendBytes();
 #endif
         }
 
@@ -97,7 +97,7 @@
 
             return networkStats.getReadPackets();
 #else
-            return base.GetRecvByte();
+            return base.GetTotalRecvPackets();
 #endif
         }
 
@@ -108,7 +108,7 @@
 
             return networkStats.getWrittenPackets();
 #else
-            return base.GetRecvByte();
+            return base.GetTotalSendPackets();
 #endif
         }
 
