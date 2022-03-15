@@ -6,7 +6,7 @@
 
     using System.Collections.Generic;
 
-    public class CustomData
+    public class CustomData : ICustomData
     {
         protected object CreateUseDataFromOriginData(object value)
         {
@@ -69,7 +69,7 @@
         {
             if (value == null) return null;
 
-            if (value is CustomData customData)
+            if (value is ICustomData customData)
             {
                 return customData.ToEzyData();
             }

@@ -100,8 +100,6 @@
             this.operationCode = operationCode;
             this.reliable = reliable;
             this.timeOut = timeout;
-
-            this.parameters = new CustomHashtable();
         }
 
         public override string ToString()

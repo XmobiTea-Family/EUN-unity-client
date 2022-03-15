@@ -28,8 +28,7 @@
         internal static string appName;
         internal static string username;
         internal static string password;
-        internal static CustomData data;
-
+        internal static ICustomData data;
 
         void Start()
         {
@@ -43,7 +42,7 @@
 #endif
         }
 
-        public virtual void Connect(string username, string password, CustomData data, string host, int port, int udpPort)
+        public virtual void Connect(string username, string password, ICustomData data, string host, int port, int udpPort)
         {
             EzySocketObject.username = username;
             EzySocketObject.password = password;
@@ -92,7 +91,35 @@
         }
 
 #if EUN
-        public virtual void Send(EzyObject request, bool reliable = true) { }
+        public virtual void Send(EzyObject request, bool reliable = true)
+        {
+
+        }
 #endif
+
+        public virtual int GetPing()
+        {
+            return -500;
+        }
+
+        public virtual long GetTotalSendBytes()
+        {
+            return 0;
+        }
+
+        public virtual long GetTotalRecvBytes()
+        {
+            return 0;
+        }
+
+        public virtual long GetTotalSendPackets()
+        {
+            return 0;
+        }
+
+        public virtual long GetTotalRecvPackets()
+        {
+            return 0;
+        }
     }
 }

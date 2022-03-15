@@ -3,7 +3,7 @@
     using EUN.Common;
     using EUN.Constant;
 
-    public class CustomOperationResponse
+    public abstract class CustomOperationResponse
     {
         public ReturnCode ReturnCode { get; private set; }
         public string DebugMessage { get; private set; }

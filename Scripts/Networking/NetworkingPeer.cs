@@ -236,9 +236,9 @@
 
                     if (customArrayLst.Count == 0)
                     {
-                        foreach (var ezyData in customArrayLst)
+                        foreach (var customArray in customArrayLst)
                         {
-                            OnResponseHandler(ezyData);
+                            OnResponseHandler(customArray);
                         }
                     }
                 }

@@ -21,7 +21,7 @@ namespace EUN.Config.Editor
         private const string EzyRPC_Path = EzyRPC_Parent_Path + "/EzyRPCCommand.cs";
         private const string EzyRPC_Disable_Path = "/EUN-unity-client/Scripts/Constant/EzyRPCCommand.cs";
         private const string EzyServerSettings_Path = "Assets/EUN-unity-client-custom/Resources";
-        private const string EzyfoxServerCsharpClientLink = "https://github.com/youngmonkeys/ezyfox-server-csharp-client.git";
+        private const string EzyfoxServerCsharpClientLink = "https://github.com/XmobiTea-Family/ezyfox-server-csharp-client.git";
 
         Vector2 scrollPos = new Vector2(0, 0);
 

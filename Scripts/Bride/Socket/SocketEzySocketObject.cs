@@ -53,7 +53,7 @@
 #endif
         }
 
-        public override void Connect(string username, string password, CustomData data, string host, int port, int udpPort)
+        public override void Connect(string username, string password, ICustomData data, string host, int port, int udpPort)
         {
             base.Connect(username, password, data, host, port, udpPort);
 
@@ -63,14 +63,65 @@
 #endif
         }
 
+        public override int GetPing()
+        {
+            return base.GetPing();
+        }
+
+        public override long GetTotalRecvBytes()
+        {
+#if EUN
+            var networkStats = socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
+
+            return networkStats.getReadBytes();
+#else
+            return base.GetRecvByte();
+#endif
+        }
+
+        public override long GetTotalSendBytes()
+        {
+#if EUN
+            var networkStats = socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
+
+            return networkStats.getWrittenBytes();
+#else
+            return base.GetSendBytes();
+#endif
+        }
+
+        public override long GetTotalRecvPackets()
+        {
+#if EUN
+            var networkStats = socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
+
+            return networkStats.getReadPackets();
+#else
+            return base.GetRecvByte();
+#endif
+        }
+
+        public override long GetTotalSendPackets()
+        {
+#if EUN
+            var networkStats = socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
+
+            return networkStats.getWrittenPackets();
+#else
+            return base.GetRecvByte();
+#endif
+        }
+
 #if EUN
         public override void Send(EzyObject request, bool reliable = true)
         {
+            base.Send(request, reliable);
+
             var app = socketClient.getApp();
             if (app != null)
             {
-                if (reliable) app.send(Commands.RequestCmd, request);
-                else app.udpSend(Commands.RequestCmd, request);
+                if (!reliable && socketClient.isUdpConnected()) app.udpSend(Commands.RequestCmd, request);
+                else app.send(Commands.RequestCmd, request);
             }
             else
             {
@@ -80,11 +131,6 @@
                 customArray.Add((int)ReturnCode.AppNullRequest);
                 customArray.Add((string)null);
                 if (data.size() > 2) customArray.Add(data.get<int>(2));
-
-                //var ezyData = EzyEntityFactory.newArray();
-                //ezyData.add((int)ReturnCode.AppNullRequest);
-                //ezyData.add((string)null);
-                //if (data.size() > 2) ezyData.add(data.get<int>(2));
 
                 onResponse?.Invoke(customArray);
             }

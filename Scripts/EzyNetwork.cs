@@ -19,9 +19,12 @@
 
         private static NetworkingPeer peer;
 
+        private static NetworkingPeerStatistics peerStatistics;
+
         static EzyNetwork()
         {
             InitEzySocketObject();
+            InitEzySocketStatisticsObject();
         }
 
         private static void InitEzySocketObject()
@@ -32,6 +35,11 @@
             GameObject.DontDestroyOnLoad(peer.gameObject);
 
             peer.InitPeer();
+        }
+
+        private static void InitEzySocketStatisticsObject()
+        {
+            peerStatistics = new NetworkingPeerStatistics(peer);
         }
 
         public static void Connect(string userId, CustomArray data)
@@ -45,6 +53,8 @@
         {
             peer.Enqueue(request, onResponse);
         }
+
+        public static NetworkingPeerStatistics GetPeerStatistics() { return peerStatistics; }
 
         internal static void SubscriberEzyBehaviour(EzyManagerBehaviour behaviour)
         {

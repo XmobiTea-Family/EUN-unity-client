@@ -34,7 +34,7 @@
 #endif
         }
 
-        public override void Connect(string username, string password, CustomData data, string host, int port, int udpPort)
+        public override void Connect(string username, string password, ICustomData data, string host, int port, int udpPort)
         {
             base.Connect(username, password, data, host, port, udpPort);
 #if EUN
@@ -47,6 +47,8 @@
 #if EUN
         public override void Send(EzyObject request, bool reliable = true)
         {
+            base.Send(request, reliable);
+
             if (EzyClientJsBride.EzySend(Serializer.Serialize(request.toDict<object, object>())))
             {
                 //if (reliable) app.send(Commands.RequestCmd, request);
@@ -60,15 +62,26 @@
                 customArray.Add((int)ReturnCode.AppNullRequest);
                 customArray.Add((string)null);
                 if (data.size() > 2) customArray.Add(data.get<int>(2));
-                //var ezyData = EzyEntityFactory.newArray();
-                //ezyData.add((int)ReturnCode.AppNullRequest);
-                //ezyData.add((string)null);
-                //if (data.size() > 2) ezyData.add(data.get<int>(2));
 
                 onResponse?.Invoke(customArray);
             }
         }
 #endif
+
+        public override int GetPing()
+        {
+            return base.GetPing();
+        }
+
+        public override long GetTotalRecvBytes()
+        {
+            return base.GetTotalRecvBytes();
+        }
+
+        public override long GetTotalSendBytes()
+        {
+            return base.GetTotalSendBytes();
+        }
 
         private void handleOnConnectionSuccess()
         {
