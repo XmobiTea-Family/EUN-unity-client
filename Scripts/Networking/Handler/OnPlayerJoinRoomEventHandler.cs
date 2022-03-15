@@ -16,7 +16,7 @@
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var roomPlayer = new RoomPlayer(parameters.GetCustomArray(ParameterCode.Data));
+            var roomPlayer = new RoomPlayer(parameters.GetEUNArray(ParameterCode.Data));
 
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(roomPlayer.UserId));
             if (thisRoomPlayer == null)
@@ -24,20 +24,20 @@
                 thisRoomPlayer = roomPlayer;
                 peer.room.RoomPlayerLst.Add(thisRoomPlayer);
 
-                foreach (var view in peer.ezyViewLst)
+                foreach (var view in peer.eunViewLst)
                 {
                     if (view)
                     {
-                        foreach (var behaviour in view.ezyBehaviourLst)
+                        foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEzyOtherPlayerJoinRoom(thisRoomPlayer);
+                            if (behaviour) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.ezyManagerBehaviourLst)
+                foreach (var behaviour in peer.eunManagerBehaviourLst)
                 {
-                    if (behaviour) behaviour.OnEzyOtherPlayerJoinRoom(thisRoomPlayer);
+                    if (behaviour) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
                 }
             }
         }

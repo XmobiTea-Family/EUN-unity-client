@@ -7,19 +7,19 @@
     public class OperationEvent
     {
         private int eventCode;
-        private CustomHashtable parameters;
+        private EUNHashtable parameters;
 
         public EventCode GetEventCode()
         {
             return (EventCode)eventCode;
         }
 
-        public CustomHashtable GetParameters()
+        public EUNHashtable GetParameters()
         {
             return parameters;
         }
 
-        public OperationEvent(int eventCode, CustomHashtable parameters)
+        public OperationEvent(int eventCode, EUNHashtable parameters)
         {
             this.eventCode = eventCode;
             this.parameters = parameters;

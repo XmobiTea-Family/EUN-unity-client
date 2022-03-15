@@ -8,7 +8,7 @@
     using System.Collections.Generic;
     using XmobiTea.EUN.Constant;
 
-    public static partial class EzyNetwork
+    public static partial class EUNNetwork
     {
         public static bool IsConnected => peer.isConnected;
 
@@ -57,11 +57,11 @@
                     if (subscriberChat) peer.SubscriberChatLobby(subscriberChat, null);
 
                     peer.lobbyId = lobbyId;
-                    var ezyManagerBehaviourLst = peer.ezyManagerBehaviourLst;
+                    var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
 
-                    foreach (var behaviour in ezyManagerBehaviourLst)
+                    foreach (var behaviour in eunManagerBehaviourLst)
                     {
-                        if (behaviour) behaviour.OnEzyJoinLobby();
+                        if (behaviour) behaviour.OnEUNJoinLobby();
                     }
                 }
 
@@ -80,11 +80,11 @@
                 if (response.Success)
                 {
                     peer.lobbyId = -1;
-                    var ezyManagerBehaviourLst = peer.ezyManagerBehaviourLst;
+                    var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
 
-                    foreach (var behaviour in ezyManagerBehaviourLst)
+                    foreach (var behaviour in eunManagerBehaviourLst)
                     {
-                        if (behaviour) behaviour.OnEzyLeftLobby();
+                        if (behaviour) behaviour.OnEUNLeftLobby();
                     }
                 }
 
@@ -122,7 +122,7 @@
             peer.CreateRoom(roomOption, onResponse);
         }
 
-        public static void JoinOrCreateRoom(int targetExpectedCount, CustomHashtable expectedProperties, RoomOption roomOption, Action<JoinOrCreateRoomOperationResponse> onResponse = null)
+        public static void JoinOrCreateRoom(int targetExpectedCount, EUNHashtable expectedProperties, RoomOption roomOption, Action<JoinOrCreateRoomOperationResponse> onResponse = null)
         {
             peer.JoinOrCreateRoom(targetExpectedCount, expectedProperties, roomOption, onResponse);
         }
@@ -142,22 +142,22 @@
             peer.ChangeLeaderClient(leaderClientPlayerId, onResponse);
         }
 
-        public static void ChangePlayerCustomProperties(int playerId, CustomHashtable customPlayerProperties, Action<ChangePlayerCustomPropertiesOperationResponse> onResponse = null)
+        public static void ChangePlayerCustomProperties(int playerId, EUNHashtable customPlayerProperties, Action<ChangePlayerCustomPropertiesOperationResponse> onResponse = null)
         {
             peer.ChangePlayerCustomProperties(playerId, customPlayerProperties, onResponse);
         }
 
-        public static void ChangeRoomInfo(CustomHashtable customHashtable, Action<ChangeRoomInfoOperationResponse> onResponse = null)
+        public static void ChangeRoomInfo(EUNHashtable eunHashtable, Action<ChangeRoomInfoOperationResponse> onResponse = null)
         {
-            peer.ChangeRoomInfo(customHashtable, onResponse);
+            peer.ChangeRoomInfo(eunHashtable, onResponse);
         }
 
-        public static void CreateGameObjectRoom(string prefabPath, object initializeData, object synchronizationData, CustomHashtable customGameObjectProperties, Action<CreateGameObjectRoomOperationResponse> onResponse = null)
+        public static void CreateGameObjectRoom(string prefabPath, object initializeData, object synchronizationData, EUNHashtable customGameObjectProperties, Action<CreateGameObjectRoomOperationResponse> onResponse = null)
         {
             peer.CreateGameObjectRoom(prefabPath, initializeData, synchronizationData, customGameObjectProperties, onResponse);
         }
 
-        public static void ChangeGameObjectCustomProperties(int objectId, CustomHashtable customPlayerProperties, Action<ChangeGameObjectRoomOperationResponse> onResponse = null)
+        public static void ChangeGameObjectCustomProperties(int objectId, EUNHashtable customPlayerProperties, Action<ChangeGameObjectRoomOperationResponse> onResponse = null)
         {
             peer.ChangeGameObjectCustomProperties(objectId, customPlayerProperties, onResponse);
         }
@@ -172,44 +172,44 @@
             peer.TransferGameObjectRoom(objectId, ownerId, onResponse);
         }
 
-        public static void RpcGameObjectRoom(EzyTargets targets, int objectId, int eunRPCCommand, object rpcData)
+        public static void RpcGameObjectRoom(EUNTargets targets, int objectId, int eunRPCCommand, object rpcData)
         {
-            var rpcDataArray = new CustomArray.Builder().AddAll(rpcData as object[]).Build();
+            var rpcDataArray = new EUNArray.Builder().AddAll(rpcData as object[]).Build();
             
-            if (targets == EzyTargets.OnlyMe || targets == EzyTargets.Others || (targets == EzyTargets.LeaderClient && EzyNetwork.IsLeaderClient))
+            if (targets == EUNTargets.OnlyMe || targets == EUNTargets.Others || (targets == EUNTargets.LeaderClient && EUNNetwork.IsLeaderClient))
             {
-                if (peer.ezyViewDic.ContainsKey(objectId))
+                if (peer.eunViewDic.ContainsKey(objectId))
                 {
-                    var view = peer.ezyViewDic[objectId];
+                    var view = peer.eunViewDic[objectId];
                     if (view)
                     {
-                        foreach (var behaviour in view.ezyBehaviourLst)
+                        foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.EzyRPC(eunRPCCommand, rpcDataArray);
+                            if (behaviour) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                         }
                     }
                 }
             }
 
-            if (EzyNetwork.RoomPlayers.Length > 1)
+            if (EUNNetwork.RoomPlayers.Length > 1)
             {
-                if (targets != EzyTargets.OnlyMe)
+                if (targets != EUNTargets.OnlyMe)
                 {
                     peer.RpcGameObjectRoom(targets, objectId, eunRPCCommand, rpcData);
                 }
             }
             else
             {
-                if (targets == EzyTargets.All)
+                if (targets == EUNTargets.All)
                 {
-                    if (peer.ezyViewDic.ContainsKey(objectId))
+                    if (peer.eunViewDic.ContainsKey(objectId))
                     {
-                        var view = peer.ezyViewDic[objectId];
+                        var view = peer.eunViewDic[objectId];
                         if (view)
                         {
-                            foreach (var behaviour in view.ezyBehaviourLst)
+                            foreach (var behaviour in view.eunBehaviourLst)
                             {
-                                if (behaviour) behaviour.EzyRPC(eunRPCCommand, rpcDataArray);
+                                if (behaviour) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                             }
                         }
                     }

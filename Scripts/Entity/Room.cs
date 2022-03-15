@@ -11,7 +11,7 @@
         public int MaxPlayer { get; set; }
         public string Password { get; set; }
         public List<RoomPlayer> RoomPlayerLst { get; set; }
-        public CustomHashtable CustomRoomProperties { get; set; }
+        public EUNHashtable CustomRoomProperties { get; set; }
         public List<int> CustomRoomPropertiesForLobby { get; set; }
         public bool IsVisible { get; set; }
         public string LeaderClientUserId { get; set; }
@@ -24,48 +24,48 @@
             return new List<RoomPlayer>(RoomPlayerLst).ToArray();
         }
 
-        public Room(CustomArray customArray)
+        public Room(EUNArray eunArray)
         {
             this.RoomPlayerLst = new List<RoomPlayer>();
             {
-                var ezyArray1 = customArray.GetCustomArray(4);
-                for (var i = 0; i < ezyArray1.Count(); i++)
+                var eunArray1 = eunArray.GetEUNArray(4);
+                for (var i = 0; i < eunArray1.Count(); i++)
                 {
-                    RoomPlayerLst.Add(new RoomPlayer(ezyArray1.GetCustomArray(i)));
+                    RoomPlayerLst.Add(new RoomPlayer(eunArray1.GetEUNArray(i)));
                 }
             }
 
             this.CustomRoomPropertiesForLobby = new List<int>();
             {
-                var ezyArray1 = customArray.GetCustomArray(6);
-                for (var i = 0; i < ezyArray1.Count(); i++)
+                var eunArray1 = eunArray.GetEUNArray(6);
+                for (var i = 0; i < eunArray1.Count(); i++)
                 {
-                    CustomRoomPropertiesForLobby.Add(ezyArray1.GetInt(i));
+                    CustomRoomPropertiesForLobby.Add(eunArray1.GetInt(i));
                 }
             }
 
             this.GameObjectDic = new Dictionary<int, RoomGameObject>();
             {
-                var ezyArray1 = customArray.GetCustomArray(11);
-                for (var i = 0; i < ezyArray1.Count(); i++)
+                var eunArray1 = eunArray.GetEUNArray(11);
+                for (var i = 0; i < eunArray1.Count(); i++)
                 {
-                    var roomGameObject = new RoomGameObject(ezyArray1.GetCustomArray(i));
+                    var roomGameObject = new RoomGameObject(eunArray1.GetEUNArray(i));
 
                     this.GameObjectDic[roomGameObject.ObjectId] = roomGameObject;
                 }
             }
 
-            this.RoomId = customArray.GetInt(0);
-            this.IsOpen = customArray.GetBool(1);
-            this.MaxPlayer = customArray.GetInt(2);
-            this.Password = customArray.GetString(3);
+            this.RoomId = eunArray.GetInt(0);
+            this.IsOpen = eunArray.GetBool(1);
+            this.MaxPlayer = eunArray.GetInt(2);
+            this.Password = eunArray.GetString(3);
 
-            this.CustomRoomProperties = customArray.GetCustomHashtable(5);
+            this.CustomRoomProperties = eunArray.GetEUNHashtable(5);
 
-            this.IsVisible = customArray.GetBool(7);
-            this.LeaderClientUserId = customArray.GetString(8);
-            this.TsCreate = customArray.GetLong(9);
-            this.Ttl = customArray.GetInt(10);
+            this.IsVisible = eunArray.GetBool(7);
+            this.LeaderClientUserId = eunArray.GetString(8);
+            this.TsCreate = eunArray.GetLong(9);
+            this.Ttl = eunArray.GetInt(10);
         }
     }
 }

@@ -14,9 +14,9 @@
         {
             peer.room = null;
 
-            foreach (var behaviour in peer.ezyManagerBehaviourLst)
+            foreach (var behaviour in peer.eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyLeftRoom();
+                if (behaviour) behaviour.OnEUNLeftRoom();
             }
         }
     }

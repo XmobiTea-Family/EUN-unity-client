@@ -16,25 +16,25 @@
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var message = new ChatMessage(parameters.GetCustomArray(ParameterCode.Message));
+            var message = new ChatMessage(parameters.GetEUNArray(ParameterCode.Message));
 
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(message.SenderId));
             if (thisRoomPlayer != null)
             {
-                foreach (var view in peer.ezyViewLst)
+                foreach (var view in peer.eunViewLst)
                 {
                     if (view)
                     {
-                        foreach (var behaviour in view.ezyBehaviourLst)
+                        foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEzyReceiveChatRoom(message, thisRoomPlayer);
+                            if (behaviour) behaviour.OnEUNReceiveChatRoom(message, thisRoomPlayer);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.ezyManagerBehaviourLst)
+                foreach (var behaviour in peer.eunManagerBehaviourLst)
                 {
-                    if (behaviour) behaviour.OnEzyReceiveChatRoom(message, thisRoomPlayer);
+                    if (behaviour) behaviour.OnEUNReceiveChatRoom(message, thisRoomPlayer);
                 }
             }
         }

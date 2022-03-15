@@ -8,28 +8,28 @@
 
     using UnityEngine;
 
-    public static partial class EzyNetwork
+    public static partial class EUNNetwork
     {
         public const string Version = "1.0.0";
-        public static EzyServerSettings.Mode Mode => ezyServerSettings != null ? ezyServerSettings.mode : EzyServerSettings.Mode.OfflineMode;
+        public static EUNServerSettings.Mode Mode => eunServerSettings != null ? eunServerSettings.mode : EUNServerSettings.Mode.OfflineMode;
 
         public static string UserId { get; private set; }
 
-        public static EzyServerSettings ezyServerSettings { get; private set; }
+        public static EUNServerSettings eunServerSettings { get; private set; }
 
         private static NetworkingPeer peer;
 
         private static NetworkingPeerStatistics peerStatistics;
 
-        static EzyNetwork()
+        static EUNNetwork()
         {
-            InitEzySocketObject();
-            InitEzySocketStatisticsObject();
+            InitEUNSocketObject();
+            InitEUNSocketStatisticsObject();
         }
 
-        private static void InitEzySocketObject()
+        private static void InitEUNSocketObject()
         {
-            ezyServerSettings = Resources.Load(EzyServerSettings.ResourcesPath) as EzyServerSettings;
+            eunServerSettings = Resources.Load(EUNServerSettings.ResourcesPath) as EUNServerSettings;
 
             peer = new GameObject("EUN NetworkingPeer").AddComponent<NetworkingPeer>();
             GameObject.DontDestroyOnLoad(peer.gameObject);
@@ -37,12 +37,12 @@
             peer.InitPeer();
         }
 
-        private static void InitEzySocketStatisticsObject()
+        private static void InitEUNSocketStatisticsObject()
         {
             peerStatistics = new NetworkingPeerStatistics(peer);
         }
 
-        public static void Connect(string userId, CustomArray data)
+        public static void Connect(string userId, EUNArray data)
         {
             UserId = userId;
 
@@ -56,24 +56,24 @@
 
         public static NetworkingPeerStatistics GetPeerStatistics() { return peerStatistics; }
 
-        internal static void SubscriberEzyBehaviour(EzyManagerBehaviour behaviour)
+        internal static void SubscriberEUNBehaviour(EUNManagerBehaviour behaviour)
         {
-            peer.SubscriberEzyBehaviour(behaviour);
+            peer.SubscriberEUNBehaviour(behaviour);
         }
 
-        internal static void UnSubscriberEzyBehaviour(EzyManagerBehaviour behaviour)
+        internal static void UnSubscriberEUNBehaviour(EUNManagerBehaviour behaviour)
         {
-            peer.UnSubscriberEzyBehaviour(behaviour);
+            peer.UnSubscriberEUNBehaviour(behaviour);
         }
 
-        internal static void SubscriberEzyView(EzyView view)
+        internal static void SubscriberEUNView(EUNView view)
         {
-            peer.SubscriberEzyView(view);
+            peer.SubscriberEUNView(view);
         }
 
-        internal static void UnSubscriberEzyView(EzyView view)
+        internal static void UnSubscriberEUNView(EUNView view)
         {
-            peer.UnSubscriberEzyView(view);
+            peer.UnSubscriberEUNView(view);
         }
     }
 }

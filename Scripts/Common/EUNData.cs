@@ -6,7 +6,7 @@
 
     using System.Collections.Generic;
 
-    public class CustomData : ICustomData
+    public class EUNData : IEUNData
     {
         protected object CreateUseDataFromOriginData(object value)
         {
@@ -15,7 +15,7 @@
 #if EUN
             if (value is EzyArray ezyArray)
             {
-                var answer = new CustomArray();
+                var answer = new EUNArray();
 
                 for (var i = 0; i < ezyArray.size(); i++)
                 {
@@ -27,25 +27,25 @@
 
             if (value is EzyObject ezyObject)
             {
-                var answer = new CustomHashtable.Builder().AddAll(ezyObject.toDict<object, object>()).Build();
+                var answer = new EUNHashtable.Builder().AddAll(ezyObject.toDict<object, object>()).Build();
 
                 return answer;
             }
 #endif
 
-            if (value is CustomHashtable customHashtable)
+            if (value is EUNHashtable eunHashtable)
             {
-                return customHashtable;
+                return eunHashtable;
             }
 
-            if (value is CustomArray customArray)
+            if (value is EUNArray eunArray)
             {
-                return customArray;
+                return eunArray;
             }
 
             if (value is IList<object> list)
             {
-                var answer = new CustomArray();
+                var answer = new EUNArray();
 
                 for (var i = 0; i < list.Count; i++)
                 {
@@ -57,7 +57,7 @@
 
             if (value is IDictionary<object, object> dict)
             {
-                var answer = new CustomHashtable.Builder().AddAll(dict).Build();
+                var answer = new EUNHashtable.Builder().AddAll(dict).Build();
 
                 return answer;
             }
@@ -65,13 +65,13 @@
             return value;
         }
 
-        protected object CreateEzyDataFromUseData(object value)
+        protected object CreateEUNDataFromUseData(object value)
         {
             if (value == null) return null;
 
-            if (value is ICustomData customData)
+            if (value is IEUNData eunData)
             {
-                return customData.ToEzyData();
+                return eunData.ToEzyData();
             }
 
             return value;
@@ -140,7 +140,7 @@
 
         public T[] GetArray<T>(int k, T[] defaultValue = null)
         {
-            var value0 = GetCustomArray(k);
+            var value0 = GetEUNArray(k);
             if (value0 != null)
             {
                 return value0.ToArray<T>();
@@ -151,7 +151,7 @@
 
         public IList<T> GetList<T>(int k, IList<T> defaultValue = null)
         {
-            var value0 = GetCustomArray(k);
+            var value0 = GetEUNArray(k);
             if (value0 != null)
             {
                 return value0.ToList<T>();
@@ -160,12 +160,12 @@
             return defaultValue;
         }
 
-        public CustomArray GetCustomArray(int k, CustomArray defaultValue = null)
+        public EUNArray GetEUNArray(int k, EUNArray defaultValue = null)
         {
             return Get(k, defaultValue);
         }
 
-        public CustomHashtable GetCustomHashtable(int k, CustomHashtable defaultValue = null)
+        public EUNHashtable GetEUNHashtable(int k, EUNHashtable defaultValue = null)
         {
             return Get(k, defaultValue);
         }

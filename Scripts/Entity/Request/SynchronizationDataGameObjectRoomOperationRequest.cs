@@ -11,7 +11,7 @@
 
         public SynchronizationDataGameObjectRoomOperationRequest(int objectId, object synchronizationData, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.ObjectId, objectId)
                 .Build();
 

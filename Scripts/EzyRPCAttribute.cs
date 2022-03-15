@@ -2,7 +2,7 @@
 {
     using System;
 
-    public class EzyRPCAttribute : Attribute
+    public class EUNRPCAttribute : Attribute
     {
 
     }

@@ -11,7 +11,7 @@
         private int operationCode;
         private int returnCode;
         private string debugMessage;
-        private CustomHashtable parameters;
+        private EUNHashtable parameters;
 
         private int responseId;
 
@@ -27,7 +27,7 @@
             return (ReturnCode)returnCode;
         }
 
-        public CustomHashtable GetParameters()
+        public EUNHashtable GetParameters()
         {
             return parameters;
         }
@@ -44,7 +44,7 @@
 
         public bool HasError => GetReturnCode() != ReturnCode.Ok;
 
-        public OperationResponse(OperationRequest operationRequest, int returnCode, string debugMessage, CustomHashtable parameters)
+        public OperationResponse(OperationRequest operationRequest, int returnCode, string debugMessage, EUNHashtable parameters)
         {
             this.operationCode = (int)operationRequest.GetOperationCode();
             this.returnCode = returnCode;

@@ -5,7 +5,7 @@
 
     public class RoomOption
     {
-        public CustomHashtable CustomRoomProperties { get; private set; }
+        public EUNHashtable CustomRoomProperties { get; private set; }
         public List<int> CustomRoomPropertiesForLobby { get; private set; }
         public string Password { get; private set; }
         public int MaxPlayer { get; private set; }
@@ -26,7 +26,7 @@
 
         public class Builder
         {
-            public CustomHashtable customRoomProperties;
+            public EUNHashtable customRoomProperties;
             public List<int> customRoomPropertiesForLobby;
             public string password;
             public int maxPlayer = 4;
@@ -34,7 +34,7 @@
             public bool isOpen = true;
             public int ttl = 15000;
 
-            public Builder SetCustomRoomProperties(CustomHashtable customRoomProperties)
+            public Builder SetCustomRoomProperties(EUNHashtable customRoomProperties)
             {
                 this.customRoomProperties = customRoomProperties;
                 return this;

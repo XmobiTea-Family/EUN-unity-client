@@ -2,7 +2,7 @@
 {
     using System.Collections.Generic;
 
-    public interface ICustomData
+    public interface IEUNData
     {
         void Clear();
 
@@ -34,9 +34,9 @@
 
         IList<T> GetList<T>(int k, IList<T> defaultValue = null);
 
-        CustomArray GetCustomArray(int k, CustomArray defaultValue = null);
+        EUNArray GetEUNArray(int k, EUNArray defaultValue = null);
 
-        CustomHashtable GetCustomHashtable(int k, CustomHashtable defaultValue = null);
+        EUNHashtable GetEUNHashtable(int k, EUNHashtable defaultValue = null);
 
         object ToEzyData();
     }

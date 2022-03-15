@@ -15,24 +15,24 @@
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var customArray = parameters.GetCustomArray(ParameterCode.Data);
+            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
 
-            var objectId = customArray.GetInt(0);
-            var synchronizationData = customArray.GetObject(1);
+            var objectId = eunArray.GetInt(0);
+            var synchronizationData = eunArray.GetObject(1);
 
             if (peer.room.GameObjectDic.ContainsKey(objectId))
             {
                 peer.room.GameObjectDic[objectId].SynchronizationData = synchronizationData;
             }
 
-            if (peer.ezyViewDic.ContainsKey(objectId))
+            if (peer.eunViewDic.ContainsKey(objectId))
             {
-                var view = peer.ezyViewDic[objectId];
+                var view = peer.eunViewDic[objectId];
                 if (view)
                 {
-                    foreach (var behaviour in view.ezyBehaviourLst)
+                    foreach (var behaviour in view.eunBehaviourLst)
                     {
-                        if (behaviour) behaviour.OnEzySynchronization(synchronizationData);
+                        if (behaviour) behaviour.OnEUNSynchronization(synchronizationData);
                     }
                 }
             }

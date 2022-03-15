@@ -5,7 +5,7 @@
     using UnityEngine;
 
     [RequireComponent(typeof(AudioSource))]
-    public class EzyVoiceChatBehaviour : EzyBehaviour
+    public class EUNVoiceChatBehaviour : EUNBehaviour
     {
         [SerializeField]
         [Range(16, 128)]
@@ -16,8 +16,8 @@
             get => bufferSize;
         }
 
-        private EzyMicSpeaker micSpeaker;
-        public EzyMicSpeaker Speaker => micSpeaker;
+        private EUNMicSpeaker micSpeaker;
+        public EUNMicSpeaker Speaker => micSpeaker;
 
         protected override void Awake()
         {
@@ -25,19 +25,19 @@
 
             var audioSource = GetComponent<AudioSource>();
 
-            if (audioSource == null) throw new Exception("Ezy init microphone failed");
+            if (audioSource == null) throw new Exception("EUN init microphone failed");
 
-            micSpeaker = new EzyMicSpeaker(audioSource);
+            micSpeaker = new EUNMicSpeaker(audioSource);
         }
 
         protected override void Start()
         {
-            if (ezyView != null) ezyView.SubscriberEzyBehaviour(this);
+            if (eunView != null) eunView.SubscriberEUNBehaviour(this);
         }
 
         protected override void OnDestroy()
         {
-            if (ezyView != null) ezyView.UnSubscriberEzyBehaviour(this);
+            if (eunView != null) eunView.UnSubscriberEUNBehaviour(this);
         }
 
         protected virtual void Update()
@@ -49,7 +49,7 @@
         {
             var frame = new float[BufferSize];
             
-            if (EzyMicRecord.DetectedVoice(frame))
+            if (EUNMicRecord.DetectedVoice(frame))
             {
                 var buffer = new short[frame.Length];
 
@@ -64,7 +64,7 @@
             return null;
         }
 
-        public override void OnEzySynchronization(object voiceChatData)
+        public override void OnEUNSynchronization(object voiceChatData)
         {
             if (Speaker != null && voiceChatData != null)
             {

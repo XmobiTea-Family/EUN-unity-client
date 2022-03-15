@@ -10,7 +10,7 @@
 
         private int operationCode;
         private int requestId;
-        private CustomHashtable parameters;
+        private EUNHashtable parameters;
         private bool reliable;
         private int timeOut;
         private bool synchronizationRequest;
@@ -27,7 +27,7 @@
             return requestId;
         }
 
-        public CustomHashtable GetParameters()
+        public EUNHashtable GetParameters()
         {
             return parameters;
         }
@@ -65,7 +65,7 @@
             return this;
         }
 
-        public OperationRequest SetParameters(CustomHashtable parameters)
+        public OperationRequest SetParameters(EUNHashtable parameters)
         {
             this.parameters = parameters;
             return this;

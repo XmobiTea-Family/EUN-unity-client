@@ -11,7 +11,7 @@
 
         public ChatRoomOperationRequest(string message, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.Message, message)
                 .Build();
         }

@@ -21,7 +21,7 @@
         public const int LeaderClientPlayerId = 16;
         public const int TsCreate = 17;
         public const int Password = 18;
-        public const int CustomHashtable = 19;
+        public const int EUNHashtable = 19;
         public const int ExpectedProperties = 20;
         public const int TargetExpectedCount = 21;
         public const int Ttl = 22;
@@ -34,7 +34,7 @@
         public const int ObjectId = 28;
         public const int EunRPCCommand = 29;
         public const int RpcData = 30;
-        public const int EzyTargets = 31;
+        public const int EUNTargets = 31;
         public const int TargetPlayerIds = 32;
 
         public const int CustomGameObjectProperties = 33;

@@ -9,10 +9,10 @@
 
         protected override bool Reliable => true;
 
-        public ChangeRoomInfoOperationRequest(CustomHashtable customHashtable, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public ChangeRoomInfoOperationRequest(EUNHashtable eunHashtable, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
-                 .Add(ParameterCode.CustomHashtable, customHashtable)
+            Parameters = new EUNHashtable.Builder()
+                 .Add(ParameterCode.EUNHashtable, eunHashtable)
                  .Build();
         }
     }

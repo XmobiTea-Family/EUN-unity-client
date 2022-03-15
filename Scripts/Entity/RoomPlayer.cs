@@ -6,13 +6,13 @@
     {
         public int PlayerId { get; private set; }
         public string UserId { get; private set; }
-        public CustomHashtable CustomProperties { get; private set; }
+        public EUNHashtable CustomProperties { get; private set; }
 
-        public RoomPlayer(CustomArray customArray)
+        public RoomPlayer(EUNArray eunArray)
         {
-            PlayerId = customArray.GetInt(0);
-            UserId = customArray.GetString(1);
-            CustomProperties = customArray.GetCustomHashtable(2);
+            PlayerId = eunArray.GetInt(0);
+            UserId = eunArray.GetString(1);
+            CustomProperties = eunArray.GetEUNHashtable(2);
         }
     }
 }

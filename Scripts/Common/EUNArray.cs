@@ -8,7 +8,7 @@
     using com.tvd12.ezyfoxserver.client.factory;
 #endif
 
-    public class CustomArray : CustomData
+    public class EUNArray : EUNData
     {
         public class Builder
         {
@@ -31,9 +31,9 @@
                 return this;
             }
 
-            public CustomArray Build()
+            public EUNArray Build()
             {
-                var awnser = new CustomArray();
+                var awnser = new EUNArray();
 
                 foreach (var o in originArray)
                 {
@@ -51,7 +51,7 @@
 
         private List<object> originArray;
 
-        public CustomArray()
+        public EUNArray()
         {
             this.originArray = new List<object>();
         }
@@ -110,16 +110,16 @@
         public override object ToEzyData()
         {
 #if EUN
-            var ezyArray = EzyEntityFactory.newArray();
+            var eunArray = EzyEntityFactory.newArray();
 
             for (var i = 0; i < originArray.Count; i++)
             {
-                ezyArray.add(CreateEzyDataFromUseData(originArray[i]));
+                eunArray.add(CreateEUNDataFromUseData(originArray[i]));
             }
 
-            return ezyArray;
+            return eunArray;
 #else
-            return base.ToEzyData();
+            return base.ToEUNData();
 #endif
         }
 

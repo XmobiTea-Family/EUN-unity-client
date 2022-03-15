@@ -9,7 +9,7 @@
     using XmobiTea.EUN.Constant;
 
     [DisallowMultipleComponent]
-    public sealed class EzyView : MonoBehaviour
+    public sealed class EUNView : MonoBehaviour
     {
         [SerializeField]
         private RoomGameObject roomObjectGame;
@@ -22,22 +22,22 @@
             }
         }
 
-        internal List<EzyBehaviour> ezyBehaviourLst { get; private set; } = new List<EzyBehaviour>();
+        internal List<EUNBehaviour> eunBehaviourLst { get; private set; } = new List<EUNBehaviour>();
 
-        internal List<EzyVoiceChatBehaviour> ezyVoiceChatBehaviourLst { get; private set; } = new List<EzyVoiceChatBehaviour>();
+        internal List<EUNVoiceChatBehaviour> eunVoiceChatBehaviourLst { get; private set; } = new List<EUNVoiceChatBehaviour>();
 
-        public RoomPlayer Owner => EzyNetwork.GetRoomPlayer(RoomGameObject.OwnerId);
+        public RoomPlayer Owner => EUNNetwork.GetRoomPlayer(RoomGameObject.OwnerId);
 
-        public bool IsMine => RoomGameObject != null && RoomGameObject.OwnerId == EzyNetwork.PlayerId;
+        public bool IsMine => RoomGameObject != null && RoomGameObject.OwnerId == EUNNetwork.PlayerId;
 
         private void Awake()
         {
-            EzyNetwork.SubscriberEzyView(this);
+            EUNNetwork.SubscriberEUNView(this);
         }
 
         private void OnDestroy()
         {
-            EzyNetwork.UnSubscriberEzyView(this);
+            EUNNetwork.UnSubscriberEUNView(this);
         }
 
         internal void Init(RoomGameObject roomGameObject)
@@ -45,38 +45,38 @@
             this.RoomGameObject = roomGameObject;
         }
 
-        internal void SubscriberEzyBehaviour(EzyBehaviour behaviour)
+        internal void SubscriberEUNBehaviour(EUNBehaviour behaviour)
         {
-            if (!ezyBehaviourLst.Contains(behaviour))
+            if (!eunBehaviourLst.Contains(behaviour))
             {
-                ezyBehaviourLst.Add(behaviour);
+                eunBehaviourLst.Add(behaviour);
 
-                behaviour.OnEzyInitialize(RoomGameObject.InitializeData);
-                behaviour.OnEzySynchronization(RoomGameObject.SynchronizationData);
+                behaviour.OnEUNInitialize(RoomGameObject.InitializeData);
+                behaviour.OnEUNSynchronization(RoomGameObject.SynchronizationData);
             }
         }
 
-        internal void SubscriberEzyBehaviour(EzyVoiceChatBehaviour behaviour)
+        internal void SubscriberEUNBehaviour(EUNVoiceChatBehaviour behaviour)
         {
-            if (!ezyVoiceChatBehaviourLst.Contains(behaviour))
+            if (!eunVoiceChatBehaviourLst.Contains(behaviour))
             {
-                ezyVoiceChatBehaviourLst.Add(behaviour);
+                eunVoiceChatBehaviourLst.Add(behaviour);
             }
         }
 
-        internal void UnSubscriberEzyBehaviour(EzyBehaviour behaviour)
+        internal void UnSubscriberEUNBehaviour(EUNBehaviour behaviour)
         {
-            if (ezyBehaviourLst.Contains(behaviour)) ezyBehaviourLst.Remove(behaviour);
+            if (eunBehaviourLst.Contains(behaviour)) eunBehaviourLst.Remove(behaviour);
         }
 
-        internal void UnSubscriberEzyBehaviour(EzyVoiceChatBehaviour behaviour)
+        internal void UnSubscriberEUNBehaviour(EUNVoiceChatBehaviour behaviour)
         {
-            if (ezyVoiceChatBehaviourLst.Contains(behaviour)) ezyVoiceChatBehaviourLst.Remove(behaviour);
+            if (eunVoiceChatBehaviourLst.Contains(behaviour)) eunVoiceChatBehaviourLst.Remove(behaviour);
         }
 
-        public void RPC(EzyTargets targets, EzyRPCCommand command, params object[] rpcData)
+        public void RPC(EUNTargets targets, EUNRPCCommand command, params object[] rpcData)
         {
-            EzyNetworkExtension.RPC(this, targets, command, rpcData);
+            EUNNetworkExtension.RPC(this, targets, command, rpcData);
         }
     }
 }

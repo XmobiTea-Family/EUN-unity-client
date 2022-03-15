@@ -8,7 +8,7 @@
     using System.Collections.Generic;
     using System.Text;
 
-    public class CustomHashtable : CustomData
+    public class EUNHashtable : EUNData
     {
         public class Builder
         {
@@ -53,9 +53,9 @@
                 return this;
             }
 
-            public CustomHashtable Build()
+            public EUNHashtable Build()
             {
-                var awnser = new CustomHashtable();
+                var awnser = new EUNHashtable();
 
                 var keys = originObject.Keys;
                 foreach (var key in keys)
@@ -74,7 +74,7 @@
 
         private IDictionary<int, object> originObject;
 
-        public CustomHashtable()
+        public EUNHashtable()
         {
             this.originObject = new Dictionary<int, object>();
         }
@@ -137,12 +137,12 @@
             var keys = originObject.Keys;
             foreach (var key in keys)
             {
-                ezyObject.put(key, CreateEzyDataFromUseData(originObject[key]));
+                ezyObject.put(key, CreateEUNDataFromUseData(originObject[key]));
             }
 
             return ezyObject;
 #else
-            return base.ToEzyData();
+            return base.ToEUNData();
 #endif
         }
 

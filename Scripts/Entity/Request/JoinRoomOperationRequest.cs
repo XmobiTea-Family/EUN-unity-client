@@ -11,7 +11,7 @@
 
         public JoinRoomOperationRequest(int roomId, string password, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.RoomId, roomId)
                 .Add(ParameterCode.Password, password)
                 .Build();

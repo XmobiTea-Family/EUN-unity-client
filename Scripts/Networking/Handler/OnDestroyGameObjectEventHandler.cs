@@ -15,8 +15,8 @@
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var customArray = parameters.GetCustomArray(ParameterCode.Data);
-            var objectId = customArray.GetInt(0);
+            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
+            var objectId = eunArray.GetInt(0);
 
             if (peer.room.GameObjectDic.ContainsKey(objectId)) peer.room.GameObjectDic.Remove(objectId);
         }

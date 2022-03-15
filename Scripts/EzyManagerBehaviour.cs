@@ -10,11 +10,11 @@
 
     using UnityEngine;
 
-    public class EzyManagerBehaviour : MonoBehaviour
+    public class EUNManagerBehaviour : MonoBehaviour
     {
         protected virtual void Awake()
         {
-            EzyNetwork.SubscriberEzyBehaviour(this);
+            EUNNetwork.SubscriberEUNBehaviour(this);
         }
 
         protected virtual void OnEnable() { }
@@ -27,49 +27,49 @@
 
         protected virtual void OnDestroy()
         {
-            EzyNetwork.UnSubscriberEzyBehaviour(this);
+            EUNNetwork.UnSubscriberEUNBehaviour(this);
         }
 
-        public virtual void OnEzyCustomPlayerPropertiesChange(RoomPlayer player, CustomHashtable customPropertiesChange) { }
+        public virtual void OnEUNCustomPlayerPropertiesChange(RoomPlayer player, EUNHashtable customPropertiesChange) { }
 
-        public virtual void OnEzyCustomRoomPropertiesChange(CustomHashtable customPropertiesChange) { }
+        public virtual void OnEUNCustomRoomPropertiesChange(EUNHashtable customPropertiesChange) { }
 
-        public virtual void OnEzyCustomGameObjectPropertiesChange(RoomGameObject roomGameObject, CustomHashtable customPropertiesChange) { }
+        public virtual void OnEUNCustomGameObjectPropertiesChange(RoomGameObject roomGameObject, EUNHashtable customPropertiesChange) { }
 
-        public virtual void OnEzyZoneConnected() { }
+        public virtual void OnEUNZoneConnected() { }
 
-        public virtual void OnEzyConnected() { }
+        public virtual void OnEUNConnected() { }
 
-        public virtual void OnEzyLoginError() { }
+        public virtual void OnEUNLoginError() { }
 
-        public virtual void OnEzyConnectionFailure(EzyConnectionFailedReason reason) { }
+        public virtual void OnEUNConnectionFailure(EzyConnectionFailedReason reason) { }
 
-        public virtual void OnEzyDisconnected(EzyDisconnectReason reason) { }
+        public virtual void OnEUNDisconnected(EzyDisconnectReason reason) { }
 
-        public virtual void OnEzyJoinLobby() { }
+        public virtual void OnEUNJoinLobby() { }
 
-        public virtual void OnEzyLeftLobby() { }
+        public virtual void OnEUNLeftLobby() { }
 
-        public virtual void OnEzyJoinRoom() { }
+        public virtual void OnEUNJoinRoom() { }
 
-        public virtual void OnEzyLeaderClientChange(RoomPlayer newLeaderClientPlayer) { }
+        public virtual void OnEUNLeaderClientChange(RoomPlayer newLeaderClientPlayer) { }
 
-        public virtual void OnEzyLeftRoom() { }
+        public virtual void OnEUNLeftRoom() { }
 
-        public virtual void OnEzyOtherPlayerJoinRoom(RoomPlayer player) { }
+        public virtual void OnEUNOtherPlayerJoinRoom(RoomPlayer player) { }
 
-        public virtual void OnEzyOtherPlayerLeftRoom(RoomPlayer player) { }
+        public virtual void OnEUNOtherPlayerLeftRoom(RoomPlayer player) { }
 
-        public virtual void OnEzyReceiveChatAll(ChatMessage message) { }
+        public virtual void OnEUNReceiveChatAll(ChatMessage message) { }
 
-        public virtual void OnEzyReceiveChatLobby(ChatMessage message) { }
+        public virtual void OnEUNReceiveChatLobby(ChatMessage message) { }
 
-        public virtual void OnEzyReceiveChatRoom(ChatMessage message, RoomPlayer sender) { }
+        public virtual void OnEUNReceiveChatRoom(ChatMessage message, RoomPlayer sender) { }
 
-        public virtual void OnEzyRoomInfoChange(CustomHashtable customPropertiesChange) { }
+        public virtual void OnEUNRoomInfoChange(EUNHashtable customPropertiesChange) { }
 
-        public virtual EzyView OnEzyViewNeedCreate(RoomGameObject roomGameObject) { return null; }
+        public virtual EUNView OnEUNViewNeedCreate(RoomGameObject roomGameObject) { return null; }
 
-        public virtual void OnEzyTransferOwnerGameObject(RoomGameObject roomGameObject, RoomPlayer newOwner) { }
+        public virtual void OnEUNTransferOwnerGameObject(RoomGameObject roomGameObject, RoomPlayer newOwner) { }
     }
 }

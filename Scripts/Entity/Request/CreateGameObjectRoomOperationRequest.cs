@@ -9,9 +9,9 @@
 
         protected override bool Reliable => true;
 
-        public CreateGameObjectRoomOperationRequest(string prefabPath, object initializeData, object synchronizationData, CustomHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public CreateGameObjectRoomOperationRequest(string prefabPath, object initializeData, object synchronizationData, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.PrefabPath, prefabPath)
                 .Add(ParameterCode.InitializeData, initializeData)
                 .Add(ParameterCode.SynchronizationData, synchronizationData)

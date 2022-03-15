@@ -2,8 +2,8 @@
 {
     using UnityEngine;
 
-    //[CreateAssetMenu(fileName = EzyServerSettings.ResourcesPath, menuName = "EUN/EzyServerSettings", order = 1)]
-    public class EzyServerSettings : ScriptableObject
+    //[CreateAssetMenu(fileName = EUNServerSettings.ResourcesPath, menuName = "EUN/EUNServerSettings", order = 1)]
+    public class EUNServerSettings : ScriptableObject
     {
         public enum Mode
         {
@@ -11,7 +11,7 @@
             OfflineMode = 1,
         }
 
-        public const string ResourcesPath = "EzyServerSettings";
+        public const string ResourcesPath = "EUNServerSettings";
 
         [SerializeField]
         private string _socketHost = "ws.stackask.com";

@@ -15,20 +15,20 @@
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var customArray = parameters.GetCustomArray(ParameterCode.Data);
+            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
 
-            var objectId = customArray.GetInt(0);
-            var eunRPCCommand = customArray.GetInt(1);
-            var rpcData = customArray.GetCustomArray(2);
+            var objectId = eunArray.GetInt(0);
+            var eunRPCCommand = eunArray.GetInt(1);
+            var rpcData = eunArray.GetEUNArray(2);
 
-            if (peer.ezyViewDic.ContainsKey(objectId))
+            if (peer.eunViewDic.ContainsKey(objectId))
             {
-                var view = peer.ezyViewDic[objectId];
+                var view = peer.eunViewDic[objectId];
                 if (view)
                 {
-                    foreach (var behaviour in view.ezyBehaviourLst)
+                    foreach (var behaviour in view.eunBehaviourLst)
                     {
-                        if (behaviour) behaviour.EzyRPC(eunRPCCommand, rpcData);
+                        if (behaviour) behaviour.EUNRPC(eunRPCCommand, rpcData);
                     }
                 }
             }

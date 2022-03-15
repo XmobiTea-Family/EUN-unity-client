@@ -8,21 +8,21 @@
     using System.Reflection;
     using UnityEngine;
 
-    [RequireComponent(typeof(EzyView))]
-    public class EzyBehaviour : MonoBehaviour
+    [RequireComponent(typeof(EUNView))]
+    public class EUNBehaviour : MonoBehaviour
     {
-        public EzyView ezyView { get; private set; }
+        public EUNView eunView { get; private set; }
 
         protected virtual void Awake()
         {
-            if (ezyView == null) ezyView = GetComponent<EzyView>();
+            if (eunView == null) eunView = GetComponent<EUNView>();
         }
 
         private List<MethodInfo> methodInfoLst;
 
         protected virtual void Start()
         {
-            if (ezyView != null) ezyView.SubscriberEzyBehaviour(this);
+            if (eunView != null) eunView.SubscriberEUNBehaviour(this);
         }
 
         protected virtual void OnDisable()
@@ -32,22 +32,22 @@
 
         protected virtual void OnDestroy()
         {
-            if (ezyView != null) ezyView.UnSubscriberEzyBehaviour(this);
+            if (eunView != null) eunView.UnSubscriberEUNBehaviour(this);
         }
 
-        public void EzyRPC(int eunRPCCommand, CustomArray rpcDataArray)
+        public void EUNRPC(int eunRPCCommand, EUNArray rpcDataArray)
         {
 
-            if (methodInfoLst == null) methodInfoLst = GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EzyRPCAttribute), true).Length > 0).ToList();
+            if (methodInfoLst == null) methodInfoLst = GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EUNRPCAttribute), true).Length > 0).ToList();
 
-            var ezyRPCMethodName = ((EzyRPCCommand)eunRPCCommand).ToString();
+            var eunRPCMethodName = ((EUNRPCCommand)eunRPCCommand).ToString();
 
             MethodInfo method = null;
             object[] parameters = null;// = rpcData != null ? rpcData.toList<object>().ToArray() : new object[0];
 
             foreach (var methodInfo in methodInfoLst)
             {
-                if (methodInfo.Name.Equals(ezyRPCMethodName))
+                if (methodInfo.Name.Equals(eunRPCMethodName))
                 {
                     var parameterInfos = methodInfo.GetParameters();
 
@@ -103,13 +103,13 @@
                                     {
                                         tempParameters[i] = rpcDataArray.GetString(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(CustomArray))
+                                    else if (parameterInfo.ParameterType == typeof(EUNArray))
                                     {
-                                        tempParameters[i] = rpcDataArray.GetCustomArray(i);
+                                        tempParameters[i] = rpcDataArray.GetEUNArray(i);
                                     }
-                                    else if (parameterInfo.ParameterType == typeof(CustomHashtable))
+                                    else if (parameterInfo.ParameterType == typeof(EUNHashtable))
                                     {
-                                        tempParameters[i] = rpcDataArray.GetCustomHashtable(i);
+                                        tempParameters[i] = rpcDataArray.GetEUNHashtable(i);
                                     }
 
                                     else if (parameterInfo.ParameterType == typeof(bool[]))
@@ -207,35 +207,35 @@
             if (method != null) method.Invoke(this, parameters);
             else
             {
-                Debug.LogError("Method " + ezyRPCMethodName + " with parameters " + parameters + " not found");
+                Debug.LogError("Method " + eunRPCMethodName + " with parameters " + parameters + " not found");
             }
         }
 
-        [EzyRPC]
+        [EUNRPC]
         private void None() { }
 
-        public virtual void OnEzyCustomPlayerPropertiesChange(RoomPlayer player, CustomHashtable customPropertiesChange) { }
+        public virtual void OnEUNCustomPlayerPropertiesChange(RoomPlayer player, EUNHashtable customPropertiesChange) { }
 
-        public virtual void OnEzyCustomGameObjectPropertiesChange(CustomHashtable customPropertiesChange) { }
+        public virtual void OnEUNCustomGameObjectPropertiesChange(EUNHashtable customPropertiesChange) { }
 
-        public virtual void OnEzyCustomRoomPropertiesChange(CustomHashtable customPropertiesChange) { }
+        public virtual void OnEUNCustomRoomPropertiesChange(EUNHashtable customPropertiesChange) { }
 
-        public virtual void OnEzyLeaderClientChange(RoomPlayer newLeaderClientPlayer) { }
+        public virtual void OnEUNLeaderClientChange(RoomPlayer newLeaderClientPlayer) { }
 
-        public virtual void OnEzyOtherPlayerJoinRoom(RoomPlayer player) { }
+        public virtual void OnEUNOtherPlayerJoinRoom(RoomPlayer player) { }
 
-        public virtual void OnEzyOtherPlayerLeftRoom(RoomPlayer player) { }
+        public virtual void OnEUNOtherPlayerLeftRoom(RoomPlayer player) { }
 
-        public virtual void OnEzyReceiveChatRoom(ChatMessage message, RoomPlayer sender) { }
+        public virtual void OnEUNReceiveChatRoom(ChatMessage message, RoomPlayer sender) { }
 
-        public virtual void OnEzyRoomInfoChange(CustomHashtable customPropertiesChange) { }
+        public virtual void OnEUNRoomInfoChange(EUNHashtable customPropertiesChange) { }
 
-        public virtual void OnEzyInitialize(object initializeData) { }
+        public virtual void OnEUNInitialize(object initializeData) { }
 
-        public virtual void OnEzySynchronization(object synchronizationData) { }
+        public virtual void OnEUNSynchronization(object synchronizationData) { }
 
         public virtual object GetSynchronizationData() { return null; }
 
-        public virtual void OnEzyTransferOwnerGameObject(RoomPlayer newOwner) { }
+        public virtual void OnEUNTransferOwnerGameObject(RoomPlayer newOwner) { }
     }
 }

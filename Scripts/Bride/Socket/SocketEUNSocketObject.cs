@@ -15,7 +15,7 @@
     using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
 
-    public class SocketEzySocketObject : EzySocketObject
+    public class SocketEUNSocketObject : EUNSocketObject
     {
 #if EUN
         private EzyClient socketClient;
@@ -53,11 +53,11 @@
 #endif
         }
 
-        public override void Connect(string username, string password, ICustomData data, string host, int port, int udpPort)
+        public override void Connect(string username, string password, IEUNData data, string host, int port, int udpPort)
         {
             base.Connect(username, password, data, host, port, udpPort);
 
-            SocketEzySocketObject.udpPort = udpPort;
+            SocketEUNSocketObject.udpPort = udpPort;
 #if EUN
             socketClient.connect(host, port);
 #endif
@@ -127,12 +127,12 @@
             {
                 var data = request.get<EzyArray>(Commands.Data);
 
-                var customArray = new CustomArray();
-                customArray.Add((int)ReturnCode.AppNullRequest);
-                customArray.Add((string)null);
-                if (data.size() > 2) customArray.Add(data.get<int>(2));
+                var eunArray = new EUNArray();
+                eunArray.Add((int)ReturnCode.AppNullRequest);
+                eunArray.Add((string)null);
+                if (data.size() > 2) eunArray.Add(data.get<int>(2));
 
-                onResponse?.Invoke(customArray);
+                onResponse?.Invoke(eunArray);
             }
         }
 #endif
@@ -149,7 +149,7 @@
         {
             protected override void process(EzyApp app, EzyArray data)
             {
-                onResponse?.Invoke(new CustomArray.Builder().AddAll(data.toList<object>()).Build());
+                onResponse?.Invoke(new EUNArray.Builder().AddAll(data.toList<object>()).Build());
             }
         }
 
@@ -157,7 +157,7 @@
         {
             protected override void process(EzyApp app, EzyArray data)
             {
-                onEvent?.Invoke(new CustomArray.Builder().AddAll(data.toList<object>()).Build());
+                onEvent?.Invoke(new EUNArray.Builder().AddAll(data.toList<object>()).Build());
             }
         }
 
@@ -201,7 +201,7 @@
                     password,
                     (EzyData)data.ToEzyData());
                 //,
-                //    EzyEntityFactory.newArrayBuilder()
+                //    EUNEntityFactory.newArrayBuilder()
                 //        //.append("gameName", appName)
                 //        .build()
                 //    );
@@ -231,7 +231,7 @@
             {
                 base.handleLoginError(data);
 
-                onLoginError?.Invoke(new CustomArray.Builder().AddAll(data.toList<object>()).Build());
+                onLoginError?.Invoke(new EUNArray.Builder().AddAll(data.toList<object>()).Build());
             }
         }
 
@@ -239,7 +239,7 @@
         {
             protected override void postHandle(EzyApp app, EzyArray data)
             {
-                onAppAccess?.Invoke(new CustomArray.Builder().AddAll(data.toList<object>()).Build());
+                onAppAccess?.Invoke(new EUNArray.Builder().AddAll(data.toList<object>()).Build());
             }
         }
 #endif

@@ -11,7 +11,7 @@
 
         public GetCurrentLobbyStatsOperationRequest(int skip, int limit, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.Skip, skip)
                 .Add(ParameterCode.Limit, limit)
                 .Build();

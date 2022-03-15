@@ -1,5 +1,5 @@
 #if !EUN
-public enum EzyRPCCommand
+public enum EUNRPCCommand
 {
     None = 0
 }

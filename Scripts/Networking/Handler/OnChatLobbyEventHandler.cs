@@ -14,11 +14,11 @@
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             var parameters = operationEvent.GetParameters();
-            var message = new ChatMessage(parameters.GetCustomArray(ParameterCode.Message));
+            var message = new ChatMessage(parameters.GetEUNArray(ParameterCode.Message));
 
-            foreach (var behaviour in peer.ezyManagerBehaviourLst)
+            foreach (var behaviour in peer.eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyReceiveChatLobby(message);
+                if (behaviour) behaviour.OnEUNReceiveChatLobby(message);
             }
         }
     }

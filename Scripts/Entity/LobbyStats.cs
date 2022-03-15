@@ -8,11 +8,11 @@
         public int PlayerSize { get; private set; }
         public int RoomSize { get; private set; }
 
-        public LobbyStats(CustomArray customArray)
+        public LobbyStats(EUNArray eunArray)
         {
-            LobbyId = customArray.GetInt(0);
-            PlayerSize = customArray.GetInt(1);
-            RoomSize = customArray.GetInt(2);
+            LobbyId = eunArray.GetInt(0);
+            PlayerSize = eunArray.GetInt(1);
+            RoomSize = eunArray.GetInt(2);
         }
     }
 }

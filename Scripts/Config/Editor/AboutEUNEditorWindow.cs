@@ -15,7 +15,7 @@ namespace XmobiTea.EUN.Config.Editor
         void OnGUI()
         {
             GUILayout.Space(2);
-            GUILayout.Label("EUN Version: " + EzyNetwork.Version);
+            GUILayout.Label("EUN Version: " + EUNNetwork.Version);
 
             GUILayout.Space(5);
             GUILayout.Label("Copyright 2022 XmobiTea Family");

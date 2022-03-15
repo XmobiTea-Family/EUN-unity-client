@@ -16,18 +16,18 @@
             if (peer.room == null) return;
             var parameters = operationEvent.GetParameters();
 
-            var roomGameObject = new RoomGameObject(parameters.GetCustomArray(ParameterCode.Data));
+            var roomGameObject = new RoomGameObject(parameters.GetEUNArray(ParameterCode.Data));
             peer.room.GameObjectDic[roomGameObject.ObjectId] = roomGameObject;
 
-            foreach (var behaviour in peer.ezyManagerBehaviourLst)
+            foreach (var behaviour in peer.eunManagerBehaviourLst)
             {
                 if (behaviour)
                 {
-                    var view = behaviour.OnEzyViewNeedCreate(roomGameObject);
+                    var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
                     if (view != null)
                     {
                         view.Init(roomGameObject);
-                        peer.ezyViewDic[view.RoomGameObject.ObjectId] = view;
+                        peer.eunViewDic[view.RoomGameObject.ObjectId] = view;
                     }
                 }
             }

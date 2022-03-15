@@ -15,7 +15,7 @@
 
     using System.Collections.Generic;
 
-    public class WebSocketEzySocketObject : EzySocketObject
+    public class WebSocketEUNSocketObject : EUNSocketObject
     {
         protected override void OnCustomStart()
         {
@@ -34,7 +34,7 @@
 #endif
         }
 
-        public override void Connect(string username, string password, ICustomData data, string host, int port, int udpPort)
+        public override void Connect(string username, string password, IEUNData data, string host, int port, int udpPort)
         {
             base.Connect(username, password, data, host, port, udpPort);
 #if EUN
@@ -58,12 +58,12 @@
             {
                 var data = request.get<EzyArray>(Commands.Data);
 
-                var customArray = new CustomArray();
-                customArray.Add((int)ReturnCode.AppNullRequest);
-                customArray.Add((string)null);
-                if (data.size() > 2) customArray.Add(data.get<int>(2));
+                var eunArray = new EUNArray();
+                eunArray.Add((int)ReturnCode.AppNullRequest);
+                eunArray.Add((string)null);
+                if (data.size() > 2) eunArray.Add(data.get<int>(2));
 
-                onResponse?.Invoke(customArray);
+                onResponse?.Invoke(eunArray);
             }
         }
 #endif
@@ -100,22 +100,22 @@
 
         private void handleOnLoginError(string jsonArr)
         {
-            onLoginError?.Invoke(new CustomArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
+            onLoginError?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
         }
 
         private void handleOnAppAccess(string jsonArr)
         {
-            onAppAccess?.Invoke(new CustomArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
+            onAppAccess?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
         }
 
         private void handleOnResponse(string jsonArr)
         {
-            onResponse?.Invoke(new CustomArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
+            onResponse?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
         }
 
         private void handleOnEvent(string jsonArr)
         {
-            onEvent?.Invoke(new CustomArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
+            onEvent?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
         }
 
         private IList<object> getObjectLstFromJsonArr(string jsonArr)

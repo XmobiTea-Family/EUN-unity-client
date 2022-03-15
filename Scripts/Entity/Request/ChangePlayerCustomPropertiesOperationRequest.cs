@@ -9,9 +9,9 @@
 
         protected override bool Reliable => true;
 
-        public ChangePlayerCustomPropertiesOperationRequest(int playerId, CustomHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public ChangePlayerCustomPropertiesOperationRequest(int playerId, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.OwnerId, playerId)
                 .Add(ParameterCode.CustomPlayerProperties, customGameObjectProperties)
                 .Build();

@@ -22,7 +22,7 @@
 
         internal int playerId;
 
-        internal Dictionary<int, EzyView> ezyViewDic;
+        internal Dictionary<int, EUNView> eunViewDic;
 
         internal long tsServerTime => (long)serverTimeStamp;
 
@@ -37,7 +37,7 @@
 
             foreach (var c in room.GameObjectDic)
             {
-                if (ezyViewDic.ContainsKey(c.Key))
+                if (eunViewDic.ContainsKey(c.Key))
                 {
                     if (c.Value == null)
                     {
@@ -51,7 +51,7 @@
                 }
             }
 
-            foreach (var c in ezyViewDic)
+            foreach (var c in eunViewDic)
             {
                 if (!room.GameObjectDic.ContainsKey(c.Key))
                 {
@@ -68,7 +68,7 @@
             {
                 foreach (var c in removeLst)
                 {
-                    ezyViewDic.Remove(c);
+                    eunViewDic.Remove(c);
                 }
             }
 
@@ -96,20 +96,20 @@
             perVoiceChatMsgTimer = 1f / sendRateVoiceChat;
         }
 
-        internal void Connect(string username, string password, ICustomData data)
+        internal void Connect(string username, string password, IEUNData data)
         {
-            var ezyServerSettings = EzyNetwork.ezyServerSettings;
-            if (ezyServerSettings == null) throw new NullReferenceException("Null Ezy Server Settings, please find it now");
+            var eunServerSettings = EUNNetwork.eunServerSettings;
+            if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
 
-            if (EzyNetwork.Mode == Config.EzyServerSettings.Mode.OfflineMode)
+            if (EUNNetwork.Mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
                 OnConnectionSuccessHandler();
 
-                var obj = new CustomArray.Builder()
+                var obj = new EUNArray.Builder()
                 .Add(null)
                 .Add(null)
                 .Add(
-                    new CustomArray.Builder()
+                    new EUNArray.Builder()
                     .Add(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                     .Build())
                 .Build();
@@ -119,9 +119,9 @@
             else
             {
 #if !UNITY_EDITOR && UNITY_WEBGL
-                ezySocketObject.Connect(username, password, data, ezyServerSettings.webSocketHost, 0, 0);
+                eunSocketObject.Connect(username, password, data, eunServerSettings.webSocketHost, 0, 0);
 #else
-                ezySocketObject.Connect(username, password, data, ezyServerSettings.socketHost, ezyServerSettings.socketTCPPort, ezyServerSettings.socketUDPPort);
+                eunSocketObject.Connect(username, password, data, eunServerSettings.socketHost, eunServerSettings.socketTCPPort, eunServerSettings.socketUDPPort);
 #endif
             }
         }
@@ -130,13 +130,13 @@
         {
             var request = new SyncTsOperationRequest().Builder();
 
-            if (EzyNetwork.Mode == Config.EzyServerSettings.Mode.OfflineMode)
+            if (EUNNetwork.Mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
-                var responseCustomHashtable = new CustomHashtable.Builder()
+                var responseEUNHashtable = new EUNHashtable.Builder()
                     .Add(ParameterCode.Ts, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
                     .Build();
 
-                var response = new OperationResponse(request, (int)ReturnCode.Ok, string.Empty, responseCustomHashtable);
+                var response = new OperationResponse(request, (int)ReturnCode.Ok, string.Empty, responseEUNHashtable);
 
                 SyncTsResponse(response, onResponse);
             }
@@ -164,13 +164,13 @@
         {
             var request = new GetLobbyStatsLstOperationRequest(skip, limit).Builder();
 
-            if (EzyNetwork.Mode == Config.EzyServerSettings.Mode.OfflineMode)
+            if (EUNNetwork.Mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
-                var responseCustomHashtable = new CustomHashtable.Builder()
-                    .Add(ParameterCode.Data, new CustomArray())
+                var responseEUNHashtable = new EUNHashtable.Builder()
+                    .Add(ParameterCode.Data, new EUNArray())
                     .Build();
 
-                var response = new OperationResponse(request, (int)ReturnCode.Ok, string.Empty, responseCustomHashtable);
+                var response = new OperationResponse(request, (int)ReturnCode.Ok, string.Empty, responseEUNHashtable);
 
                 GetLobbyStatsLstResponse(response, onResponse);
             }
@@ -255,7 +255,7 @@
             });
         }
 
-        internal void JoinOrCreateRoom(int targetExpectedCount, CustomHashtable expectedProperties, RoomOption roomOption, Action<JoinOrCreateRoomOperationResponse> onResponse)
+        internal void JoinOrCreateRoom(int targetExpectedCount, EUNHashtable expectedProperties, RoomOption roomOption, Action<JoinOrCreateRoomOperationResponse> onResponse)
         {
             var request = new JoinOrCreateRoomOperationRequest(targetExpectedCount, expectedProperties, roomOption).Builder();
 
@@ -299,9 +299,9 @@
             });
         }
 
-        internal void ChangeRoomInfo(CustomHashtable customHashtable, Action<ChangeRoomInfoOperationResponse> onResponse)
+        internal void ChangeRoomInfo(EUNHashtable eunHashtable, Action<ChangeRoomInfoOperationResponse> onResponse)
         {
-            var request = new ChangeRoomInfoOperationRequest(customHashtable).Builder();
+            var request = new ChangeRoomInfoOperationRequest(eunHashtable).Builder();
 
             Enqueue(request, response =>
             {
@@ -332,7 +332,7 @@
             });
         }
 
-        internal void ChangePlayerCustomProperties(int playerId, CustomHashtable customPlayerProperties, Action<ChangePlayerCustomPropertiesOperationResponse> onResponse)
+        internal void ChangePlayerCustomProperties(int playerId, EUNHashtable customPlayerProperties, Action<ChangePlayerCustomPropertiesOperationResponse> onResponse)
         {
             var request = new ChangePlayerCustomPropertiesOperationRequest(playerId, customPlayerProperties).Builder();
 
@@ -343,7 +343,7 @@
             });
         }
 
-        internal void RpcGameObjectRoom(EzyTargets targets, int objectId, int eunRPCCommand, object rpcData)
+        internal void RpcGameObjectRoom(EUNTargets targets, int objectId, int eunRPCCommand, object rpcData)
         {
             var request = new RpcGameObjectRoomOperationRequest(targets, objectId, eunRPCCommand, rpcData).Builder();
 
@@ -357,7 +357,7 @@
             Enqueue(request, null);
         }
 
-        internal void CreateGameObjectRoom(string prefabPath, object initializeData, object synchronizationData, CustomHashtable customGameObjectProperties, Action<CreateGameObjectRoomOperationResponse> onResponse)
+        internal void CreateGameObjectRoom(string prefabPath, object initializeData, object synchronizationData, EUNHashtable customGameObjectProperties, Action<CreateGameObjectRoomOperationResponse> onResponse)
         {
             var request = new CreateGameObjectRoomOperationRequest(prefabPath, initializeData, synchronizationData, customGameObjectProperties).Builder();
 
@@ -368,7 +368,7 @@
             });
         }
 
-        internal void ChangeGameObjectCustomProperties(int objectId, CustomHashtable customGameObjectProperties, Action<ChangeGameObjectRoomOperationResponse> onResponse)
+        internal void ChangeGameObjectCustomProperties(int objectId, EUNHashtable customGameObjectProperties, Action<ChangeGameObjectRoomOperationResponse> onResponse)
         {
             var request = new ChangeGameObjectCustomPropertiesOperationRequest(objectId, customGameObjectProperties).Builder();
 

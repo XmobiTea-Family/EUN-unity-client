@@ -13,7 +13,7 @@
 
         public RpcGameObjectRoomToOperationRequest(IList<int> targetPlayerIds, int objectId, int eunRPCCommand, object rpcData, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.ObjectId, objectId)
                 .Add(ParameterCode.EunRPCCommand, eunRPCCommand)
                 .Add(ParameterCode.RpcData, rpcData)

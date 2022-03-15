@@ -14,14 +14,14 @@ namespace XmobiTea.EUN.Config.Editor
 
     using Debug = UnityEngine.Debug;
 
-    [CustomEditor(typeof(EzyServerSettings))]
-    public class EzyServerSettingsEditor : Editor
+    [CustomEditor(typeof(EUNServerSettings))]
+    public class EUNServerSettingsEditor : Editor
     {
-        private const string EzyRPC_Parent_Path = "/EUN-unity-client-custom/Scripts/Constant";
-        private const string EzyRPC_Path = EzyRPC_Parent_Path + "/EzyRPCCommand.cs";
-        private const string EzyRPC_Disable_Path = "/EUN-unity-client/Scripts/Constant/EzyRPCCommand.cs";
-        private const string EzyServerSettings_Path = "Assets/EUN-unity-client-custom/Resources";
-        private const string EzyfoxServerCsharpClientLink = "https://github.com/XmobiTea-Family/ezyfox-server-csharp-client.git";
+        private const string EUNRPC_Parent_Path = "/EUN-unity-client-custom/Scripts/Constant";
+        private const string EUNRPC_Path = EUNRPC_Parent_Path + "/EUNRPCCommand.cs";
+        private const string EUNRPC_Disable_Path = "/EUN-unity-client/Scripts/Constant/EUNRPCCommand.cs";
+        private const string EUNServerSettings_Path = "Assets/EUN-unity-client-custom/Resources";
+        private const string ezyfoxserverCsharpClientLink = "https://github.com/XmobiTea-Family/ezyfox-server-csharp-client.git";
 
         Vector2 scrollPos = new Vector2(0, 0);
 
@@ -85,8 +85,8 @@ namespace XmobiTea.EUN.Config.Editor
 
             EditorGUILayout.PropertyField(mode);
 
-            var ezyMode = (EzyServerSettings.Mode)mode.intValue;
-            if (ezyMode == EzyServerSettings.Mode.SelfHost)
+            var eunMode = (EUNServerSettings.Mode)mode.intValue;
+            if (eunMode == EUNServerSettings.Mode.SelfHost)
             {
                 EditorGUILayout.LabelField("This is online mode, you will connect to your host with info:", italicStyle);
                 EditorGUILayout.Space(2);
@@ -128,20 +128,20 @@ namespace XmobiTea.EUN.Config.Editor
 
             serializedObject.ApplyModifiedProperties();
 
-            var ezyRPCCommandValues = Enum.GetValues(typeof(EzyRPCCommand));
+            var eunRPCCommandValues = Enum.GetValues(typeof(EUNRPCCommand));
 
             EditorGUILayout.Space(20);
-            EditorGUILayout.LabelField("All EzyRPC Command (" + ezyRPCCommandValues.Length + ")", boldStyle);
+            EditorGUILayout.LabelField("All EUNRPC Command (" + eunRPCCommandValues.Length + ")", boldStyle);
             EditorGUILayout.Space(5);
             scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, true, GUILayout.Height(150));
             EditorGUILayout.BeginVertical();
 
-            foreach (EzyRPCCommand ezyRPCCommandValue in ezyRPCCommandValues)
+            foreach (EUNRPCCommand eunRPCCommandValue in eunRPCCommandValues)
             {
                 GUILayout.BeginHorizontal();
 
-                EditorGUILayout.LabelField(ezyRPCCommandValue.ToString(), GUILayout.Width(200));
-                EditorGUILayout.LabelField(((int)ezyRPCCommandValue).ToString(), GUILayout.Width(150));
+                EditorGUILayout.LabelField(eunRPCCommandValue.ToString(), GUILayout.Width(200));
+                EditorGUILayout.LabelField(((int)eunRPCCommandValue).ToString(), GUILayout.Width(150));
 
                 GUILayout.EndHorizontal();
             }
@@ -151,26 +151,26 @@ namespace XmobiTea.EUN.Config.Editor
         }
 
         [MenuItem("EUN/EUN Settings")]
-        private static void OpenEzyServerSettings()
+        private static void OpenEUNServerSettings()
         {
-            var ezyServerSettings = Resources.Load(EzyServerSettings.ResourcesPath) as EzyServerSettings;
-            if (ezyServerSettings == null)
+            var eunServerSettings = Resources.Load(EUNServerSettings.ResourcesPath) as EUNServerSettings;
+            if (eunServerSettings == null)
             {
-                if (!System.IO.Directory.Exists(EzyServerSettings_Path))
-                    System.IO.Directory.CreateDirectory(EzyServerSettings_Path);
+                if (!System.IO.Directory.Exists(EUNServerSettings_Path))
+                    System.IO.Directory.CreateDirectory(EUNServerSettings_Path);
 
-                ezyServerSettings = ScriptableObject.CreateInstance<EzyServerSettings>();
-                var path = EzyServerSettings_Path + "/" + EzyServerSettings.ResourcesPath + ".asset";
-                AssetDatabase.CreateAsset(ezyServerSettings, path);
+                eunServerSettings = ScriptableObject.CreateInstance<EUNServerSettings>();
+                var path = EUNServerSettings_Path + "/" + EUNServerSettings.ResourcesPath + ".asset";
+                AssetDatabase.CreateAsset(eunServerSettings, path);
 
-                Debug.Log(ezyServerSettings + " ezyServerSettings create success at path " + path);
+                Debug.Log(eunServerSettings + " ezyServerSettings create success at path " + path);
             }
 
-            Selection.SetActiveObjectWithContext(ezyServerSettings, ezyServerSettings);
+            Selection.SetActiveObjectWithContext(eunServerSettings, eunServerSettings);
         }
 
-        [MenuItem("EUN/About Ezyfox")]
-        private static void AboutEzyfox()
+        [MenuItem("EUN/About EUNfox")]
+        private static void AboutEUNfox()
         {
             Application.OpenURL("https://youngmonkeys.org/ezyfox-sever/");
         }
@@ -199,9 +199,9 @@ namespace XmobiTea.EUN.Config.Editor
                     return;
                 }
 
-                if (!CloneEzyFoxServerCsharpClient())
+                if (!CloneezyfoxserverCsharpClient())
                 {
-                    EditorUtility.DisplayDialog("Error", "Please use terminal to execute on the Assets path: git clone https://github.com/youngmonkeys/ezyfox-server-csharp-client.git", "Ok");
+                    EditorUtility.DisplayDialog("Error", "Please use terminal to execute on the Assets path: git clone " + ezyfoxserverCsharpClientLink, "Ok");
 
                     return;
                 }
@@ -212,13 +212,13 @@ namespace XmobiTea.EUN.Config.Editor
             }
         }
 
-        private static bool CloneEzyFoxServerCsharpClient()
+        private static bool CloneezyfoxserverCsharpClient()
         {
-            if (!IsEzyfoxServerCsharpClone())
+            if (!IsezyfoxserverCsharpClone())
             {
                 if (Application.platform == RuntimePlatform.WindowsEditor)
                 {
-                    CommandOutput("git clone " + EzyfoxServerCsharpClientLink, Application.dataPath);
+                    CommandOutput("git clone " + ezyfoxserverCsharpClientLink, Application.dataPath);
 
                     AssetDatabase.Refresh();
 
@@ -240,7 +240,7 @@ namespace XmobiTea.EUN.Config.Editor
                 if (!HasScriptingDefineSymbols(buildTargetGroup, "EUN")) return false;
             }
 
-            if (!IsEzyfoxServerCsharpClone()) return false;
+            if (!IsezyfoxserverCsharpClone()) return false;
 
             return true;
         }
@@ -297,7 +297,7 @@ namespace XmobiTea.EUN.Config.Editor
             PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, scriptingDefineSymbols);
         }
 
-        private static bool IsEzyfoxServerCsharpClone()
+        private static bool IsezyfoxserverCsharpClone()
         {
             var ezyfoxServerCsharpClient = Application.dataPath + "/ezyfox-server-csharp-client";
             return System.IO.Directory.Exists(ezyfoxServerCsharpClient);
@@ -345,12 +345,12 @@ namespace XmobiTea.EUN.Config.Editor
         [DidReloadScripts]
         public static void OnCompileScripts()
         {
-            UpdateEzyRPCCommand();
+            UpdateEUNRPCCommand();
         }
 
-        private static void UpdateEzyRPCCommand()
+        private static void UpdateEUNRPCCommand()
         {
-            var assemblie = typeof(EzyServerSettings).Assembly;
+            var assemblie = typeof(EUNServerSettings).Assembly;
 
             var types = assemblie.GetTypes();
 
@@ -360,7 +360,7 @@ namespace XmobiTea.EUN.Config.Editor
 
             foreach (var type in types)
             {
-                var methodInfos = type.GetMethods(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EzyRPCAttribute), false).Length > 0);
+                var methodInfos = type.GetMethods(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EUNRPCAttribute), false).Length > 0);
 
                 foreach (var methodInfo in methodInfos)
                 {
@@ -370,11 +370,11 @@ namespace XmobiTea.EUN.Config.Editor
 
             var needModifier = false;
 
-            var ezyRPCCommandValues = Enum.GetValues(typeof(EzyRPCCommand));
+            var eunRPCCommandValues = Enum.GetValues(typeof(EUNRPCCommand));
 
-            foreach (EzyRPCCommand ezyRPCCommandValue in ezyRPCCommandValues)
+            foreach (EUNRPCCommand eunRPCCommandValue in eunRPCCommandValues)
             {
-                if (methodNameLst.Contains(ezyRPCCommandValue.ToString())) dic.Add((int)ezyRPCCommandValue, ezyRPCCommandValue.ToString());
+                if (methodNameLst.Contains(eunRPCCommandValue.ToString())) dic.Add((int)eunRPCCommandValue, eunRPCCommandValue.ToString());
                 else if (!needModifier) needModifier = true;
             }
 
@@ -405,8 +405,8 @@ namespace XmobiTea.EUN.Config.Editor
                 enableStringBuilder.AppendLine("// dont modifier this, this file will auto generate by EUN");
                 disableStringBuilder.AppendLine("// dont modifier this, this file will auto generate by EUN");
                 
-                enableStringBuilder.AppendLine("public enum EzyRPCCommand");
-                disableStringBuilder.AppendLine("public enum EzyRPCCommand");
+                enableStringBuilder.AppendLine("public enum EUNRPCCommand");
+                disableStringBuilder.AppendLine("public enum EUNRPCCommand");
 
                 enableStringBuilder.AppendLine("{");
                 disableStringBuilder.AppendLine("{");
@@ -416,7 +416,7 @@ namespace XmobiTea.EUN.Config.Editor
                     enableStringBuilder.AppendLine("    " + c.Value + " = " + c.Key + ",");
                     disableStringBuilder.AppendLine("    " + c.Value + " = " + c.Key + ",");
 
-                    Debug.Log("EzyRPCCommand add " + c.Value + " = " + c.Key);
+                    Debug.Log("EUNRPCCommand add " + c.Value + " = " + c.Key);
                 }
 
                 enableStringBuilder.AppendLine("}");
@@ -425,12 +425,12 @@ namespace XmobiTea.EUN.Config.Editor
                 enableStringBuilder.AppendLine("#endif");
                 disableStringBuilder.AppendLine("#endif");
 
-                var dirPath = Application.dataPath + EzyRPC_Parent_Path;
+                var dirPath = Application.dataPath + EUNRPC_Parent_Path;
                 if (!System.IO.Directory.Exists(dirPath)) System.IO.Directory.CreateDirectory(dirPath);
 
                 // generate this file
-                var enableFilePath = Application.dataPath + EzyRPC_Path;
-                var disableFilePath = Application.dataPath + EzyRPC_Disable_Path;
+                var enableFilePath = Application.dataPath + EUNRPC_Path;
+                var disableFilePath = Application.dataPath + EUNRPC_Disable_Path;
 
                 if (System.IO.File.Exists(enableFilePath)) System.IO.File.Delete(enableFilePath);
 

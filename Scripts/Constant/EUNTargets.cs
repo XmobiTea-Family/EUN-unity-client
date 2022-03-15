@@ -1,6 +1,6 @@
 ﻿namespace XmobiTea.EUN.Constant
 {
-    public enum EzyTargets : byte
+    public enum EUNTargets : byte
     {
         All = 0,
         Others = 1,

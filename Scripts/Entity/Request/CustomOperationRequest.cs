@@ -11,7 +11,7 @@
 
         protected int Timeout { get; }
         
-        protected CustomHashtable Parameters { get; set; }
+        protected EUNHashtable Parameters { get; set; }
 
         public CustomOperationRequest(int timeout)
         {

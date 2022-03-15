@@ -14,21 +14,21 @@
     using System;
     using XmobiTea.EUN.Common;
 
-    public class EzySocketObject : MonoBehaviour, IEzySocketObject
+    public class EUNSocketObject : MonoBehaviour, IEUNSocketObject
     {
         internal static Action onConnectionSuccess;
         internal static Action<EzyConnectionFailedReason> onConnectionFailure;
         internal static Action<EzyDisconnectReason> onDisconnection;
-        internal static Action<CustomArray> onAppAccess;
-        internal static Action<CustomArray> onLoginError;
-        internal static Action<CustomArray> onEvent;
-        internal static Action<CustomArray> onResponse;
+        internal static Action<EUNArray> onAppAccess;
+        internal static Action<EUNArray> onLoginError;
+        internal static Action<EUNArray> onEvent;
+        internal static Action<EUNArray> onResponse;
 
         internal static string zoneName;
         internal static string appName;
         internal static string username;
         internal static string password;
-        internal static ICustomData data;
+        internal static IEUNData data;
 
         void Start()
         {
@@ -42,11 +42,11 @@
 #endif
         }
 
-        public virtual void Connect(string username, string password, ICustomData data, string host, int port, int udpPort)
+        public virtual void Connect(string username, string password, IEUNData data, string host, int port, int udpPort)
         {
-            EzySocketObject.username = username;
-            EzySocketObject.password = password;
-            EzySocketObject.data = data;
+            EUNSocketObject.username = username;
+            EUNSocketObject.password = password;
+            EUNSocketObject.data = data;
         }
 
         public virtual void Init(string _zoneName, string _appName)
@@ -55,7 +55,7 @@
             appName = _appName;
         }
 
-        public void SubscriberAppAccessHandler(Action<CustomArray> _onAppAccess)
+        public void SubscriberAppAccessHandler(Action<EUNArray> _onAppAccess)
         {
             onAppAccess = _onAppAccess;
         }
@@ -75,17 +75,17 @@
             onDisconnection = _onDisconnection;
         }
 
-        public void SubscriberLoginErrorHandler(Action<CustomArray> _onLoginError)
+        public void SubscriberLoginErrorHandler(Action<EUNArray> _onLoginError)
         {
             onLoginError = _onLoginError;
         }
 
-        public void SubscriberEventHandler(Action<CustomArray> _onEvent)
+        public void SubscriberEventHandler(Action<EUNArray> _onEvent)
         {
             onEvent = _onEvent;
         }
 
-        public void SubscriberResponseHandler(Action<CustomArray> _onResponse)
+        public void SubscriberResponseHandler(Action<EUNArray> _onResponse)
         {
             onResponse = _onResponse;
         }

@@ -11,7 +11,7 @@
 
         public CreateRoomOperationRequest(RoomOption roomOption, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.MaxPlayer, roomOption.MaxPlayer)
                 .Add(ParameterCode.CustomRoomProperties, roomOption.CustomRoomProperties)
                 .Add(ParameterCode.IsVisible, roomOption.IsVisible)

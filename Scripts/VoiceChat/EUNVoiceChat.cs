@@ -4,12 +4,12 @@
 
     using UnityEngine;
 
-    public class EzyMicRecord
+    public class EUNMicRecord
     {
         private AudioClip mic;
         private string device;
 
-        public EzyMicRecord(string device, int suggestedFrequency)
+        public EUNMicRecord(string device, int suggestedFrequency)
         {
 #if EUN_VOICE_CHAT
             if (Microphone.devices.Length < 1)
@@ -110,7 +110,7 @@
         }
     }
 
-    public class EzyMicSpeaker
+    public class EUNMicSpeaker
     {
         const int maxPlayLagMs = 100;
         private int maxPlayLagSamples;
@@ -131,7 +131,7 @@
 
         private AudioSource source;
 
-        public EzyMicSpeaker(AudioSource audioSource)
+        public EUNMicSpeaker(AudioSource audioSource)
         {
             this.source = audioSource;
             this.frameQueue = new Queue<float[]>();

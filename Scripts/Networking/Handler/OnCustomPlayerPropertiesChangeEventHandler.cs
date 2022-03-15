@@ -15,13 +15,13 @@
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var customArray = parameters.GetCustomArray(ParameterCode.Data);
-            var playerId = customArray.GetInt(0);
+            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
+            var playerId = eunArray.GetInt(0);
 
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.PlayerId == playerId);
             if (thisRoomPlayer != null)
             {
-                var customPlayerProperties = customArray.GetCustomHashtable(1);
+                var customPlayerProperties = eunArray.GetEUNHashtable(1);
                 var keySet = customPlayerProperties.Keys();
                 foreach (int key in keySet)
                 {
@@ -37,20 +37,20 @@
                     else thisRoomPlayer.CustomProperties.Add(key, value);
                 }
 
-                foreach (var view in peer.ezyViewLst)
+                foreach (var view in peer.eunViewLst)
                 {
                     if (view)
                     {
-                        foreach (var behaviour in view.ezyBehaviourLst)
+                        foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEzyCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
+                            if (behaviour) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.ezyManagerBehaviourLst)
+                foreach (var behaviour in peer.eunManagerBehaviourLst)
                 {
-                    if (behaviour) behaviour.OnEzyCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
+                    if (behaviour) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
                 }
             }
         }

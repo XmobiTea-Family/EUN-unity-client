@@ -11,7 +11,7 @@
 
         public VoiceChatOperationRequest(int objectId, object voiceChatData, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.ObjectId, objectId)
                 .Add(ParameterCode.SynchronizationData, voiceChatData)
                 .Build();

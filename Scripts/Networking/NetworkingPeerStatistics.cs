@@ -5,27 +5,27 @@
 
         internal int GetPing()
         {
-            return ezySocketObject.GetPing();
+            return eunSocketObject.GetPing();
         }
 
         internal long GetTotalSendBytes()
         {
-            return ezySocketObject.GetTotalSendBytes();
+            return eunSocketObject.GetTotalSendBytes();
         }
 
         internal long GetTotalRecvBytes()
         {
-            return ezySocketObject.GetTotalRecvBytes();
+            return eunSocketObject.GetTotalRecvBytes();
         }
 
         internal long GetTotalSendPackets()
         {
-            return ezySocketObject.GetTotalSendPackets();
+            return eunSocketObject.GetTotalSendPackets();
         }
 
         internal long GetTotalRecvPackets()
         {
-            return ezySocketObject.GetTotalRecvPackets();
+            return eunSocketObject.GetTotalRecvPackets();
         }
     }
 

@@ -13,11 +13,11 @@
             {
                 var parameters = operationResponse.GetParameters();
 
-                var array = parameters.GetCustomArray(ParameterCode.Data);
+                var array = parameters.GetEUNArray(ParameterCode.Data);
 
-                var array0 = array.GetCustomArray(0);
+                var array0 = array.GetEUNArray(0);
                 LobbyStatss = new LobbyStats[array0.Count()];
-                for (var i = 0; i < LobbyStatss.Length; i++) LobbyStatss[i] = new LobbyStats(array0.GetCustomArray(i));
+                for (var i = 0; i < LobbyStatss.Length; i++) LobbyStatss[i] = new LobbyStats(array0.GetEUNArray(i));
             }
         }
     }

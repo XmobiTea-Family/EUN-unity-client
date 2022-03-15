@@ -9,9 +9,9 @@
 
         protected override bool Reliable => true;
 
-        public JoinOrCreateRoomOperationRequest(int targetExpectedCount, CustomHashtable expectedProperties, RoomOption roomOption, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public JoinOrCreateRoomOperationRequest(int targetExpectedCount, EUNHashtable expectedProperties, RoomOption roomOption, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.MaxPlayer, roomOption.MaxPlayer)
                 .Add(ParameterCode.TargetExpectedCount, targetExpectedCount)
                 .Add(ParameterCode.ExpectedProperties, expectedProperties)

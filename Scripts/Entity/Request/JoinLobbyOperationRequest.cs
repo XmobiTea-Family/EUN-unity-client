@@ -11,7 +11,7 @@
 
         public JoinLobbyOperationRequest(int lobbyId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new CustomHashtable.Builder()
+            Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.LobbyId, lobbyId)
                 .Build();
         }
