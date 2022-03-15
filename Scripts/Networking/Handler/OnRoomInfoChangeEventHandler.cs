@@ -1,7 +1,7 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
 
     internal class OnRoomInfoChangeEventHandler : IServerEventHandler
     {

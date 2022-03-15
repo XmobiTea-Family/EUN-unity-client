@@ -1,11 +1,12 @@
-﻿namespace EUN
+﻿namespace XmobiTea.EUN
 {
-    using EUN.Entity;
-    using EUN.Extension;
+    using XmobiTea.EUN.Entity;
+    using XmobiTea.EUN.Extension;
 
     using System.Collections.Generic;
 
     using UnityEngine;
+    using XmobiTea.EUN.Constant;
 
     [DisallowMultipleComponent]
     public sealed class EzyView : MonoBehaviour

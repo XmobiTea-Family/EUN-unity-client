@@ -1,6 +1,6 @@
-﻿namespace EUN.Constant
+﻿namespace XmobiTea.EUN.Constant
 {
-    public enum OperationCode
+    public enum OperationCode : byte
     {
         SyncTs = 0,
         GetLobbyStatsLst = 1,

@@ -1,8 +1,8 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
-    using EUN.Entity;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal class OnChatAllEventHandler : IServerEventHandler
     {

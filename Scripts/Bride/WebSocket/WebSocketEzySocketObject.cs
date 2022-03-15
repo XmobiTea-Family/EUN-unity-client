@@ -1,17 +1,17 @@
-﻿namespace EUN.Bride.WebSocket
+﻿namespace XmobiTea.EUN.Bride.WebSocket
 {
 #if EUN
     using com.tvd12.ezyfoxserver.client.constant;
     using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.factory;
 #else
-    using EUN.Entity.Support;
+    using XmobiTea.EUN.Entity.Support;
 #endif
 
-    using EUN.Common;
-    using EUN.Constant;
-    using EUN.Helper;
-    using EUN.Plugin.WebGL;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Helper;
+    using XmobiTea.EUN.Plugin.WebGL;
 
     using System.Collections.Generic;
 

@@ -1,4 +1,4 @@
-﻿namespace EUN.VoiceChat
+﻿namespace XmobiTea.EUN.VoiceChat
 {
     using System.Collections.Generic;
 

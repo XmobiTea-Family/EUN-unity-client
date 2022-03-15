@@ -1,6 +1,6 @@
-﻿namespace EUN.Common
+﻿namespace XmobiTea.EUN.Common
 {
-    using EUN.Constant;
+    using XmobiTea.EUN.Constant;
 
     using System.Text;
 

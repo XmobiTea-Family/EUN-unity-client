@@ -1,15 +1,14 @@
-﻿
-namespace EUN.Bride
+﻿namespace XmobiTea.EUN.Bride
 {
 #if EUN
     using com.tvd12.ezyfoxserver.client.constant;
     using com.tvd12.ezyfoxserver.client.entity;
 #else
-    using EUN.Entity.Support;
+    using XmobiTea.EUN.Entity.Support;
 #endif
 
     using System;
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
 
     public interface IEzySocketObject
     {

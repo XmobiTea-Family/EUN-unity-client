@@ -1,11 +1,12 @@
-﻿namespace EUN
+﻿namespace XmobiTea.EUN
 {
-    using EUN.Common;
-    using EUN.Entity;
-    using EUN.Entity.Response;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Entity;
+    using XmobiTea.EUN.Entity.Response;
 
     using System;
     using System.Collections.Generic;
+    using XmobiTea.EUN.Constant;
 
     public static partial class EzyNetwork
     {

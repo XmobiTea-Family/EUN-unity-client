@@ -1,4 +1,4 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
     public partial class NetworkingPeer
     {

@@ -1,15 +1,15 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
 #if EUN
     using com.tvd12.ezyfoxserver.client.factory;
 #endif
 
-    using EUN.Bride;
-    using EUN.Bride.Socket;
-    using EUN.Bride.WebSocket;
+    using XmobiTea.EUN.Bride;
+    using XmobiTea.EUN.Bride.Socket;
+    using XmobiTea.EUN.Bride.WebSocket;
 
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
 
     using System;
     using System.Collections.Generic;

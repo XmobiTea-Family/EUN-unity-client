@@ -1,12 +1,12 @@
-﻿namespace EUN
+﻿namespace XmobiTea.EUN
 {
 #if EUN
     using com.tvd12.ezyfoxserver.client.constant;
 #else
-    using EUN.Entity.Support;
+    using XmobiTea.EUN.Entity.Support;
 #endif
-    using EUN.Common;
-    using EUN.Entity;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Entity;
 
     using UnityEngine;
 

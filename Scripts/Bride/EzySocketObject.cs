@@ -1,4 +1,4 @@
-﻿namespace EUN.Bride
+﻿namespace XmobiTea.EUN.Bride
 {
     using UnityEngine;
 #if EUN
@@ -6,13 +6,13 @@
     using com.tvd12.ezyfoxserver.client.constant;
     using com.tvd12.ezyfoxserver.client.logger;
 #else
-    using EUN.Entity.Support;
+    using XmobiTea.EUN.Entity.Support;
 #endif
 
-    using EUN.Logger;
+    using XmobiTea.EUN.Logger;
 
     using System;
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
 
     public class EzySocketObject : MonoBehaviour, IEzySocketObject
     {

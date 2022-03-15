@@ -1,4 +1,4 @@
-﻿namespace EUN.Common
+﻿namespace XmobiTea.EUN.Common
 {
     using System.Collections.Generic;
 

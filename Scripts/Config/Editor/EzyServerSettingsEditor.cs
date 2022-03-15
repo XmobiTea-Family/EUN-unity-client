@@ -1,5 +1,5 @@
 ﻿#if UNITY_EDITOR
-namespace EUN.Config.Editor
+namespace XmobiTea.EUN.Config.Editor
 {
     using System;
     using System.Collections.Generic;

@@ -1,4 +1,4 @@
-﻿namespace EUN.Config
+﻿namespace XmobiTea.EUN.Config
 {
     using UnityEngine;
 

@@ -1,4 +1,4 @@
-﻿namespace EUN.Bride.Socket
+﻿namespace XmobiTea.EUN.Bride.Socket
 {
 #if EUN
     using com.tvd12.ezyfoxserver.client;
@@ -9,11 +9,11 @@
     using com.tvd12.ezyfoxserver.client.handler;
     using com.tvd12.ezyfoxserver.client.request;
 #else
-    using EUN.Entity.Support;
+    using XmobiTea.EUN.Entity.Support;
 #endif
 
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
 
     public class SocketEzySocketObject : EzySocketObject
     {

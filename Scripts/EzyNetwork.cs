@@ -1,8 +1,8 @@
-﻿namespace EUN
+﻿namespace XmobiTea.EUN
 {
-    using EUN.Common;
-    using EUN.Networking;
-    using EUN.Config;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Networking;
+    using XmobiTea.EUN.Config;
 
     using System;
 

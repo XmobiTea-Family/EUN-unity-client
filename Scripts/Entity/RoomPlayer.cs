@@ -1,6 +1,6 @@
-﻿namespace EUN.Entity
+﻿namespace XmobiTea.EUN.Entity
 {
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
 
     public class RoomPlayer
     {

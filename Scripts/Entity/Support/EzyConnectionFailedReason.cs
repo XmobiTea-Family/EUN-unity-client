@@ -1,5 +1,5 @@
 ﻿#if !EUN
-namespace EUN.Entity.Support
+namespace XmobiTea.EUN.Entity.Support
 {
 	public enum EzyConnectionFailedReason
 	{

@@ -1,7 +1,7 @@
-﻿namespace EUN
+﻿namespace XmobiTea.EUN
 {
-    using EUN.Common;
-    using EUN.Entity;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Entity;
     using System;
     using System.Collections.Generic;
     using System.Linq;

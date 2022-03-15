@@ -1,18 +1,18 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
 
     using System;
-    using EUN.Entity;
+    using XmobiTea.EUN.Entity;
     using System.Collections.Generic;
-    using EUN.Entity.Response;
+    using XmobiTea.EUN.Entity.Response;
 
 #if EUN
     using com.tvd12.ezyfoxserver.client.factory;
 #endif
 
-    using EUN.Entity.Request;
+    using XmobiTea.EUN.Entity.Request;
 
     public partial class NetworkingPeer
     {

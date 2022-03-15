@@ -1,4 +1,4 @@
-﻿namespace EUN
+﻿namespace XmobiTea.EUN
 {
     using System;
 

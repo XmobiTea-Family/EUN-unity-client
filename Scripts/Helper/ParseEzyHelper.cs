@@ -1,4 +1,4 @@
-﻿namespace EUN.Helper
+﻿namespace XmobiTea.EUN.Helper
 {
     using System;
     using System.Collections.Generic;

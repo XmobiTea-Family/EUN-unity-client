@@ -1,7 +1,7 @@
-﻿namespace EUN.Entity.Request
+﻿namespace XmobiTea.EUN.Entity.Request
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
 
     public class GetLobbyStatsLstOperationRequest : CustomOperationRequest
     {

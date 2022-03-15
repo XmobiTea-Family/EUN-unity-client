@@ -1,12 +1,12 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
 #if EUN
     using com.tvd12.ezyfoxserver.client.constant;
 #else
-    using EUN.Entity.Support;
+    using XmobiTea.EUN.Entity.Support;
 #endif
 
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
 
     using System;
     using System.Collections.Generic;

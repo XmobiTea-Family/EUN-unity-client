@@ -1,9 +1,9 @@
-﻿namespace EUN.Extension
+﻿namespace XmobiTea.EUN.Extension
 {
-    using EUN.Common;
-    using EUN.Constant;
-    using EUN.Entity;
-    using EUN.Entity.Response;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
+    using XmobiTea.EUN.Entity.Response;
 
     using System;
 

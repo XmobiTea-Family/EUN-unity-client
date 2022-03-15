@@ -1,6 +1,6 @@
-﻿namespace EUN
+﻿namespace XmobiTea.EUN
 {
-    using EUN.VoiceChat;
+    using XmobiTea.EUN.VoiceChat;
     using System;
     using UnityEngine;
 

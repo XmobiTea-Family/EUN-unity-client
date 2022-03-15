@@ -1,4 +1,4 @@
-﻿namespace EUN.Common
+﻿namespace XmobiTea.EUN.Common
 {
 #if EUN
     using com.tvd12.ezyfoxserver.client.entity;
