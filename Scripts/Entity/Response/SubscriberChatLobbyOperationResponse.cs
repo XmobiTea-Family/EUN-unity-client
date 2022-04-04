@@ -1,7 +1,7 @@
-﻿namespace EUN.Entity.Response
+﻿namespace XmobiTea.EUN.Entity.Response
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
 
     public class SubscriberChatLobbyOperationResponse : CustomOperationResponse
     {

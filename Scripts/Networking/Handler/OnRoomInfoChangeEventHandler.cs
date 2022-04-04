@@ -1,7 +1,7 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Entity;
+    using XmobiTea.EUN.Constant;
 
     internal class OnRoomInfoChangeEventHandler : IServerEventHandler
     {
@@ -19,7 +19,7 @@
 
             if (parameters.ContainsKey(ParameterCode.CustomRoomProperties))
             {
-                var data = parameters.GetCustomHashtable(ParameterCode.CustomRoomProperties);
+                var data = parameters.GetEUNHashtable(ParameterCode.CustomRoomProperties);
                 var keySet = data.Keys();
                 foreach (int key in keySet)
                 {
@@ -35,20 +35,20 @@
                     else currentRoom.CustomRoomProperties.Add(key, value);
                 }
 
-                foreach (var view in peer.ezyViewLst)
+                foreach (var view in peer.eunViewLst)
                 {
                     if (view)
                     {
-                        foreach (var behaviour in view.ezyBehaviourLst)
+                        foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEzyCustomRoomPropertiesChange(data);
+                            if (behaviour) behaviour.OnEUNCustomRoomPropertiesChange(data);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.ezyManagerBehaviourLst)
+                foreach (var behaviour in peer.eunManagerBehaviourLst)
                 {
-                    if (behaviour) behaviour.OnEzyCustomRoomPropertiesChange(data);
+                    if (behaviour) behaviour.OnEUNCustomRoomPropertiesChange(data);
                 }
 
                 parameters.Remove(ParameterCode.CustomRoomProperties);
@@ -58,7 +58,7 @@
 
             if (parameters.ContainsKey(ParameterCode.CustomRoomPropertiesForLobby))
             {
-                var data = parameters.GetCustomArray(ParameterCode.CustomRoomPropertiesForLobby);
+                var data = parameters.GetEUNArray(ParameterCode.CustomRoomPropertiesForLobby);
                 currentRoom.CustomRoomPropertiesForLobby.Clear();
                 {
                     for (var i = 0; i < data.Count(); i++)
@@ -112,20 +112,20 @@
 
             if (canNotify)
             {
-                foreach (var view in peer.ezyViewLst)
+                foreach (var view in peer.eunViewLst)
                 {
                     if (view)
                     {
-                        foreach (var behaviour in view.ezyBehaviourLst)
+                        foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEzyRoomInfoChange(parameters);
+                            if (behaviour) behaviour.OnEUNRoomInfoChange(parameters);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.ezyManagerBehaviourLst)
+                foreach (var behaviour in peer.eunManagerBehaviourLst)
                 {
-                    if (behaviour) behaviour.OnEzyRoomInfoChange(parameters);
+                    if (behaviour) behaviour.OnEUNRoomInfoChange(parameters);
                 }
             }
         }

@@ -1,9 +1,8 @@
-﻿namespace EUN.Entity.Response
+﻿namespace XmobiTea.EUN.Entity.Response
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Constant;
 
-    public class CustomOperationResponse
+    public abstract class CustomOperationResponse
     {
         public ReturnCode ReturnCode { get; private set; }
         public string DebugMessage { get; private set; }

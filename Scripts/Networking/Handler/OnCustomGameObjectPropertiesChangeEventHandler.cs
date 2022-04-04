@@ -1,7 +1,7 @@
-namespace EUN.Networking
+namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal class OnCustomGameObjectPropertiesChangeEventHandler : IServerEventHandler
     {
@@ -15,14 +15,14 @@ namespace EUN.Networking
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var customArray = parameters.GetCustomArray(ParameterCode.Data);
-            var objectId = customArray.GetInt(0);
+            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
+            var objectId = eunArray.GetInt(0);
 
             if (!peer.room.GameObjectDic.ContainsKey(objectId)) return;
 
             var roomGameObject = peer.room.GameObjectDic[objectId];
 
-            var customGameObjectProperties = customArray.GetCustomHashtable(1);
+            var customGameObjectProperties = eunArray.GetEUNHashtable(1);
             var keySet = customGameObjectProperties.Keys();
             foreach (int key in keySet)
             {
@@ -38,23 +38,23 @@ namespace EUN.Networking
                 else roomGameObject.CustomProperties.Add(key, value);
             }
 
-            foreach (var view in peer.ezyViewLst)
+            foreach (var view in peer.eunViewLst)
             {
                 if (view)
                 {
                     if (objectId == view.RoomGameObject.ObjectId)
                     {
-                        foreach (var behaviour in view.ezyBehaviourLst)
+                        foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEzyCustomGameObjectPropertiesChange(customGameObjectProperties);
+                            if (behaviour) behaviour.OnEUNCustomGameObjectPropertiesChange(customGameObjectProperties);
                         }
                     }
                 }
             }
 
-            foreach (var behaviour in peer.ezyManagerBehaviourLst)
+            foreach (var behaviour in peer.eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyCustomGameObjectPropertiesChange(roomGameObject, customGameObjectProperties);
+                if (behaviour) behaviour.OnEUNCustomGameObjectPropertiesChange(roomGameObject, customGameObjectProperties);
             }
         }
     }

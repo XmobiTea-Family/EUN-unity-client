@@ -1,6 +1,6 @@
-﻿namespace EUN.Entity
+﻿namespace XmobiTea.EUN.Entity
 {
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
     using System;
     using UnityEngine;
 
@@ -63,8 +63,8 @@
         }
 
         [SerializeField]
-        private CustomHashtable customProperties;
-        public CustomHashtable CustomProperties
+        private EUNHashtable customProperties;
+        public EUNHashtable CustomProperties
         {
             get { return customProperties; }
             set
@@ -73,14 +73,14 @@
             }
         }
 
-        public RoomGameObject(CustomArray customArray)
+        public RoomGameObject(EUNArray eunArray)
         {
-            ObjectId = customArray.GetInt(0);
-            OwnerId = customArray.GetInt(1);
-            PrefabPath = customArray.GetString(2);
-            SynchronizationData = customArray.GetObject(3);
-            InitializeData = customArray.GetObject(4);
-            CustomProperties = customArray.GetCustomHashtable(5);
+            ObjectId = eunArray.GetInt(0);
+            OwnerId = eunArray.GetInt(1);
+            PrefabPath = eunArray.GetString(2);
+            SynchronizationData = eunArray.GetObject(3);
+            InitializeData = eunArray.GetObject(4);
+            CustomProperties = eunArray.GetEUNHashtable(5);
         }
     }
 }

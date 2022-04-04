@@ -1,6 +1,6 @@
-﻿namespace EUN.Entity
+﻿namespace XmobiTea.EUN.Entity
 {
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
 
     public class ChatMessage
     {
@@ -8,11 +8,11 @@
         public string Message { get; private set; }
         public long Ts { get; private set; }
 
-        public ChatMessage(CustomArray customArray)
+        public ChatMessage(EUNArray eunArray)
         {
-            SenderId = customArray.GetString(0);
-            Message = customArray.GetString(1);
-            Ts = customArray.GetLong(2);
+            SenderId = eunArray.GetString(0);
+            Message = eunArray.GetString(1);
+            Ts = eunArray.GetLong(2);
         }
     }
 }

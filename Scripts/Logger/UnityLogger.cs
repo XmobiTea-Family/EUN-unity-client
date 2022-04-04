@@ -1,4 +1,4 @@
-﻿namespace EUN.Logger
+﻿namespace XmobiTea.EUN.Logger
 {
     using System;
     using UnityEngine;

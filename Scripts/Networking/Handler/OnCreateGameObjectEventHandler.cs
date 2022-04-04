@@ -1,8 +1,8 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
-    using EUN.Entity;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal class OnCreateGameObjectEventHandler : IServerEventHandler
     {
@@ -16,18 +16,18 @@
             if (peer.room == null) return;
             var parameters = operationEvent.GetParameters();
 
-            var roomGameObject = new RoomGameObject(parameters.GetCustomArray(ParameterCode.Data));
+            var roomGameObject = new RoomGameObject(parameters.GetEUNArray(ParameterCode.Data));
             peer.room.GameObjectDic[roomGameObject.ObjectId] = roomGameObject;
 
-            foreach (var behaviour in peer.ezyManagerBehaviourLst)
+            foreach (var behaviour in peer.eunManagerBehaviourLst)
             {
                 if (behaviour)
                 {
-                    var view = behaviour.OnEzyViewNeedCreate(roomGameObject);
+                    var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
                     if (view != null)
                     {
                         view.Init(roomGameObject);
-                        peer.ezyViewDic[view.RoomGameObject.ObjectId] = view;
+                        peer.eunViewDic[view.RoomGameObject.ObjectId] = view;
                     }
                 }
             }

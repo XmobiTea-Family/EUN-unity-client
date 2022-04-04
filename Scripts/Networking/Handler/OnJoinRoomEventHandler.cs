@@ -1,8 +1,8 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
-    using EUN.Entity;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal class OnJoinRoomEventHandler : IServerEventHandler
     {
@@ -14,15 +14,15 @@
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             var parameters = operationEvent.GetParameters();
-            var room = new Room(parameters.GetCustomArray(ParameterCode.Data));
+            var room = new Room(parameters.GetEUNArray(ParameterCode.Data));
             peer.room = room;
 
-            foreach (var behaviour in peer.ezyManagerBehaviourLst)
+            foreach (var behaviour in peer.eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyJoinRoom();
+                if (behaviour) behaviour.OnEUNJoinRoom();
             }
 
-            var roomPlayer = room.RoomPlayerLst.Find(x => x.UserId.Equals(EzyNetwork.UserId));
+            var roomPlayer = room.RoomPlayerLst.Find(x => x.UserId.Equals(EUNNetwork.UserId));
 
             peer.playerId = roomPlayer == null ? -1 : roomPlayer.PlayerId;
         }

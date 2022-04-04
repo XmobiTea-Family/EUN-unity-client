@@ -1,4 +1,4 @@
-﻿namespace EUN.Plugin.WebGL
+﻿namespace XmobiTea.EUN.Plugin.WebGL
 {
     using System.Runtime.InteropServices;
 

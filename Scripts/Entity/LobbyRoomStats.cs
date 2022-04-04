@@ -1,6 +1,6 @@
-﻿namespace EUN.Entity
+﻿namespace XmobiTea.EUN.Entity
 {
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
 
     public class LobbyRoomStats
     {
@@ -10,16 +10,16 @@
         public int MaxPlayer { get; private set; }
         public bool HasPassword { get; private set; }
         public int PlayerCount { get; private set; }
-        public CustomHashtable CustomRoomPropertiesForLobby { get; private set; }
+        public EUNHashtable CustomRoomPropertiesForLobby { get; private set; }
 
-        public LobbyRoomStats(CustomArray customArray)
+        public LobbyRoomStats(EUNArray eunArray)
         {
-            RoomId = customArray.GetInt(0);
-            IsOpen = customArray.GetBool(1);
-            MaxPlayer = customArray.GetInt(2);
-            HasPassword = customArray.GetBool(3);
-            PlayerCount = customArray.GetInt(4);
-            CustomRoomPropertiesForLobby = customArray.GetCustomHashtable(5);
+            RoomId = eunArray.GetInt(0);
+            IsOpen = eunArray.GetBool(1);
+            MaxPlayer = eunArray.GetInt(2);
+            HasPassword = eunArray.GetBool(3);
+            PlayerCount = eunArray.GetInt(4);
+            CustomRoomPropertiesForLobby = eunArray.GetEUNHashtable(5);
         }
     }
 }
