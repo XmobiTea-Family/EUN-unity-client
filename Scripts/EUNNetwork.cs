@@ -7,6 +7,7 @@
     using System;
 
     using UnityEngine;
+    using XmobiTea.EUN.Entity;
 
     public static partial class EUNNetwork
     {
@@ -23,14 +24,30 @@
 
         static EUNNetwork()
         {
+            InitServerSettings();
+
+            if (!Application.isPlaying) return;
+
             InitEUNSocketObject();
             InitEUNSocketStatisticsObject();
         }
 
-        private static void InitEUNSocketObject()
+        private static void InitServerSettings()
         {
             eunServerSettings = Resources.Load(EUNServerSettings.ResourcesPath) as EUNServerSettings;
 
+            if (eunServerSettings == null)
+            {
+#if UNITY_EDITOR
+                UnityEditor.EditorApplication.ExecuteMenuItem("EUN/EUN Settings");
+                eunServerSettings = Resources.Load(EUNServerSettings.ResourcesPath) as EUNServerSettings;
+                if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
+#endif
+            }
+        }
+
+        private static void InitEUNSocketObject()
+        {
             peer = new GameObject("EUN NetworkingPeer").AddComponent<NetworkingPeer>();
             GameObject.DontDestroyOnLoad(peer.gameObject);
 

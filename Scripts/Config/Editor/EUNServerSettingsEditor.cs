@@ -169,8 +169,8 @@ namespace XmobiTea.EUN.Config.Editor
             Selection.SetActiveObjectWithContext(eunServerSettings, eunServerSettings);
         }
 
-        [MenuItem("EUN/About EUNfox")]
-        private static void AboutEUNfox()
+        [MenuItem("EUN/About Ezyfox")]
+        private static void AboutEzyfox()
         {
             Application.OpenURL("https://youngmonkeys.org/ezyfox-sever/");
         }
@@ -199,7 +199,7 @@ namespace XmobiTea.EUN.Config.Editor
                     return;
                 }
 
-                if (!CloneezyfoxserverCsharpClient())
+                if (!CloneEzyfoxserverCsharpClient())
                 {
                     EditorUtility.DisplayDialog("Error", "Please use terminal to execute on the Assets path: git clone " + ezyfoxserverCsharpClientLink, "Ok");
 
@@ -212,7 +212,7 @@ namespace XmobiTea.EUN.Config.Editor
             }
         }
 
-        private static bool CloneezyfoxserverCsharpClient()
+        private static bool CloneEzyfoxserverCsharpClient()
         {
             if (!IsezyfoxserverCsharpClone())
             {

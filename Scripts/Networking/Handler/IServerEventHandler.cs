@@ -1,7 +1,7 @@
 ﻿namespace XmobiTea.EUN.Networking
 {
-    using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal interface IServerEventHandler
     {

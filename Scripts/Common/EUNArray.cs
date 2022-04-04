@@ -21,7 +21,7 @@
                 return this;
             }
 
-            public Builder AddAll(IList<object> list)
+            public Builder AddAll(System.Collections.IList list)
             {
                 foreach (var o in list)
                 {
@@ -83,11 +83,13 @@
             return originArray.Count;
         }
 
-        protected override T Get<T>(int k, T defaultValue = default(T))
+        protected override object Get<T>(int k, T defaultValue = default(T))
         {
             if (k < 0 || k > originArray.Count - 1) return defaultValue;
 
             var value = originArray[k];
+
+            if (value == null) return defaultValue;
 
             if (value is T t)
             {
@@ -119,7 +121,7 @@
 
             return eunArray;
 #else
-            return base.ToEUNData();
+            return base.ToEzyData();
 #endif
         }
 

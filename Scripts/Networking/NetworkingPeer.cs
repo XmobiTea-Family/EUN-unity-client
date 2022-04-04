@@ -16,6 +16,7 @@
 
     using UnityEngine;
     using UnityEngine.SceneManagement;
+    using XmobiTea.EUN.Entity;
 
     public partial class NetworkingPeer : MonoBehaviour
     {

@@ -16,22 +16,12 @@
 
             public Builder Add(int key, object value)
             {
-                originObject.Add(key, value);
+                originObject[key] = value;
 
                 return this;
             }
 
-            public Builder AddAll(IDictionary<int, object> dict)
-            {
-                foreach (var d in dict)
-                {
-                    Add(d.Key, d.Value);
-                }
-
-                return this;
-            }
-
-            public Builder AddAll(IDictionary<object, object> dict)
+            public Builder AddAll(System.Collections.IDictionary dict)
             {
                 var keys = dict.Keys;
                 foreach (var key in keys)
@@ -81,7 +71,7 @@
 
         public void Add(int key, object value)
         {
-            originObject.Add(key, CreateUseDataFromOriginData(value));
+            originObject[key] = CreateUseDataFromOriginData(value);
         }
 
         public ICollection<object> Values()
@@ -114,16 +104,20 @@
             return originObject.Count;
         }
 
-        protected override T Get<T>(int k, T defaultValue = default(T))
+        protected override object Get<T>(int k, T defaultValue = default(T))
         {
             if (originObject.ContainsKey(k))
             {
                 var value = originObject[k];
 
+                if (value == null) return defaultValue;
+
                 if (value is T t)
                 {
                     return t;
                 }
+
+                return defaultValue;
             }
 
             return defaultValue;
@@ -142,7 +136,7 @@
 
             return ezyObject;
 #else
-            return base.ToEUNData();
+            return base.ToEzyData();
 #endif
         }
 

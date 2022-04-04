@@ -4,11 +4,12 @@
     using com.tvd12.ezyfoxserver.client.entity;
 #endif
 
+    using System;
     using System.Collections.Generic;
 
     public class EUNData : IEUNData
     {
-        protected object CreateUseDataFromOriginData(object value)
+        protected static object CreateUseDataFromOriginData(object value)
         {
             if (value == null) return null;
 
@@ -27,7 +28,9 @@
 
             if (value is EzyObject ezyObject)
             {
-                var answer = new EUNHashtable.Builder().AddAll(ezyObject.toDict<object, object>()).Build();
+                var answer = new EUNHashtable.Builder()
+                    .AddAll(ezyObject.toDict<object, object>() as System.Collections.IDictionary)
+                    .Build();
 
                 return answer;
             }
@@ -43,7 +46,7 @@
                 return eunArray;
             }
 
-            if (value is IList<object> list)
+            if (value is System.Collections.IList list)
             {
                 var answer = new EUNArray();
 
@@ -55,9 +58,11 @@
                 return answer;
             }
 
-            if (value is IDictionary<object, object> dict)
+            if (value is System.Collections.IDictionary dict)
             {
-                var answer = new EUNHashtable.Builder().AddAll(dict).Build();
+                var answer = new EUNHashtable.Builder()
+                    .AddAll(dict)
+                    .Build();
 
                 return answer;
             }
@@ -65,7 +70,7 @@
             return value;
         }
 
-        protected object CreateEUNDataFromUseData(object value)
+        protected static object CreateEUNDataFromUseData(object value)
         {
             if (value == null) return null;
 
@@ -83,54 +88,54 @@
 
         public virtual int Count() { return 0; }
 
-        protected virtual T Get<T>(int k, T defaultValue = default(T))
+        protected virtual object Get<T>(int k, T defaultValue = default(T))
         {
             return defaultValue;
         }
 
         public byte GetByte(int k, byte defaultValue = 0)
         {
-            return Get(k, defaultValue);
+            return Convert.ToByte(Get(k, defaultValue));
         }
 
         public sbyte GetSByte(int k, sbyte defaultValue = 0)
         {
-            return Get(k, defaultValue);
+            return Convert.ToSByte(Get(k, defaultValue));
         }
 
         public short GetShort(int k, short defaultValue = 0)
         {
-            return Get(k, defaultValue);
+            return Convert.ToInt16(Get(k, defaultValue));
         }
 
         public int GetInt(int k, int defaultValue = 0)
         {
-            return Get(k, defaultValue);
+            return Convert.ToInt32(Get(k, defaultValue));
         }
 
         public float GetFloat(int k, float defaultValue = 0)
         {
-            return Get(k, defaultValue);
+            return Convert.ToSingle(Get(k, defaultValue));
         }
 
         public long GetLong(int k, long defaultValue = 0)
         {
-            return Get(k, defaultValue);
+            return Convert.ToInt64(Get(k, defaultValue));
         }
 
         public double GetDouble(int k, double defaultValue = 0)
         {
-            return Get(k, defaultValue);
+            return Convert.ToDouble(Get(k, defaultValue));
         }
 
         public bool GetBool(int k, bool defaultValue = false)
         {
-            return Get(k, defaultValue);
+            return Convert.ToBoolean(Get(k, defaultValue));
         }
 
         public string GetString(int k, string defaultValue = null)
         {
-            return Get(k, defaultValue);
+            return Convert.ToString(Get(k, defaultValue));
         }
 
         public object GetObject(int k, object defaultValue = null)
@@ -162,12 +167,12 @@
 
         public EUNArray GetEUNArray(int k, EUNArray defaultValue = null)
         {
-            return Get(k, defaultValue);
+            return (EUNArray)Get(k, defaultValue);
         }
 
         public EUNHashtable GetEUNHashtable(int k, EUNHashtable defaultValue = null)
         {
-            return Get(k, defaultValue);
+            return (EUNHashtable)Get(k, defaultValue);
         }
 
         public virtual object ToEzyData() { return null; }

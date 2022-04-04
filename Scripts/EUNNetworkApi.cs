@@ -41,12 +41,12 @@
 
         public static void GetLobbyStatsLst(int skip = 0, int limit = 10, Action<GetLobbyStatsLstOperationResponse> onResponse = null)
         {
-            peer.GetLobbyStatsLst(0, 10, onResponse);
+            peer.GetLobbyStatsLst(skip, limit, onResponse);
         }
 
         public static void GetCurrentLobbyStats(int skip = 0, int limit = 10, Action<GetCurrentLobbyStatsOperationResponse> onResponse = null)
         {
-            peer.GetCurrentLobbyStats(0, 10, onResponse);
+            peer.GetCurrentLobbyStats(skip, limit, onResponse);
         }
 
         public static void JoinLobby(int lobbyId, bool subscriberChat, Action<JoinLobbyOperationResponse> onResponse = null)

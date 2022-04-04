@@ -1,10 +1,11 @@
-﻿namespace XmobiTea.EUN.Common
+﻿namespace XmobiTea.EUN.Entity
 {
     using XmobiTea.EUN.Constant;
 
     using System.Text;
 
     using UnityEngine;
+    using XmobiTea.EUN.Common;
 
     public class OperationResponse
     {

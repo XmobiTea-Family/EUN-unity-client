@@ -120,9 +120,7 @@
 
         private IList<object> getObjectLstFromJsonArr(string jsonArr)
         {
-            var jsonString = "{\"data\":$data}".Replace("$data", jsonArr);
-            var jsonDic = Parser.Parse(jsonString) as IDictionary<string, object>;
-            return jsonDic["data"] as IList<object>;
+            return (IList<object>)Parser.Parse(jsonArr);
         }
     }
 }

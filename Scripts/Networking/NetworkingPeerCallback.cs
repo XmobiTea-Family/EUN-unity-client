@@ -13,6 +13,7 @@
 
     using UnityEngine;
     using System.Linq;
+    using XmobiTea.EUN.Entity;
 
     public partial class NetworkingPeer
     {
