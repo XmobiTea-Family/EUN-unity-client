@@ -1,9 +1,6 @@
-﻿namespace EUN.Entity
+﻿namespace XmobiTea.EUN.Entity
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
     using System;
     using UnityEngine;
 
@@ -66,8 +63,8 @@
         }
 
         [SerializeField]
-        private CustomHashtable customProperties;
-        public CustomHashtable CustomProperties
+        private EUNHashtable customProperties;
+        public EUNHashtable CustomProperties
         {
             get { return customProperties; }
             set
@@ -76,16 +73,14 @@
             }
         }
 
-#if EUN
-        public RoomGameObject(EzyArray ezyArray)
+        public RoomGameObject(EUNArray eunArray)
         {
-            ObjectId = ezyArray.get<int>(0);
-            OwnerId = ezyArray.get<int>(1);
-            PrefabPath = ezyArray.get<string>(2);
-            SynchronizationData = ezyArray.get<object>(3);
-            InitializeData = ezyArray.get<object>(4);
-            CustomProperties = new CustomHashtable(ezyArray.get<EzyObject>(5));
+            ObjectId = eunArray.GetInt(0);
+            OwnerId = eunArray.GetInt(1);
+            PrefabPath = eunArray.GetString(2);
+            SynchronizationData = eunArray.GetObject(3);
+            InitializeData = eunArray.GetObject(4);
+            CustomProperties = eunArray.GetEUNHashtable(5);
         }
-#endif
     }
 }

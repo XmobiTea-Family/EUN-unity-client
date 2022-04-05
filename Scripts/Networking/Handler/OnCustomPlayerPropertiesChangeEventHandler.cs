@@ -1,10 +1,7 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal class OnCustomPlayerPropertiesChangeEventHandler : IServerEventHandler
     {
@@ -15,17 +12,16 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var ezyArray = parameters.GetEzyArray(ParameterCode.Data);
-            var playerId = ezyArray.get<int>(0);
+            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
+            var playerId = eunArray.GetInt(0);
 
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.PlayerId == playerId);
             if (thisRoomPlayer != null)
             {
-                var customPlayerProperties = new CustomHashtable(ezyArray.get<EzyObject>(1));
+                var customPlayerProperties = eunArray.GetEUNHashtable(1);
                 var keySet = customPlayerProperties.Keys();
                 foreach (int key in keySet)
                 {
@@ -41,23 +37,22 @@
                     else thisRoomPlayer.CustomProperties.Add(key, value);
                 }
 
-                foreach (var view in peer.ezyViewLst)
+                foreach (var view in peer.eunViewLst)
                 {
                     if (view)
                     {
-                        foreach (var behaviour in view.ezyBehaviourLst)
+                        foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEzyCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
+                            if (behaviour) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.ezyManagerBehaviourLst)
+                foreach (var behaviour in peer.eunManagerBehaviourLst)
                 {
-                    if (behaviour) behaviour.OnEzyCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
+                    if (behaviour) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
                 }
             }
-#endif
         }
     }
 }

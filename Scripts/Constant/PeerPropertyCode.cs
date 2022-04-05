@@ -1,4 +1,4 @@
-﻿namespace EUN.Constant
+﻿namespace XmobiTea.EUN.Constant
 {
     public class PeerPropertyCode
     {

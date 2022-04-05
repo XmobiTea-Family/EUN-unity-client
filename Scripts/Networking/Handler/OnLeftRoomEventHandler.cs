@@ -1,7 +1,7 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal class OnLeftRoomEventHandler : IServerEventHandler
     {
@@ -12,14 +12,12 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             peer.room = null;
 
-            foreach (var behaviour in peer.ezyManagerBehaviourLst)
+            foreach (var behaviour in peer.eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyLeftRoom();
+                if (behaviour) behaviour.OnEUNLeftRoom();
             }
-#endif
         }
     }
 }

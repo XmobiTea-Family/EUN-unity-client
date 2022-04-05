@@ -1,21 +1,18 @@
-﻿namespace EUN.Entity
+﻿namespace XmobiTea.EUN.Entity
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
+    using XmobiTea.EUN.Common;
+
     public class ChatMessage
     {
         public string SenderId { get; private set; }
         public string Message { get; private set; }
         public long Ts { get; private set; }
 
-#if EUN
-        public ChatMessage(EzyArray ezyArray)
+        public ChatMessage(EUNArray eunArray)
         {
-            SenderId = ezyArray.get<string>(0);
-            Message = ezyArray.get<string>(1);
-            Ts = ezyArray.get<long>(2);
+            SenderId = eunArray.GetString(0);
+            Message = eunArray.GetString(1);
+            Ts = eunArray.GetLong(2);
         }
-#endif
     }
 }

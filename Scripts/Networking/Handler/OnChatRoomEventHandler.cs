@@ -1,8 +1,8 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
-    using EUN.Entity;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal class OnChatRoomEventHandler : IServerEventHandler
     {
@@ -13,32 +13,30 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var message = new ChatMessage(parameters.GetEzyArray(ParameterCode.Message));
+            var message = new ChatMessage(parameters.GetEUNArray(ParameterCode.Message));
 
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(message.SenderId));
             if (thisRoomPlayer != null)
             {
-                foreach (var view in peer.ezyViewLst)
+                foreach (var view in peer.eunViewLst)
                 {
                     if (view)
                     {
-                        foreach (var behaviour in view.ezyBehaviourLst)
+                        foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEzyReceiveChatRoom(message, thisRoomPlayer);
+                            if (behaviour) behaviour.OnEUNReceiveChatRoom(message, thisRoomPlayer);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.ezyManagerBehaviourLst)
+                foreach (var behaviour in peer.eunManagerBehaviourLst)
                 {
-                    if (behaviour) behaviour.OnEzyReceiveChatRoom(message, thisRoomPlayer);
+                    if (behaviour) behaviour.OnEUNReceiveChatRoom(message, thisRoomPlayer);
                 }
             }
-#endif
         }
     }
 }

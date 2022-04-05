@@ -1,9 +1,6 @@
-﻿namespace EUN.Entity
+﻿namespace XmobiTea.EUN.Entity
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
 
     using System.Collections.Generic;
 
@@ -14,7 +11,7 @@
         public int MaxPlayer { get; set; }
         public string Password { get; set; }
         public List<RoomPlayer> RoomPlayerLst { get; set; }
-        public CustomHashtable CustomRoomProperties { get; set; }
+        public EUNHashtable CustomRoomProperties { get; set; }
         public List<int> CustomRoomPropertiesForLobby { get; set; }
         public bool IsVisible { get; set; }
         public string LeaderClientUserId { get; set; }
@@ -27,50 +24,48 @@
             return new List<RoomPlayer>(RoomPlayerLst).ToArray();
         }
 
-#if EUN
-        public Room(EzyArray ezyArray)
+        public Room(EUNArray eunArray)
         {
             this.RoomPlayerLst = new List<RoomPlayer>();
             {
-                var ezyArray1 = ezyArray.get<EzyArray>(4);
-                for (var i = 0; i < ezyArray1.size(); i++)
+                var eunArray1 = eunArray.GetEUNArray(4);
+                for (var i = 0; i < eunArray1.Count(); i++)
                 {
-                    RoomPlayerLst.Add(new RoomPlayer(ezyArray1.get<EzyArray>(i)));
+                    RoomPlayerLst.Add(new RoomPlayer(eunArray1.GetEUNArray(i)));
                 }
             }
 
             this.CustomRoomPropertiesForLobby = new List<int>();
             {
-                var ezyArray1 = ezyArray.get<EzyArray>(6);
-                for (var i = 0; i < ezyArray1.size(); i++)
+                var eunArray1 = eunArray.GetEUNArray(6);
+                for (var i = 0; i < eunArray1.Count(); i++)
                 {
-                    CustomRoomPropertiesForLobby.Add(ezyArray1.get<int>(i));
+                    CustomRoomPropertiesForLobby.Add(eunArray1.GetInt(i));
                 }
             }
 
             this.GameObjectDic = new Dictionary<int, RoomGameObject>();
             {
-                var ezyArray1 = ezyArray.get<EzyArray>(11);
-                for (var i = 0; i < ezyArray1.size(); i++)
+                var eunArray1 = eunArray.GetEUNArray(11);
+                for (var i = 0; i < eunArray1.Count(); i++)
                 {
-                    var roomGameObject = new RoomGameObject(ezyArray1.get<EzyArray>(i));
+                    var roomGameObject = new RoomGameObject(eunArray1.GetEUNArray(i));
 
                     this.GameObjectDic[roomGameObject.ObjectId] = roomGameObject;
                 }
             }
 
-            this.RoomId = ezyArray.get<int>(0);
-            this.IsOpen = ezyArray.get<bool>(1);
-            this.MaxPlayer = ezyArray.get<int>(2);
-            this.Password = ezyArray.get<string>(3);
+            this.RoomId = eunArray.GetInt(0);
+            this.IsOpen = eunArray.GetBool(1);
+            this.MaxPlayer = eunArray.GetInt(2);
+            this.Password = eunArray.GetString(3);
 
-            this.CustomRoomProperties = new CustomHashtable(ezyArray.get<EzyObject>(5));
+            this.CustomRoomProperties = eunArray.GetEUNHashtable(5);
 
-            this.IsVisible = ezyArray.get<bool>(7);
-            this.LeaderClientUserId = ezyArray.get<string>(8);
-            this.TsCreate = ezyArray.get<long>(9);
-            this.Ttl = ezyArray.get<int>(10);
+            this.IsVisible = eunArray.GetBool(7);
+            this.LeaderClientUserId = eunArray.GetString(8);
+            this.TsCreate = eunArray.GetLong(9);
+            this.Ttl = eunArray.GetInt(10);
         }
-#endif
     }
 }

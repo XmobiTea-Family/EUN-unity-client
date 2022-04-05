@@ -1,7 +1,7 @@
-﻿namespace EUN.Entity.Response
+﻿namespace XmobiTea.EUN.Entity.Response
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
 
     public class SyncTsOperationResponse : CustomOperationResponse
     {
@@ -9,14 +9,12 @@
 
         public SyncTsOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
-#if EUN
             if (!HasError)
             {
                 var parameters = operationResponse.GetParameters();
 
                 ServerTimeStamp = parameters.GetLong(ParameterCode.Ts);
             }
-#endif
         }
     }
 }

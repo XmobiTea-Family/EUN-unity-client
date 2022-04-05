@@ -1,6 +1,6 @@
-﻿namespace EUN.Entity.Response
+﻿namespace XmobiTea.EUN.Entity.Response
 {
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
 
     public class JoinLobbyOperationResponse : CustomOperationResponse
     {
@@ -8,12 +8,10 @@
 
         public JoinLobbyOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
-#if EUN
             if (!HasError)
             {
                 Success = true;
             }
-#endif
         }
     }
 }

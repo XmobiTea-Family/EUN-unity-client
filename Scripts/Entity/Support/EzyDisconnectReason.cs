@@ -1,5 +1,5 @@
 ﻿#if !EUN
-namespace EUN
+namespace XmobiTea.EUN.Entity.Support
 {
 	public enum EzyDisconnectReason
 	{

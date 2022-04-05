@@ -1,21 +1,18 @@
-﻿namespace EUN.Entity
+﻿namespace XmobiTea.EUN.Entity
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
+    using XmobiTea.EUN.Common;
+
     public class LobbyStats
     {
         public int LobbyId { get; private set; }
         public int PlayerSize { get; private set; }
         public int RoomSize { get; private set; }
 
-#if EUN
-        public LobbyStats(EzyArray ezyArray)
+        public LobbyStats(EUNArray eunArray)
         {
-            LobbyId = ezyArray.get<int>(0);
-            PlayerSize = ezyArray.get<int>(1);
-            RoomSize = ezyArray.get<int>(2);
+            LobbyId = eunArray.GetInt(0);
+            PlayerSize = eunArray.GetInt(1);
+            RoomSize = eunArray.GetInt(2);
         }
-#endif
     }
 }

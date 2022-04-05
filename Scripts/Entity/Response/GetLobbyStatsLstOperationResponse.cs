@@ -1,10 +1,7 @@
-﻿namespace EUN.Entity.Response
+﻿namespace XmobiTea.EUN.Entity.Response
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
 
     public class GetLobbyStatsLstOperationResponse : CustomOperationResponse
     {
@@ -12,18 +9,16 @@
 
         public GetLobbyStatsLstOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
-#if EUN
             if (!HasError)
             {
                 var parameters = operationResponse.GetParameters();
 
-                var array = parameters.GetEzyArray(ParameterCode.Data);
+                var array = parameters.GetEUNArray(ParameterCode.Data);
 
-                var array0 = array.get<EzyArray>(0);
-                LobbyStatss = new LobbyStats[array0.size()];
-                for (var i = 0; i < LobbyStatss.Length; i++) LobbyStatss[i] = new LobbyStats(array0.get<EzyArray>(i));
+                var array0 = array.GetEUNArray(0);
+                LobbyStatss = new LobbyStats[array0.Count()];
+                for (var i = 0; i < LobbyStatss.Length; i++) LobbyStatss[i] = new LobbyStats(array0.GetEUNArray(i));
             }
-#endif
         }
     }
 }

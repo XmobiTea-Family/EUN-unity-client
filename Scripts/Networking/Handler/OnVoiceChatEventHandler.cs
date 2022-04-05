@@ -1,7 +1,7 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal class OnVoiceChatEventHandler : IServerEventHandler
     {
@@ -12,27 +12,25 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var ezyArray = parameters.GetEzyArray(ParameterCode.Data);
+            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
 
-            var objectId = ezyArray.get<int>(0);
-            var voiceChatData = ezyArray.get<object>(1);
+            var objectId = eunArray.GetInt(0);
+            var voiceChatData = eunArray.GetObject(1);
 
-            if (peer.ezyViewDic.ContainsKey(objectId))
+            if (peer.eunViewDic.ContainsKey(objectId))
             {
-                var view = peer.ezyViewDic[objectId];
+                var view = peer.eunViewDic[objectId];
                 if (view)
                 {
-                    foreach (var behaviour in view.ezyVoiceChatBehaviourLst)
+                    foreach (var behaviour in view.eunVoiceChatBehaviourLst)
                     {
-                        if (behaviour) behaviour.OnEzySynchronization(voiceChatData);
+                        if (behaviour) behaviour.OnEUNSynchronization(voiceChatData);
                     }
                 }
             }
-#endif
         }
     }
 }

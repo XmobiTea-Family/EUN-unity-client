@@ -1,23 +1,18 @@
-﻿namespace EUN.Entity
+﻿namespace XmobiTea.EUN.Entity
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
-#endif
-    using EUN.Common;
+    using XmobiTea.EUN.Common;
 
     public class RoomPlayer
     {
         public int PlayerId { get; private set; }
         public string UserId { get; private set; }
-        public CustomHashtable CustomProperties { get; private set; }
+        public EUNHashtable CustomProperties { get; private set; }
 
-#if EUN
-        public RoomPlayer(EzyArray ezyArray)
+        public RoomPlayer(EUNArray eunArray)
         {
-            PlayerId = ezyArray.get<int>(0);
-            UserId = ezyArray.get<string>(1);
-            CustomProperties = new CustomHashtable(ezyArray.get<EzyObject>(2));
+            PlayerId = eunArray.GetInt(0);
+            UserId = eunArray.GetString(1);
+            CustomProperties = eunArray.GetEUNHashtable(2);
         }
-#endif
     }
 }

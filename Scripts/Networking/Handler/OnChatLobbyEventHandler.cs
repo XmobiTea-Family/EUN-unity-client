@@ -1,8 +1,8 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
-    using EUN.Entity;
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal class OnChatLobbyEventHandler : IServerEventHandler
     {
@@ -13,15 +13,13 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             var parameters = operationEvent.GetParameters();
-            var message = new ChatMessage(parameters.GetEzyArray(ParameterCode.Message));
+            var message = new ChatMessage(parameters.GetEUNArray(ParameterCode.Message));
 
-            foreach (var behaviour in peer.ezyManagerBehaviourLst)
+            foreach (var behaviour in peer.eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyReceiveChatLobby(message);
+                if (behaviour) behaviour.OnEUNReceiveChatLobby(message);
             }
-#endif
         }
     }
 }

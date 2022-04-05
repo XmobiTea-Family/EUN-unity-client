@@ -1,7 +1,7 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
-    using EUN.Common;
-    using EUN.Constant;
+    using XmobiTea.EUN.Constant;
+    using XmobiTea.EUN.Entity;
 
     internal class OnTransferOwnerGameObjectEventHandler : IServerEventHandler
     {
@@ -12,14 +12,13 @@
 
         public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-#if EUN
             if (peer.room == null) return;
 
             var parameters = operationEvent.GetParameters();
-            var ezyArray = parameters.GetEzyArray(ParameterCode.Data);
+            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
 
-            var objectId = ezyArray.get<int>(0);
-            var newOwnerId = ezyArray.get<int>(1);
+            var objectId = eunArray.GetInt(0);
+            var newOwnerId = eunArray.GetInt(1);
 
             if (peer.room.GameObjectDic.ContainsKey(objectId))
             {
@@ -29,26 +28,25 @@
 
                 var newOwner = peer.room.RoomPlayerLst.Find(x => x.PlayerId == newOwnerId);
 
-                foreach (var view in peer.ezyViewLst)
+                foreach (var view in peer.eunViewLst)
                 {
                     if (view)
                     {
                         if (objectId == view.RoomGameObject.ObjectId)
                         {
-                            foreach (var behaviour in view.ezyBehaviourLst)
+                            foreach (var behaviour in view.eunBehaviourLst)
                             {
-                                if (behaviour) behaviour.OnEzyTransferOwnerGameObject(newOwner);
+                                if (behaviour) behaviour.OnEUNTransferOwnerGameObject(newOwner);
                             }
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.ezyManagerBehaviourLst)
+                foreach (var behaviour in peer.eunManagerBehaviourLst)
                 {
-                    if (behaviour) behaviour.OnEzyTransferOwnerGameObject(roomGameObject, newOwner);
+                    if (behaviour) behaviour.OnEUNTransferOwnerGameObject(roomGameObject, newOwner);
                 }
             }
-#endif
         }
     }
 }

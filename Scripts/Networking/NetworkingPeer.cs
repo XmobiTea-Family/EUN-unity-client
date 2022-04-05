@@ -1,21 +1,22 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
 #if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.factory;
-
-    using EUN.Bride;
-    using EUN.Bride.Socket;
-    using EUN.Bride.WebSocket;
 #endif
-    using EUN.Common;
-    using EUN.Constant;
+
+    using XmobiTea.EUN.Bride;
+    using XmobiTea.EUN.Bride.Socket;
+    using XmobiTea.EUN.Bride.WebSocket;
+
+    using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Constant;
 
     using System;
     using System.Collections.Generic;
 
     using UnityEngine;
     using UnityEngine.SceneManagement;
+    using XmobiTea.EUN.Entity;
 
     public partial class NetworkingPeer : MonoBehaviour
     {
@@ -40,9 +41,8 @@
                 return onOperationResponse;
             }
         }
-#if EUN
-        private IEzySocketObject ezySocketObject;
-#endif
+
+        private IEUNSocketObject eunSocketObject;
 
         private int requestId;
 
@@ -64,7 +64,6 @@
 
         internal void InitPeer()
         {
-#if EUN
             serverTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
             if (operationWaitingResponseDic == null) operationWaitingResponseDic = new Dictionary<int, OperationPending>();
@@ -73,13 +72,13 @@
             if (voiceChatOperationPendingQueue == null) voiceChatOperationPendingQueue = new Queue<OperationPending>();
 
             if (serverEventHandlerDic == null) serverEventHandlerDic = new Dictionary<int, IServerEventHandler>();
-            if (ezyViewLst == null) ezyViewLst = new List<EzyView>();
-            if (ezyManagerBehaviourLst == null) ezyManagerBehaviourLst = new List<EzyManagerBehaviour>();
-            if (ezyViewDic == null) ezyViewDic = new Dictionary<int, EzyView>();
+            if (eunViewLst == null) eunViewLst = new List<EUNView>();
+            if (eunManagerBehaviourLst == null) eunManagerBehaviourLst = new List<EUNManagerBehaviour>();
+            if (eunViewDic == null) eunViewDic = new Dictionary<int, EUNView>();
 
             InitSendRate();
 
-            InitEzySocketObject();
+            InitEUNSocketObject();
 
             SubscriberHandler();
 
@@ -87,56 +86,49 @@
             SceneManager.sceneLoaded += OnSceneLoaded;
 
             SubscriberServerEventHandler();
-#endif
         }
 
         private void InitSendRate()
         {
-#if EUN
-            var ezyServerSettings = EzyNetwork.ezyServerSettings;
-            if (ezyServerSettings == null) throw new NullReferenceException("Null Ezy Server Settings, please find it now");
+            var eunServerSettings = EUNNetwork.eunServerSettings;
+            if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
 
-            var sendRate = ezyServerSettings.sendRate;
-            var sendRateSynchronizationData = ezyServerSettings.sendRateSynchronizationData;
-            var sendRateVoiceChat = ezyServerSettings.sendRateVoiceChat;
+            var sendRate = eunServerSettings.sendRate;
+            var sendRateSynchronizationData = eunServerSettings.sendRateSynchronizationData;
+            var sendRateVoiceChat = eunServerSettings.sendRateVoiceChat;
 
             SetSendRate(sendRate, sendRateSynchronizationData, sendRateVoiceChat);
-#endif
         }
 
-        private void InitEzySocketObject()
+        private void InitEUNSocketObject()
         {
-#if EUN
-            var ezyServerSettings = EzyNetwork.ezyServerSettings;
+            var eunServerSettings = EUNNetwork.eunServerSettings;
 
-            if (ezyServerSettings == null) throw new NullReferenceException("Where is Ezy Server Settings");
+            if (eunServerSettings == null) throw new NullReferenceException("Where is EUN Server Settings");
 
 #if !UNITY_EDITOR && UNITY_WEBGL
-            ezySocketObject = gameObject.AddComponent<WebSocketEzySocketObject>();
+            eunSocketObject = gameObject.AddComponent<WebSocketEUNSocketObject>();
 #else
-            ezySocketObject = gameObject.AddComponent<SocketEzySocketObject>();
+            eunSocketObject = gameObject.AddComponent<SocketEUNSocketObject>();
 #endif
 
-            var zoneName = ezyServerSettings.zoneName;
-            var appName = ezyServerSettings.appName;
+            var zoneName = eunServerSettings.zoneName;
+            var appName = eunServerSettings.appName;
 
-            ezySocketObject.Init(zoneName, appName);
-#endif
+            eunSocketObject.Init(zoneName, appName);
         }
 
         private void SubscriberHandler()
         {
-#if EUN
-            ezySocketObject.SubscriberConnectionSuccessHandler(OnConnectionSuccessHandler);
-            ezySocketObject.SubscriberConnectionFailureHandler(OnConnectionFailureHandler);
-            ezySocketObject.SubscriberDisconnectionHandler(OnDisconnectionHandler);
-            ezySocketObject.SubscriberLoginErrorHandler(OnLoginErrorHandler);
-            ezySocketObject.SubscriberAppAccessHandler(OnAppAccessHandler);
-            ezySocketObject.SubscriberResponseHandler(OnResponseHandler);
-            ezySocketObject.SubscriberEventHandler(OnEventHandler);
-#endif
+            eunSocketObject.SubscriberConnectionSuccessHandler(OnConnectionSuccessHandler);
+            eunSocketObject.SubscriberConnectionFailureHandler(OnConnectionFailureHandler);
+            eunSocketObject.SubscriberDisconnectionHandler(OnDisconnectionHandler);
+            eunSocketObject.SubscriberLoginErrorHandler(OnLoginErrorHandler);
+            eunSocketObject.SubscriberAppAccessHandler(OnAppAccessHandler);
+            eunSocketObject.SubscriberResponseHandler(OnResponseHandler);
+            eunSocketObject.SubscriberEventHandler(OnEventHandler);
         }
-#if EUN
+
         private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
         {
             StartCoroutine(IEOnSceneLoaded(scene, loadSceneMode));
@@ -150,30 +142,28 @@
 
             if (roomGameObjectNeedCreateLst != null && roomGameObjectNeedCreateLst.Count != 0)
             {
-                foreach (var behaviour in ezyManagerBehaviourLst)
+                foreach (var behaviour in eunManagerBehaviourLst)
                 {
                     if (behaviour)
                     {
                         foreach (var roomGameObject in roomGameObjectNeedCreateLst)
                         {
-                            var view = behaviour.OnEzyViewNeedCreate(roomGameObject);
+                            var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
                             if (view != null)
                             {
                                 view.Init(roomGameObject);
-                                ezyViewDic[view.RoomGameObject.ObjectId] = view;
+                                eunViewDic[view.RoomGameObject.ObjectId] = view;
                             }
                         }
                     }
                 }
             }
         }
-#endif
-#if EUN
+
         float checkTimeoutOperationPending = 0;
-#endif
+
         internal void Enqueue(OperationRequest operationRequest, Action<OperationResponse> onOperationResponse)
         {
-#if EUN
             var operationPending = new OperationPending(operationRequest, onOperationResponse);
 
             if (operationRequest.IsSynchronizationRequest())
@@ -182,22 +172,20 @@
                 else syncOperationPendingQueue.Enqueue(operationPending);
             }
             else operationPendingQueue.Enqueue(operationPending);
-#endif
         }
 
         private void Send(OperationPending operationPending)
         {
-#if EUN
             var onOperationResponse = operationPending.GetCallback();
             var operationRequest = operationPending.GetOperationRequest();
 
             if (onOperationResponse != null) operationRequest.SetRequestId(requestId++);
             else operationRequest.SetRequestId(-1);
-
+#if EUN
             var request = EzyEntityFactory.newObject();
             var data = EzyEntityFactory.newArray();
             data.add((int)operationRequest.GetOperationCode());
-            data.add(operationRequest.GetParameters() == null ? null : operationRequest.GetParameters().toData());
+            data.add(operationRequest.GetParameters() == null ? null : operationRequest.GetParameters().ToEzyData());
 
             if (operationRequest.GetRequestId() != -1)
             {
@@ -210,16 +198,16 @@
 
             request.put(Commands.Data, data);
 
-            ezySocketObject.Send(request, operationRequest.IsReliable());
+            eunSocketObject.Send(request, operationRequest.IsReliable());
+#endif
 
             if (operationRequest.IsSynchronizationRequest()) Debug.Log("[SEND SYNC] " + operationRequest.ToString());
             else Debug.Log("[SEND] " + operationRequest.ToString());
-#endif
+
         }
 
         private void Update()
         {
-#if EUN
             serverTimeStamp += Time.deltaTime * 1000;
 
             if (checkTimeoutOperationPending < Time.time)
@@ -228,7 +216,7 @@
 
                 if (operationWaitingResponseDic.Count != 0)
                 {
-                    var ezyArrayLst = new List<EzyArray>();
+                    var eunArrayLst = new List<EUNArray>();
 
                     foreach (var operationPendingPair in operationWaitingResponseDic)
                     {
@@ -237,21 +225,21 @@
 
                         if (operationRequest.GetEndTimeOut() < Time.time)
                         {
-                            var ezyData = EzyEntityFactory.newArray();
+                            var eunArray = new EUNArray();
 
-                            ezyData.add((int)ReturnCode.OperationTimeout);
-                            ezyData.add((string)null);
-                            ezyData.add(operationRequest.GetRequestId());
+                            eunArray.Add((int)ReturnCode.OperationTimeout);
+                            eunArray.Add((string)null);
+                            eunArray.Add(operationRequest.GetRequestId());
 
-                            ezyArrayLst.Add(ezyData);
+                            eunArrayLst.Add(eunArray);
                         }
                     }
 
-                    if (ezyArrayLst.Count == 0)
+                    if (eunArrayLst.Count == 0)
                     {
-                        foreach (var ezyData in ezyArrayLst)
+                        foreach (var eunArray in eunArrayLst)
                         {
-                            OnResponseHandler(ezyData);
+                            OnResponseHandler(eunArray);
                         }
                     }
                 }
@@ -270,18 +258,18 @@
             {
                 if (nextSendSyncMsgTimer < Time.time)
                 {
-                    foreach (var view in ezyViewLst)
+                    foreach (var view in eunViewLst)
                     {
                         if (view)
                         {
-                            foreach (var behaviour in view.ezyBehaviourLst)
+                            foreach (var behaviour in view.eunBehaviourLst)
                             {
                                 if (behaviour)
                                 {
                                     if (behaviour.gameObject.activeInHierarchy)
                                     {
                                         var objectData = behaviour.GetSynchronizationData();
-                                        if (objectData != null) SynchronizationDataGameObjectRoom(behaviour.ezyView.RoomGameObject.ObjectId, objectData);
+                                        if (objectData != null) SynchronizationDataGameObjectRoom(behaviour.eunView.RoomGameObject.ObjectId, objectData);
                                     }
                                 }
                             }
@@ -297,18 +285,18 @@
 
                 if (nextSendVoiceChatMsgTimer < Time.time)
                 {
-                    foreach (var view in ezyViewLst)
+                    foreach (var view in eunViewLst)
                     {
                         if (view)
                         {
-                            foreach (var behaviour in view.ezyVoiceChatBehaviourLst)
+                            foreach (var behaviour in view.eunVoiceChatBehaviourLst)
                             {
                                 if (behaviour)
                                 {
                                     if (behaviour.gameObject.activeInHierarchy)
                                     {
                                         var objectData = behaviour.GetSynchronizationData();
-                                        if (objectData != null) VoiceChatRoom(behaviour.ezyView.RoomGameObject.ObjectId, objectData);
+                                        if (objectData != null) VoiceChatRoom(behaviour.eunView.RoomGameObject.ObjectId, objectData);
                                     }
                                 }
                             }
@@ -321,8 +309,7 @@
                         Send(voiceChatOperationPendingQueue.Dequeue());
                     }
                 }
-            }  
-#endif
+            }
         }
     }
 }

@@ -1,25 +1,27 @@
-﻿namespace EUN.Networking
+﻿namespace XmobiTea.EUN.Networking
 {
 #if EUN
-    using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.constant;
+#else
+    using XmobiTea.EUN.Entity.Support;
 #endif
-    using EUN.Common;
+
+    using XmobiTea.EUN.Common;
 
     using System;
     using System.Collections.Generic;
 
     using UnityEngine;
     using System.Linq;
+    using XmobiTea.EUN.Entity;
 
     public partial class NetworkingPeer
     {
         private Dictionary<int, IServerEventHandler> serverEventHandlerDic;
 
-        internal List<EzyView> ezyViewLst;
-        internal List<EzyManagerBehaviour> ezyManagerBehaviourLst;
+        internal List<EUNView> eunViewLst;
+        internal List<EUNManagerBehaviour> eunManagerBehaviourLst;
 
-#if EUN
         void SubscriberServerEventHandler()
         {
             var type = typeof(IServerEventHandler);
@@ -34,15 +36,15 @@
             }
         }
 
-        void OnEventHandler(EzyArray obj)
+        void OnEventHandler(EUNArray obj)
         {
-            var eventCode = obj.get<int>(0);
+            var eventCode = obj.GetInt(0);
             if (!serverEventHandlerDic.ContainsKey(eventCode))
             {
                 return;
             }
 
-            var operationEvent = new OperationEvent(eventCode, new CustomHashtable(obj.get<EzyObject>(1)));
+            var operationEvent = new OperationEvent(eventCode, obj.GetEUNHashtable(1));
 
             Debug.Log("[EVENT] " + operationEvent.ToString());
 
@@ -50,19 +52,19 @@
             serverEventHandler.Handle(operationEvent, this);
         }
 
-        void OnResponseHandler(EzyArray obj)
+        void OnResponseHandler(EUNArray obj)
         {
-            var responseId = obj.get<int>(2);
+            var responseId = obj.GetInt(2);
 
             if (operationWaitingResponseDic.ContainsKey(responseId))
             {
-                var returnCode = obj.get<int>(0);
+                var returnCode = obj.GetInt(0);
 
-                CustomHashtable parameters = null;
+                EUNHashtable parameters = null;
                 string debugMessage = null;
 
-                if (returnCode == 0) parameters = new CustomHashtable(obj.get<EzyObject>(1));
-                else debugMessage = obj.get<string>(1);
+                if (returnCode == 0) parameters = obj.GetEUNHashtable(1);
+                else debugMessage = obj.GetString(1);
 
                 var operationPending = operationWaitingResponseDic[responseId];
 
@@ -80,13 +82,13 @@
             }
         }
 
-        void OnLoginErrorHandler(EzyArray obj)
+        void OnLoginErrorHandler(EUNArray obj)
         {
             isConnected = false;
 
-            foreach (var behaviour in ezyManagerBehaviourLst)
+            foreach (var behaviour in eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyLoginError();
+                if (behaviour) behaviour.OnEUNLoginError();
             }
         }
 
@@ -94,9 +96,9 @@
         {
             isConnected = false;
 
-            foreach (var behaviour in ezyManagerBehaviourLst)
+            foreach (var behaviour in eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyDisconnected(obj);
+                if (behaviour) behaviour.OnEUNDisconnected(obj);
             }
 
             room = null;
@@ -107,9 +109,9 @@
         {
             isConnected = false;
 
-            foreach (var behaviour in ezyManagerBehaviourLst)
+            foreach (var behaviour in eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyConnectionFailure(obj);
+                if (behaviour) behaviour.OnEUNConnectionFailure(obj);
             }
 
             room = null;
@@ -118,44 +120,43 @@
 
         void OnConnectionSuccessHandler()
         {
-            foreach (var behaviour in ezyManagerBehaviourLst)
+            foreach (var behaviour in eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyZoneConnected();
+                if (behaviour) behaviour.OnEUNZoneConnected();
             }
         }
 
-        void OnAppAccessHandler(EzyArray obj)
+        void OnAppAccessHandler(EUNArray obj)
         {
             isConnected = true;
 
-            var outputEzyArray = obj.get<EzyArray>(2);
-            serverTimeStamp = outputEzyArray.get<long>(0);
+            var outputEUNArray = obj.GetEUNArray(2);
+            serverTimeStamp = outputEUNArray.GetLong(0);
 
-            foreach (var behaviour in ezyManagerBehaviourLst)
+            foreach (var behaviour in eunManagerBehaviourLst)
             {
-                if (behaviour) behaviour.OnEzyConnected();
+                if (behaviour) behaviour.OnEUNConnected();
             }
         }
-#endif
 
-        internal void SubscriberEzyView(EzyView view)
+        internal void SubscriberEUNView(EUNView view)
         {
-            if (!ezyViewLst.Contains(view)) ezyViewLst.Add(view);
+            if (!eunViewLst.Contains(view)) eunViewLst.Add(view);
         }
 
-        internal void UnSubscriberEzyView(EzyView view)
+        internal void UnSubscriberEUNView(EUNView view)
         {
-            if (ezyViewLst.Contains(view)) ezyViewLst.Remove(view);
+            if (eunViewLst.Contains(view)) eunViewLst.Remove(view);
         }
 
-        internal void SubscriberEzyBehaviour(EzyManagerBehaviour behaviour)
+        internal void SubscriberEUNBehaviour(EUNManagerBehaviour behaviour)
         {
-            if (!ezyManagerBehaviourLst.Contains(behaviour)) ezyManagerBehaviourLst.Add(behaviour);
+            if (!eunManagerBehaviourLst.Contains(behaviour)) eunManagerBehaviourLst.Add(behaviour);
         }
 
-        internal void UnSubscriberEzyBehaviour(EzyManagerBehaviour behaviour)
+        internal void UnSubscriberEUNBehaviour(EUNManagerBehaviour behaviour)
         {
-            if (ezyManagerBehaviourLst.Contains(behaviour)) ezyManagerBehaviourLst.Remove(behaviour);
+            if (eunManagerBehaviourLst.Contains(behaviour)) eunManagerBehaviourLst.Remove(behaviour);
         }
     }
 }
