@@ -5,7 +5,7 @@
 
     internal class OnRoomInfoChangeEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnRoomInfoChange;
         }

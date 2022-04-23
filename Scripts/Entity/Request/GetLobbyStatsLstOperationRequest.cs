@@ -5,7 +5,7 @@
 
     public class GetLobbyStatsLstOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.GetLobbyStatsLst;
+        protected override int Code => OperationCode.GetLobbyStatsLst;
 
         protected override bool Reliable => true;
 

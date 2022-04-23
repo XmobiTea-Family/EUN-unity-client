@@ -5,7 +5,7 @@
 
     internal class OnRpcGameObjectEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnRpcGameObject;
         }

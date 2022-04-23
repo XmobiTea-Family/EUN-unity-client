@@ -5,7 +5,7 @@
 
     public class JoinOrCreateRoomOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.JoinOrCreateRoom;
+        protected override int Code => OperationCode.JoinOrCreateRoom;
 
         protected override bool Reliable => true;
 

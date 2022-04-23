@@ -5,7 +5,7 @@
 
     public class SynchronizationDataGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.SynchronizationDataGameObjectRoom;
+        protected override int Code => OperationCode.SynchronizationDataGameObjectRoom;
 
         protected override bool Reliable => false;
 

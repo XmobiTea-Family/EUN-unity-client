@@ -5,7 +5,7 @@
 
     public class ChangeLeaderClientOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.ChangeLeaderClient;
+        protected override int Code => OperationCode.ChangeLeaderClient;
 
         protected override bool Reliable => true;
 

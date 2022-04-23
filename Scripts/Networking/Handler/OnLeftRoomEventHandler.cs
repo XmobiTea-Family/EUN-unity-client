@@ -5,7 +5,7 @@
 
     internal class OnLeftRoomEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnLeftRoom;
         }

@@ -5,7 +5,7 @@ namespace XmobiTea.EUN.Networking
 
     internal class OnCustomGameObjectPropertiesChangeEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnCustomGameObjectPropertiesChange;
         }

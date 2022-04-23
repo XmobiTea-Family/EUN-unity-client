@@ -5,7 +5,7 @@
 
     public class SyncTsOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.SyncTs;
+        protected override int Code => OperationCode.SyncTs;
 
         protected override bool Reliable => true;
 

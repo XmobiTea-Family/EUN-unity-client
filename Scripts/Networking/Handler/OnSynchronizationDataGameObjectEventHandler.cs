@@ -5,7 +5,7 @@
 
     internal class OnSynchronizationDataGameObjectEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnSynchronizationDataGameObject;
         }

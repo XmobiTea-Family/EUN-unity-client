@@ -5,7 +5,7 @@
 
     public class DestroyGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.DestroyGameObjectRoom;
+        protected override int Code => OperationCode.DestroyGameObjectRoom;
 
         protected override bool Reliable => true;
 

@@ -5,7 +5,7 @@
 
     internal class OnVoiceChatEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnVoiceChat;
         }

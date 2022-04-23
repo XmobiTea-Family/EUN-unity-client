@@ -6,7 +6,7 @@
 
     internal class OnChatAllEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnChatAll;
         }

@@ -6,7 +6,7 @@
 
     internal class OnCreateGameObjectEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnCreateGameObject;
         }

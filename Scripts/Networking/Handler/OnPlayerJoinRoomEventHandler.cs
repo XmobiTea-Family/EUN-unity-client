@@ -6,7 +6,7 @@
 
     internal class OnPlayerJoinRoomEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnPlayerJoinRoom;
         }

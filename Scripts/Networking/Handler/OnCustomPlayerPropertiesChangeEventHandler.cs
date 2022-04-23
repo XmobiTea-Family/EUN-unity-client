@@ -5,7 +5,7 @@
 
     internal class OnCustomPlayerPropertiesChangeEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnCustomPlayerPropertiesChange;
         }

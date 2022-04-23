@@ -11,14 +11,14 @@
     [RequireComponent(typeof(EUNView))]
     public class EUNBehaviour : MonoBehaviour
     {
+        private static Dictionary<Type, MethodInfo[]> methodInfoDic = new Dictionary<Type, MethodInfo[]>();
+
         public EUNView eunView { get; private set; }
 
         protected virtual void Awake()
         {
             if (eunView == null) eunView = GetComponent<EUNView>();
         }
-
-        private List<MethodInfo> methodInfoLst;
 
         protected virtual void Start()
         {
@@ -37,15 +37,26 @@
 
         public void EUNRPC(int eunRPCCommand, EUNArray rpcDataArray)
         {
+            var type = GetType();
 
-            if (methodInfoLst == null) methodInfoLst = GetType().GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EUNRPCAttribute), true).Length > 0).ToList();
+            MethodInfo[] methodInfos;
+            
+            if (methodInfoDic.ContainsKey(type))
+            {
+                methodInfos = methodInfoDic[type];
+            }
+            else
+            {
+                methodInfos = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EUNRPCAttribute), true).Length > 0).ToArray();
+                methodInfoDic[type] = methodInfos;
+            }
 
             var eunRPCMethodName = ((EUNRPCCommand)eunRPCCommand).ToString();
 
             MethodInfo method = null;
             object[] parameters = null;// = rpcData != null ? rpcData.toList<object>().ToArray() : new object[0];
 
-            foreach (var methodInfo in methodInfoLst)
+            foreach (var methodInfo in methodInfos)
             {
                 if (methodInfo.Name.Equals(eunRPCMethodName))
                 {

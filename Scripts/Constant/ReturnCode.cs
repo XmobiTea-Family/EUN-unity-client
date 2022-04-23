@@ -1,21 +1,21 @@
 ﻿namespace XmobiTea.EUN.Constant
 {
-    public enum ReturnCode
+    public class ReturnCode
     {
-        InvalidRequestParameters = -6,
-        OperationTimeout = -5,
-        AppNullRequest = -4,
-        OperationInvalid = -3,
-        InternalServerError = -2,
-        NotOk = -1,
+        public const int InvalidRequestParameters = -6;
+        public const int OperationTimeout = -5;
+        public const int AppNullRequest = -4;
+        public const int OperationInvalid = -3;
+        public const int InternalServerError = -2;
+        public const int NotOk = -1;
 
-        Ok = 0,
-        RoomFull = 10,
-        RoomClosed = 11,
-        LobbyFull = 12,
-        RoomNotFound = 14,
-        RoomPasswordWrong = 15,
+        public const int Ok = 0;
+        public const int RoomFull = 10;
+        public const int RoomClosed = 11;
+        public const int LobbyFull = 12;
+        public const int RoomNotFound = 14;
+        public const int RoomPasswordWrong = 15;
 
-        UserInRoom = 16,
+        public const int UserInRoom = 16;
     }
 }

@@ -5,7 +5,7 @@
 
     public class RpcGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.RpcGameObjectRoom;
+        protected override int Code => OperationCode.RpcGameObjectRoom;
 
         protected override bool Reliable => false;
 

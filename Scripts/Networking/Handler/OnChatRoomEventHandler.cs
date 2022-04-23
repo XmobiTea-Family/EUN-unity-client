@@ -6,7 +6,7 @@
 
     internal class OnChatRoomEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnChatRoom;
         }

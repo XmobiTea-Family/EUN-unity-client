@@ -6,7 +6,7 @@
 
     internal class OnLeaderClientChangeEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnLeaderClientChange;
         }

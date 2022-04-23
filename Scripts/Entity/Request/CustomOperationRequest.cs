@@ -1,11 +1,10 @@
 ﻿namespace XmobiTea.EUN.Entity.Request
 {
     using XmobiTea.EUN.Common;
-    using XmobiTea.EUN.Constant;
 
     public abstract class CustomOperationRequest
     {
-        protected virtual OperationCode Code { get; }
+        protected abstract int Code { get; }
 
         protected virtual bool Reliable { get; }
 

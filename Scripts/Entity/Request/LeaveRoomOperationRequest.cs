@@ -5,7 +5,7 @@
 
     public class LeaveRoomOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.LeaveRoom;
+        protected override int Code => OperationCode.LeaveRoom;
 
         protected override bool Reliable => true;
 

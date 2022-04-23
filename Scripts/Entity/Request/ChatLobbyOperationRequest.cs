@@ -5,7 +5,7 @@
 
     public class ChatLobbyOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.ChatLobby;
+        protected override int Code => OperationCode.ChatLobby;
 
         protected override bool Reliable => false;
 

@@ -5,7 +5,7 @@
 
     public class SubscriberChatAllOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.SubscriberChatAll;
+        protected override int Code => OperationCode.SubscriberChatAll;
 
         protected override bool Reliable => true;
 

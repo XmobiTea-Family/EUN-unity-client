@@ -6,7 +6,7 @@
 
     internal class OnPlayerLeftRoomEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnPlayerLeftRoom;
         }
