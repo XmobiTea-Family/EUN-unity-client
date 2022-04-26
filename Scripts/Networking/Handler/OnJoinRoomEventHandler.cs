@@ -17,14 +17,13 @@
             var room = new Room(parameters.GetEUNArray(ParameterCode.Data));
             peer.room = room;
 
+            var roomPlayer = room.RoomPlayerLst.Find(x => x.UserId.Equals(EUNNetwork.UserId));
+            peer.playerId = roomPlayer == null ? -1 : roomPlayer.PlayerId;
+
             foreach (var behaviour in peer.eunManagerBehaviourLst)
             {
                 if (behaviour) behaviour.OnEUNJoinRoom();
             }
-
-            var roomPlayer = room.RoomPlayerLst.Find(x => x.UserId.Equals(EUNNetwork.UserId));
-
-            peer.playerId = roomPlayer == null ? -1 : roomPlayer.PlayerId;
         }
     }
 }

@@ -41,6 +41,8 @@
                 }
             }
 
+            peer.room.LeaderClientUserId = thisRoomPlayer.UserId;
+
             foreach (var view in peer.eunViewLst)
             {
                 if (view)
@@ -56,8 +58,6 @@
             {
                 if (behaviour) behaviour.OnEUNLeaderClientChange(thisRoomPlayer);
             }
-
-            peer.room.LeaderClientUserId = thisRoomPlayer.UserId;
         }
     }
 }

@@ -117,7 +117,7 @@
                     return t;
                 }
 
-                return defaultValue;
+                return value;
             }
 
             return defaultValue;
