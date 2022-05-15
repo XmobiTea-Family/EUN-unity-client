@@ -19,9 +19,8 @@ namespace XmobiTea.EUN.Config.Editor
 
             GUILayout.Space(5);
             GUILayout.Label("Copyright 2022 XmobiTea Family");
-            GUILayout.Label("EUN (Ezy Unity Networking) use the core of Ezyfox.");
+            GUILayout.Label("EUN (Ezy Unity Networking) use the core of Ezyfox server.");
         }
     }
 }
-
 #endif

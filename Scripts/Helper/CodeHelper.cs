@@ -1,11 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Reflection;
-
-using XmobiTea.EUN.Constant;
-
-namespace XmobiTea.EUN.Helper
+﻿namespace XmobiTea.EUN.Helper
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Reflection;
+
+    using XmobiTea.EUN.Constant;
+
     public class CodeHelper
     {
         private static string UnknownCode = "Unknown";

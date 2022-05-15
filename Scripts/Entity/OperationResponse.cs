@@ -62,6 +62,9 @@
 
             stringBuilder.Append("Code: " + CodeHelper.GetOperationCodeName(operationCode) + " ExecuteTime " + executeTime + "ms ResponseId: " + responseId + " ReturnCode " + CodeHelper.GetReturnCodeName(returnCode));
 
+            if (returnCode == ReturnCode.Ok) stringBuilder.Append(" Parameters " + parameters);
+            else stringBuilder.Append(" DebugMessage " + debugMessage);
+
             return stringBuilder.ToString();
         }
     }
