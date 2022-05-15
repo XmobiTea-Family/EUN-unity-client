@@ -27,7 +27,7 @@
                 {
                     foreach (var behaviour in view.eunVoiceChatBehaviourLst)
                     {
-                        if (behaviour) behaviour.OnEUNSynchronization(voiceChatData);
+                        if (behaviour != null) behaviour.OnEUNSynchronization(voiceChatData);
                     }
                 }
             }

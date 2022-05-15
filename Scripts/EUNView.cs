@@ -43,6 +43,19 @@
         internal void Init(RoomGameObject roomGameObject)
         {
             this.RoomGameObject = roomGameObject;
+
+            if (RoomGameObject.IsValid())
+            {
+                for (var i = 0; i < eunBehaviourLst.Count; i++)
+                {
+                    var behaviour = eunBehaviourLst[i];
+                    if (behaviour != null)
+                    {
+                        behaviour.OnEUNInitialize(RoomGameObject.InitializeData);
+                        behaviour.OnEUNSynchronization(RoomGameObject.SynchronizationData);
+                    }
+                }
+            }
         }
 
         internal void SubscriberEUNBehaviour(EUNBehaviour behaviour)
@@ -51,8 +64,11 @@
             {
                 eunBehaviourLst.Add(behaviour);
 
-                behaviour.OnEUNInitialize(RoomGameObject.InitializeData);
-                behaviour.OnEUNSynchronization(RoomGameObject.SynchronizationData);
+                if (RoomGameObject.IsValid())
+                {
+                    behaviour.OnEUNInitialize(RoomGameObject.InitializeData);
+                    behaviour.OnEUNSynchronization(RoomGameObject.SynchronizationData);
+                }
             }
         }
 

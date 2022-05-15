@@ -20,7 +20,7 @@
         private Dictionary<int, IServerEventHandler> serverEventHandlerDic;
 
         internal List<EUNView> eunViewLst;
-        internal List<EUNManagerBehaviour> eunManagerBehaviourLst;
+        internal List<IEUNManagerBehaviour> eunManagerBehaviourLst;
 
         void SubscriberServerEventHandler()
         {
@@ -86,9 +86,10 @@
         {
             isConnected = false;
 
-            foreach (var behaviour in eunManagerBehaviourLst)
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNLoginError();
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNLoginError();
             }
         }
 
@@ -96,9 +97,10 @@
         {
             isConnected = false;
 
-            foreach (var behaviour in eunManagerBehaviourLst)
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNDisconnected(obj);
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNDisconnected(obj);
             }
 
             room = null;
@@ -109,9 +111,10 @@
         {
             isConnected = false;
 
-            foreach (var behaviour in eunManagerBehaviourLst)
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNConnectionFailure(obj);
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNConnectionFailure(obj);
             }
 
             room = null;
@@ -120,9 +123,10 @@
 
         void OnConnectionSuccessHandler()
         {
-            foreach (var behaviour in eunManagerBehaviourLst)
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNZoneConnected();
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNZoneConnected();
             }
         }
 
@@ -133,9 +137,10 @@
             var outputEUNArray = obj.GetEUNArray(2);
             serverTimeStamp = outputEUNArray.GetLong(0);
 
-            foreach (var behaviour in eunManagerBehaviourLst)
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNConnected();
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNConnected();
             }
         }
 
@@ -149,12 +154,12 @@
             if (eunViewLst.Contains(view)) eunViewLst.Remove(view);
         }
 
-        internal void SubscriberEUNBehaviour(EUNManagerBehaviour behaviour)
+        internal void SubscriberEUNBehaviour(IEUNManagerBehaviour behaviour)
         {
             if (!eunManagerBehaviourLst.Contains(behaviour)) eunManagerBehaviourLst.Add(behaviour);
         }
 
-        internal void UnSubscriberEUNBehaviour(EUNManagerBehaviour behaviour)
+        internal void UnSubscriberEUNBehaviour(IEUNManagerBehaviour behaviour)
         {
             if (eunManagerBehaviourLst.Contains(behaviour)) eunManagerBehaviourLst.Remove(behaviour);
         }

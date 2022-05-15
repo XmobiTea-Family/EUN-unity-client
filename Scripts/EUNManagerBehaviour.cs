@@ -10,7 +10,7 @@
 
     using UnityEngine;
 
-    public class EUNManagerBehaviour : MonoBehaviour
+    public class EUNManagerBehaviour : MonoBehaviour, IEUNManagerBehaviour
     {
         protected virtual void Awake()
         {

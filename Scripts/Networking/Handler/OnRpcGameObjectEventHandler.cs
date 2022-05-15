@@ -28,7 +28,7 @@
                 {
                     foreach (var behaviour in view.eunBehaviourLst)
                     {
-                        if (behaviour) behaviour.EUNRPC(eunRPCCommand, rpcData);
+                        if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcData);
                     }
                 }
             }

@@ -46,15 +46,17 @@ namespace XmobiTea.EUN.Networking
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEUNCustomGameObjectPropertiesChange(customGameObjectProperties);
+                            if (behaviour != null) behaviour.OnEUNCustomGameObjectPropertiesChange(customGameObjectProperties);
                         }
                     }
                 }
             }
 
-            foreach (var behaviour in peer.eunManagerBehaviourLst)
+            var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNCustomGameObjectPropertiesChange(roomGameObject, customGameObjectProperties);
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNCustomGameObjectPropertiesChange(roomGameObject, customGameObjectProperties);
             }
         }
     }

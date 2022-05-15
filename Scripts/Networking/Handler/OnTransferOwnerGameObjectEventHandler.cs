@@ -36,15 +36,17 @@
                         {
                             foreach (var behaviour in view.eunBehaviourLst)
                             {
-                                if (behaviour) behaviour.OnEUNTransferOwnerGameObject(newOwner);
+                                if (behaviour != null) behaviour.OnEUNTransferOwnerGameObject(newOwner);
                             }
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.eunManagerBehaviourLst)
+                var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
-                    if (behaviour) behaviour.OnEUNTransferOwnerGameObject(roomGameObject, newOwner);
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null) behaviour.OnEUNTransferOwnerGameObject(roomGameObject, newOwner);
                 }
             }
         }

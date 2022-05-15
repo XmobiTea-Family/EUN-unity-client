@@ -18,6 +18,8 @@
             var parameters = operationEvent.GetParameters();
             var roomPlayer = new RoomPlayer(parameters.GetEUNArray(ParameterCode.Data));
 
+            var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(roomPlayer.UserId));
             if (thisRoomPlayer == null)
             {
@@ -35,9 +37,10 @@
                     }
                 }
 
-                foreach (var behaviour in peer.eunManagerBehaviourLst)
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
-                    if (behaviour) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
                 }
             }
 
@@ -54,9 +57,10 @@
                 }
             }
 
-            foreach (var behaviour in peer.eunManagerBehaviourLst)
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNLeaderClientChange(thisRoomPlayer);
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNLeaderClientChange(thisRoomPlayer);
             }
         }
     }

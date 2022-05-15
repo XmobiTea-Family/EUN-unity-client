@@ -32,7 +32,7 @@
                 {
                     foreach (var behaviour in view.eunBehaviourLst)
                     {
-                        if (behaviour) behaviour.OnEUNSynchronization(synchronizationData);
+                        if (behaviour != null) behaviour.OnEUNSynchronization(synchronizationData);
                     }
                 }
             }

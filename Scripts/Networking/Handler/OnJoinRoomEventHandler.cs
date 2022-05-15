@@ -20,9 +20,31 @@
             var roomPlayer = room.RoomPlayerLst.Find(x => x.UserId.Equals(EUNNetwork.UserId));
             peer.playerId = roomPlayer == null ? -1 : roomPlayer.PlayerId;
 
-            foreach (var behaviour in peer.eunManagerBehaviourLst)
+            var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNJoinRoom();
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNJoinRoom();
+            }
+
+            var roomGameObjectNeedCreateLst = peer.getListGameObjectNeedCreate();
+            if (roomGameObjectNeedCreateLst != null && roomGameObjectNeedCreateLst.Count != 0)
+            {
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
+                {
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null)
+                    {
+                        foreach (var roomGameObject in roomGameObjectNeedCreateLst)
+                        {
+                            var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
+                            if (view != null)
+                            {
+                                view.Init(roomGameObject);
+                            }
+                        }
+                    }
+                }
             }
         }
     }

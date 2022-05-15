@@ -27,14 +27,16 @@
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEUNReceiveChatRoom(message, thisRoomPlayer);
+                            if (behaviour != null) behaviour.OnEUNReceiveChatRoom(message, thisRoomPlayer);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.eunManagerBehaviourLst)
+                var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
-                    if (behaviour) behaviour.OnEUNReceiveChatRoom(message, thisRoomPlayer);
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null) behaviour.OnEUNReceiveChatRoom(message, thisRoomPlayer);
                 }
             }
         }

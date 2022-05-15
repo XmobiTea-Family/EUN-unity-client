@@ -41,14 +41,16 @@
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEUNCustomRoomPropertiesChange(data);
+                            if (behaviour != null) behaviour.OnEUNCustomRoomPropertiesChange(data);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.eunManagerBehaviourLst)
+                var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
-                    if (behaviour) behaviour.OnEUNCustomRoomPropertiesChange(data);
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null) behaviour.OnEUNCustomRoomPropertiesChange(data);
                 }
 
                 parameters.Remove(ParameterCode.CustomRoomProperties);
@@ -118,14 +120,16 @@
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEUNRoomInfoChange(parameters);
+                            if (behaviour != null) behaviour.OnEUNRoomInfoChange(parameters);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.eunManagerBehaviourLst)
+                var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
-                    if (behaviour) behaviour.OnEUNRoomInfoChange(parameters);
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null) behaviour.OnEUNRoomInfoChange(parameters);
                 }
             }
         }

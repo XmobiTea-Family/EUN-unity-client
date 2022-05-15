@@ -16,9 +16,11 @@
             var parameters = operationEvent.GetParameters();
             var message = new ChatMessage(parameters.GetEUNArray(ParameterCode.Message));
 
-            foreach (var behaviour in peer.eunManagerBehaviourLst)
+            var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNReceiveChatAll(message);
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNReceiveChatAll(message);
             }
         }
     }
