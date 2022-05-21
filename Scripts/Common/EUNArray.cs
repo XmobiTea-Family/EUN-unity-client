@@ -96,7 +96,7 @@
                 return t;
             }
 
-            return defaultValue;
+            return value;
         }
 
         public T[] ToArray<T>()

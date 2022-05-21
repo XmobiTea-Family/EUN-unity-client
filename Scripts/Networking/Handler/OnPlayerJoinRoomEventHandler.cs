@@ -6,7 +6,7 @@
 
     internal class OnPlayerJoinRoomEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnPlayerJoinRoom;
         }
@@ -30,14 +30,16 @@
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
+                            if (behaviour != null) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.eunManagerBehaviourLst)
+                var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
-                    if (behaviour) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
                 }
             }
         }

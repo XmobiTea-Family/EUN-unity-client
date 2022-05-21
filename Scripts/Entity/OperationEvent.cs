@@ -1,18 +1,17 @@
 ﻿namespace XmobiTea.EUN.Entity
 {
-    using XmobiTea.EUN.Constant;
-
     using System.Text;
     using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Helper;
 
     public class OperationEvent
     {
         private int eventCode;
         private EUNHashtable parameters;
 
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
-            return (EventCode)eventCode;
+            return eventCode;
         }
 
         public EUNHashtable GetParameters()
@@ -30,7 +29,7 @@
         {
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.Append("Code: " + GetEventCode() + " parameters " + parameters);
+            stringBuilder.Append("Code: " + CodeHelper.GetEventCodeName(eventCode) + " parameters " + parameters);
 
             return stringBuilder.ToString();
         }

@@ -1,13 +1,11 @@
 ﻿namespace XmobiTea.EUN.Entity.Response
 {
-    using XmobiTea.EUN.Constant;
-
     public abstract class CustomOperationResponse
     {
-        public ReturnCode ReturnCode { get; private set; }
+        public int ReturnCode { get; private set; }
         public string DebugMessage { get; private set; }
 
-        public bool HasError => ReturnCode != ReturnCode.Ok;
+        public bool HasError => ReturnCode != Constant.ReturnCode.Ok;
 
         public CustomOperationResponse(OperationResponse operationResponse)
         {

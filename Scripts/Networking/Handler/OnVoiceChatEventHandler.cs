@@ -5,7 +5,7 @@
 
     internal class OnVoiceChatEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnVoiceChat;
         }
@@ -27,7 +27,7 @@
                 {
                     foreach (var behaviour in view.eunVoiceChatBehaviourLst)
                     {
-                        if (behaviour) behaviour.OnEUNSynchronization(voiceChatData);
+                        if (behaviour != null) behaviour.OnEUNSynchronization(voiceChatData);
                     }
                 }
             }

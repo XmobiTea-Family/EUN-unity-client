@@ -5,7 +5,7 @@
 
     public class JoinLobbyOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.JoinLobby;
+        protected override int Code => OperationCode.JoinLobby;
 
         protected override bool Reliable => true;
 

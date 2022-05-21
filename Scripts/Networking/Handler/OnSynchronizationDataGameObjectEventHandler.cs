@@ -5,7 +5,7 @@
 
     internal class OnSynchronizationDataGameObjectEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnSynchronizationDataGameObject;
         }
@@ -32,7 +32,7 @@
                 {
                     foreach (var behaviour in view.eunBehaviourLst)
                     {
-                        if (behaviour) behaviour.OnEUNSynchronization(synchronizationData);
+                        if (behaviour != null) behaviour.OnEUNSynchronization(synchronizationData);
                     }
                 }
             }

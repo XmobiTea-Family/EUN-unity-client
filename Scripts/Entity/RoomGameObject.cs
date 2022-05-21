@@ -8,7 +8,7 @@
     public class RoomGameObject
     {
         [SerializeField]
-        private int objectId;
+        private int objectId = -1;
         public int ObjectId
         {
             get { return objectId; }
@@ -81,6 +81,11 @@
             SynchronizationData = eunArray.GetObject(3);
             InitializeData = eunArray.GetObject(4);
             CustomProperties = eunArray.GetEUNHashtable(5);
+        }
+
+        public bool IsValid()
+        {
+            return objectId > -1;
         }
     }
 }

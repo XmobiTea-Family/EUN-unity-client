@@ -6,7 +6,7 @@
 
     internal class OnChatLobbyEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnChatLobby;
         }
@@ -16,9 +16,11 @@
             var parameters = operationEvent.GetParameters();
             var message = new ChatMessage(parameters.GetEUNArray(ParameterCode.Message));
 
-            foreach (var behaviour in peer.eunManagerBehaviourLst)
+            var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNReceiveChatLobby(message);
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNReceiveChatLobby(message);
             }
         }
     }

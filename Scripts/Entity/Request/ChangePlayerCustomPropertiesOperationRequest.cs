@@ -5,7 +5,7 @@
 
     public class ChangePlayerCustomPropertiesOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.ChangePlayerCustomProperties;
+        protected override int Code => OperationCode.ChangePlayerCustomProperties;
 
         protected override bool Reliable => true;
 

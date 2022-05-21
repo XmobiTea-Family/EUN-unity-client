@@ -5,7 +5,7 @@
 
     public class CreateGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.CreateGameObjectRoom;
+        protected override int Code => OperationCode.CreateGameObjectRoom;
 
         protected override bool Reliable => true;
 

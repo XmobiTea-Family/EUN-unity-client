@@ -57,11 +57,12 @@
                     if (subscriberChat) peer.SubscriberChatLobby(subscriberChat, null);
 
                     peer.lobbyId = lobbyId;
-                    var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
 
-                    foreach (var behaviour in eunManagerBehaviourLst)
+                    var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+                    for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                     {
-                        if (behaviour) behaviour.OnEUNJoinLobby();
+                        var behaviour = eunManagerBehaviourLst[i];
+                        if (behaviour != null) behaviour.OnEUNJoinLobby();
                     }
                 }
 
@@ -80,11 +81,12 @@
                 if (response.Success)
                 {
                     peer.lobbyId = -1;
-                    var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
 
-                    foreach (var behaviour in eunManagerBehaviourLst)
+                    var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+                    for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                     {
-                        if (behaviour) behaviour.OnEUNLeftLobby();
+                        var behaviour = eunManagerBehaviourLst[i];
+                        if (behaviour != null) behaviour.OnEUNLeftLobby();
                     }
                 }
 
@@ -185,7 +187,7 @@
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
+                            if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                         }
                     }
                 }
@@ -209,7 +211,7 @@
                         {
                             foreach (var behaviour in view.eunBehaviourLst)
                             {
-                                if (behaviour) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
+                                if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                             }
                         }
                     }

@@ -5,7 +5,7 @@
 
     internal class OnCustomPlayerPropertiesChangeEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnCustomPlayerPropertiesChange;
         }
@@ -43,14 +43,16 @@
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
+                            if (behaviour != null) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
                         }
                     }
                 }
 
-                foreach (var behaviour in peer.eunManagerBehaviourLst)
+                var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
-                    if (behaviour) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
                 }
             }
         }

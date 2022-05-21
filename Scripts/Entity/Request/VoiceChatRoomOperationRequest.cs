@@ -5,7 +5,7 @@
 
     public class VoiceChatOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.VoiceChat;
+        protected override int Code => OperationCode.VoiceChat;
 
         protected override bool Reliable => false;
 

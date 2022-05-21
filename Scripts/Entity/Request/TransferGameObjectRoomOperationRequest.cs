@@ -5,7 +5,7 @@
 
     public class TransferGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.TransferGameObjectRoom;
+        protected override int Code => OperationCode.TransferGameObjectRoom;
 
         protected override bool Reliable => true;
 

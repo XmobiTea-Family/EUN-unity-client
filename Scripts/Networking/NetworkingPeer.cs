@@ -73,7 +73,7 @@
 
             if (serverEventHandlerDic == null) serverEventHandlerDic = new Dictionary<int, IServerEventHandler>();
             if (eunViewLst == null) eunViewLst = new List<EUNView>();
-            if (eunManagerBehaviourLst == null) eunManagerBehaviourLst = new List<EUNManagerBehaviour>();
+            if (eunManagerBehaviourLst == null) eunManagerBehaviourLst = new List<IEUNManagerBehaviour>();
             if (eunViewDic == null) eunViewDic = new Dictionary<int, EUNView>();
 
             InitSendRate();
@@ -142,9 +142,10 @@
 
             if (roomGameObjectNeedCreateLst != null && roomGameObjectNeedCreateLst.Count != 0)
             {
-                foreach (var behaviour in eunManagerBehaviourLst)
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
-                    if (behaviour)
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null)
                     {
                         foreach (var roomGameObject in roomGameObjectNeedCreateLst)
                         {
@@ -291,7 +292,7 @@
                         {
                             foreach (var behaviour in view.eunVoiceChatBehaviourLst)
                             {
-                                if (behaviour)
+                                if (behaviour != null)
                                 {
                                     if (behaviour.gameObject.activeInHierarchy)
                                     {

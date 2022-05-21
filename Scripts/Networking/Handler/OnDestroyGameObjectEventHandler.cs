@@ -5,7 +5,7 @@
 
     internal class OnDestroyGameObjectEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnDestroyGameObject;
         }

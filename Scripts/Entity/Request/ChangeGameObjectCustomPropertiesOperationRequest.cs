@@ -5,7 +5,7 @@
 
     public class ChangeGameObjectCustomPropertiesOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.ChangeGameObjectCustomProperties;
+        protected override int Code => OperationCode.ChangeGameObjectCustomProperties;
 
         protected override bool Reliable => true;
 

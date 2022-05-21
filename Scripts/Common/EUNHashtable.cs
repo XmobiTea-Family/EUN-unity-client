@@ -117,7 +117,7 @@
                     return t;
                 }
 
-                return defaultValue;
+                return value;
             }
 
             return defaultValue;
@@ -142,11 +142,24 @@
 
         public override string ToString()
         {
-            return new StringBuilder()
-                .Append("[")
-                .Append(String.Join(",", originObject))
-                .Append("]")
-                .ToString();
+            var builder = new StringBuilder();
+            builder.Append("{");
+            var count = 0;
+            var commable = originObject.Count - 1;
+            var keys = Keys();
+            foreach (var key in keys)
+            {
+                builder
+                    .Append(key)
+                    .Append(":")
+                    .Append(originObject[key]);
+                if ((count++) < commable)
+                {
+                    builder.Append(",");
+                }
+            }
+            builder.Append("}");
+            return builder.ToString();
         }
     }
 }

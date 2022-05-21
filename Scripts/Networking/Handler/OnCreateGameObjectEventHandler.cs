@@ -6,7 +6,7 @@
 
     internal class OnCreateGameObjectEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnCreateGameObject;
         }
@@ -18,10 +18,12 @@
 
             var roomGameObject = new RoomGameObject(parameters.GetEUNArray(ParameterCode.Data));
             peer.room.GameObjectDic[roomGameObject.ObjectId] = roomGameObject;
-
-            foreach (var behaviour in peer.eunManagerBehaviourLst)
+            
+            var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour)
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null)
                 {
                     var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
                     if (view != null)

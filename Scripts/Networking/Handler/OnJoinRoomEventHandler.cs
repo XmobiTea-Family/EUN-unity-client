@@ -6,7 +6,7 @@
 
     internal class OnJoinRoomEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnJoinRoom;
         }
@@ -17,14 +17,35 @@
             var room = new Room(parameters.GetEUNArray(ParameterCode.Data));
             peer.room = room;
 
-            foreach (var behaviour in peer.eunManagerBehaviourLst)
+            var roomPlayer = room.RoomPlayerLst.Find(x => x.UserId.Equals(EUNNetwork.UserId));
+            peer.playerId = roomPlayer == null ? -1 : roomPlayer.PlayerId;
+
+            var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNJoinRoom();
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNJoinRoom();
             }
 
-            var roomPlayer = room.RoomPlayerLst.Find(x => x.UserId.Equals(EUNNetwork.UserId));
-
-            peer.playerId = roomPlayer == null ? -1 : roomPlayer.PlayerId;
+            var roomGameObjectNeedCreateLst = peer.getListGameObjectNeedCreate();
+            if (roomGameObjectNeedCreateLst != null && roomGameObjectNeedCreateLst.Count != 0)
+            {
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
+                {
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null)
+                    {
+                        foreach (var roomGameObject in roomGameObjectNeedCreateLst)
+                        {
+                            var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
+                            if (view != null)
+                            {
+                                view.Init(roomGameObject);
+                            }
+                        }
+                    }
+                }
+            }
         }
     }
 }

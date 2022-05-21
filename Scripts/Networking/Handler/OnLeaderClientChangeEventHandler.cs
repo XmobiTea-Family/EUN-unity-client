@@ -6,7 +6,7 @@
 
     internal class OnLeaderClientChangeEventHandler : IServerEventHandler
     {
-        public EventCode GetEventCode()
+        public int GetEventCode()
         {
             return EventCode.OnLeaderClientChange;
         }
@@ -17,6 +17,8 @@
 
             var parameters = operationEvent.GetParameters();
             var roomPlayer = new RoomPlayer(parameters.GetEUNArray(ParameterCode.Data));
+
+            var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
 
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(roomPlayer.UserId));
             if (thisRoomPlayer == null)
@@ -35,11 +37,14 @@
                     }
                 }
 
-                foreach (var behaviour in peer.eunManagerBehaviourLst)
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
-                    if (behaviour) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
                 }
             }
+
+            peer.room.LeaderClientUserId = thisRoomPlayer.UserId;
 
             foreach (var view in peer.eunViewLst)
             {
@@ -52,12 +57,11 @@
                 }
             }
 
-            foreach (var behaviour in peer.eunManagerBehaviourLst)
+            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
-                if (behaviour) behaviour.OnEUNLeaderClientChange(thisRoomPlayer);
+                var behaviour = eunManagerBehaviourLst[i];
+                if (behaviour != null) behaviour.OnEUNLeaderClientChange(thisRoomPlayer);
             }
-
-            peer.room.LeaderClientUserId = thisRoomPlayer.UserId;
         }
     }
 }

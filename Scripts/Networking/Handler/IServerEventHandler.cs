@@ -5,7 +5,7 @@
 
     internal interface IServerEventHandler
     {
-        EventCode GetEventCode();
+        int GetEventCode();
         void Handle(OperationEvent operationEvent, NetworkingPeer peer);
     }
 }

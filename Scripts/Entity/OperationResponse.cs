@@ -6,6 +6,7 @@
 
     using UnityEngine;
     using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Helper;
 
     public class OperationResponse
     {
@@ -18,14 +19,14 @@
 
         private float executeTime;
 
-        public OperationCode GetOperationCode()
+        public int GetOperationCode()
         {
-            return (OperationCode)operationCode;
+            return operationCode;
         }
 
-        public ReturnCode GetReturnCode()
+        public int GetReturnCode()
         {
-            return (ReturnCode)returnCode;
+            return returnCode;
         }
 
         public EUNHashtable GetParameters()
@@ -59,7 +60,10 @@
         {
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.Append("Code: " + GetOperationCode() + " ExecuteTime " + executeTime + "ms ResponseId: " + responseId + " ReturnCode " + GetReturnCode());
+            stringBuilder.Append("Code: " + CodeHelper.GetOperationCodeName(operationCode) + " ExecuteTime " + executeTime + "ms ResponseId: " + responseId + " ReturnCode " + CodeHelper.GetReturnCodeName(returnCode));
+
+            if (returnCode == ReturnCode.Ok) stringBuilder.Append(" Parameters " + parameters);
+            else stringBuilder.Append(" DebugMessage " + debugMessage);
 
             return stringBuilder.ToString();
         }

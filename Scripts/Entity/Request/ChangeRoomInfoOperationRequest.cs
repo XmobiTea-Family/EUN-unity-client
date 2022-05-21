@@ -5,7 +5,7 @@
 
     public class ChangeRoomInfoOperationRequest : CustomOperationRequest
     {
-        protected override OperationCode Code => OperationCode.ChangeRoomInfo;
+        protected override int Code => OperationCode.ChangeRoomInfo;
 
         protected override bool Reliable => true;
 

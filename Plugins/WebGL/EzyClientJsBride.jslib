@@ -130,13 +130,14 @@ mergeInto(LibraryManager.library, {
 
     EzyConnect: function(username, password, dataJson, host) {
         username = Pointer_stringify(username);
+        password = Pointer_stringify(password);
+        dataJson = Pointer_stringify(dataJson);
+
         host = Pointer_stringify(host);
 
-		var jsonD = JSON.parse(dataJson);
-		
         window.ezyConfig.username = username;
         window.ezyConfig.password = password;
-        window.ezyConfig.data = jsonD;
+        window.ezyConfig.data = JSON.parse(dataJson);
 
         var afterInitDone = function() {
             window.ezyClient.connect(host);

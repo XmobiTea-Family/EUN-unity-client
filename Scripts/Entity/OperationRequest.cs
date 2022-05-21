@@ -4,6 +4,7 @@
 
     using System.Text;
     using XmobiTea.EUN.Common;
+    using XmobiTea.EUN.Helper;
 
     public class OperationRequest
     {
@@ -18,9 +19,9 @@
 
         private float endTimeOut = -1;
 
-        public OperationCode GetOperationCode()
+        public int GetOperationCode()
         {
-            return (OperationCode)operationCode;
+            return operationCode;
         }
 
         public int GetRequestId()
@@ -107,7 +108,7 @@
         {
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.Append("Code: " + GetOperationCode() + " RequestId: " + requestId + " parameters " + parameters);
+            stringBuilder.Append("Code: " + CodeHelper.GetOperationCodeName(operationCode) + " RequestId: " + requestId + " parameters " + parameters);
 
             return stringBuilder.ToString();
         }

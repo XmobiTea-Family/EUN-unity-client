@@ -100,22 +100,22 @@
 
         private void handleOnLoginError(string jsonArr)
         {
-            onLoginError?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
+            onLoginError?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr) as System.Collections.IList).Build());
         }
 
         private void handleOnAppAccess(string jsonArr)
         {
-            onAppAccess?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
+            onAppAccess?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr) as System.Collections.IList).Build());
         }
 
         private void handleOnResponse(string jsonArr)
         {
-            onResponse?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
+            onResponse?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr) as System.Collections.IList).Build());
         }
 
         private void handleOnEvent(string jsonArr)
         {
-            onEvent?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr)).Build());
+            onEvent?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr) as System.Collections.IList).Build());
         }
 
         private IList<object> getObjectLstFromJsonArr(string jsonArr)

@@ -1,34 +1,34 @@
 ﻿namespace XmobiTea.EUN.Constant
 {
-    public enum OperationCode : byte
+    public partial class OperationCode
     {
-        SyncTs = 0,
-        GetLobbyStatsLst = 1,
-        GetCurrentLobbyStats = 2,
-        JoinLobby = 3,
-        LeaveLobby = 4,
-        ChatAll = 5,
-        ChatLobby = 6,
-        ChatRoom = 7,
-        CreateRoom = 8,
-        JoinOrCreateRoom = 9,
-        JoinRoom = 10,
-        LeaveRoom = 11,
+        public const int SyncTs = 0;
+        public const int GetLobbyStatsLst = 1;
+        public const int GetCurrentLobbyStats = 2;
+        public const int JoinLobby = 3;
+        public const int LeaveLobby = 4;
+        public const int ChatAll = 5;
+        public const int ChatLobby = 6;
+        public const int ChatRoom = 7;
+        public const int CreateRoom = 8;
+        public const int JoinOrCreateRoom = 9;
+        public const int JoinRoom = 10;
+        public const int LeaveRoom = 11;
 
-        ChangeLeaderClient = 12,
-        ChangeRoomInfo = 13,
-        SubscriberChatAll = 14,
-        SubscriberChatLobby = 15,
-        ChangePlayerCustomProperties = 16,
+        public const int ChangeLeaderClient = 12;
+        public const int ChangeRoomInfo = 13;
+        public const int SubscriberChatAll = 14;
+        public const int SubscriberChatLobby = 15;
+        public const int ChangePlayerCustomProperties = 16;
 
-        RpcGameObjectRoom = 17,
-        CreateGameObjectRoom = 18,
-        DestroyGameObjectRoom = 19,
-        SynchronizationDataGameObjectRoom = 20,
-        TransferGameObjectRoom = 21,
-        VoiceChat = 22,
-        RpcGameObjectRoomTo = 23,
+        public const int RpcGameObjectRoom = 17;
+        public const int CreateGameObjectRoom = 18;
+        public const int DestroyGameObjectRoom = 19;
+        public const int SynchronizationDataGameObjectRoom = 20;
+        public const int TransferGameObjectRoom = 21;
+        public const int VoiceChat = 22;
+        public const int RpcGameObjectRoomTo = 23;
 
-        ChangeGameObjectCustomProperties = 24,
+        public const int ChangeGameObjectCustomProperties = 24;
     }
 }

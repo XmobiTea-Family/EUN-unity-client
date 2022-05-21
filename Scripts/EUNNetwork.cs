@@ -73,12 +73,12 @@
 
         public static NetworkingPeerStatistics GetPeerStatistics() { return peerStatistics; }
 
-        internal static void SubscriberEUNBehaviour(EUNManagerBehaviour behaviour)
+        public static void SubscriberEUNBehaviour(IEUNManagerBehaviour behaviour)
         {
             peer.SubscriberEUNBehaviour(behaviour);
         }
 
-        internal static void UnSubscriberEUNBehaviour(EUNManagerBehaviour behaviour)
+        public static void UnSubscriberEUNBehaviour(IEUNManagerBehaviour behaviour)
         {
             peer.UnSubscriberEUNBehaviour(behaviour);
         }
