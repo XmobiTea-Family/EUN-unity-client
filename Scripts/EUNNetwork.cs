@@ -75,6 +75,11 @@
             peer.Connect(UserId, string.Empty, data);
         }
 
+        public static void Disconnect()
+        {
+            peer.Disconnect();
+        }
+
         public static void Send(OperationRequest request, Action<OperationResponse> onResponse = null)
         {
             peer.Enqueue(request, onResponse);

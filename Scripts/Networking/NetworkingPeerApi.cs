@@ -126,6 +126,11 @@
             }
         }
 
+        internal void Disconnect()
+        {
+            eunSocketObject.Disconnect();
+        }
+
         internal void SyncTs(Action<SyncTsOperationResponse> onResponse)
         {
             var request = new SyncTsOperationRequest().Builder();

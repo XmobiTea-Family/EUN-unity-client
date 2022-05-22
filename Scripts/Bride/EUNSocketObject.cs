@@ -49,6 +49,8 @@
             EUNSocketObject.data = data;
         }
 
+        public virtual void Disconnect() { }
+
         public virtual void Init(string _zoneName, string _appName)
         {
             zoneName = _zoneName;

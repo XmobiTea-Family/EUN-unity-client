@@ -63,6 +63,15 @@
 #endif
         }
 
+        public override void Disconnect()
+        {
+            base.Disconnect();
+
+#if EUN
+            socketClient.disconnect((int)EzyDisconnectReason.CLOSE);
+#endif
+        }
+
         public override int GetPing()
         {
             return base.GetPing();

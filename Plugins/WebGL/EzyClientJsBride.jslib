@@ -146,6 +146,10 @@ mergeInto(LibraryManager.library, {
         if (window.ezyClient != null) afterInitDone();
         else window.onEzyClientLoaded = afterInitDone;
 	},
+	
+	EzyDisconnect: function() {
+		if (window.ezyClient != null) window.ezyClient.disconnect(-1);
+	},
 
     EzySend: function(requestData) {
         var client = window.ezyClient;
