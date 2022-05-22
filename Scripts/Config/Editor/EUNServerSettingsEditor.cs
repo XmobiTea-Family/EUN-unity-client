@@ -397,6 +397,8 @@ namespace XmobiTea.EUN.Config.Editor
                 }
             }
 
+            needModifier = true;
+
             if (needModifier)
             {
                 var enableStringBuilder = new StringBuilder();
@@ -436,6 +438,7 @@ namespace XmobiTea.EUN.Config.Editor
                 var disableFilePath = Application.dataPath + EUNRPC_Disable_Path;
 
                 if (System.IO.File.Exists(enableFilePath)) System.IO.File.Delete(enableFilePath);
+                if (System.IO.File.Exists(disableFilePath)) System.IO.File.Delete(disableFilePath);
 
                 System.IO.File.WriteAllText(enableFilePath, enableStringBuilder.ToString());
                 System.IO.File.WriteAllText(disableFilePath, disableStringBuilder.ToString());

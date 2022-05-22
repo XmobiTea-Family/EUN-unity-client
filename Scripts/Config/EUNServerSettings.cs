@@ -30,11 +30,11 @@
         public string webSocketHost => _webSocketHost;
 
         [SerializeField]
-        private string _zoneName = "EUN";
+        private string _zoneName = "EUN Zone";
         public string zoneName => _zoneName;
 
         [SerializeField]
-        private string _appName = "EUN";
+        private string _appName = "EUN App";
         public string appName => _appName;
 
         [SerializeField]
