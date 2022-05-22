@@ -8,6 +8,7 @@
 
     using UnityEngine;
     using XmobiTea.EUN.Entity;
+    using XmobiTea.EUN.Logger;
 
     public static partial class EUNNetwork
     {
@@ -25,6 +26,7 @@
         static EUNNetwork()
         {
             InitServerSettings();
+            InitEUNDebug();
 
             if (!Application.isPlaying) return;
 
@@ -44,6 +46,13 @@
                 if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
 #endif
             }
+        }
+
+        private static void InitEUNDebug()
+        {
+            if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
+
+            EUNDebug.Init(eunServerSettings.LogType);
         }
 
         private static void InitEUNSocketObject()

@@ -56,5 +56,9 @@
         [SerializeField]
         private Mode _mode = Mode.SelfHost;
         public Mode mode => _mode;
+
+        [SerializeField]
+        private EUN.Logger.LogType _logType = EUN.Logger.LogType.All;
+        public EUN.Logger.LogType LogType => _logType;
     }
 }

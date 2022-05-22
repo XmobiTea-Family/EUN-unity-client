@@ -7,6 +7,7 @@
     using System.Linq;
     using System.Reflection;
     using UnityEngine;
+    using XmobiTea.EUN.Logger;
 
     [RequireComponent(typeof(EUNView))]
     public class EUNBehaviour : MonoBehaviour
@@ -203,7 +204,7 @@
                             }
                             catch (Exception ex)
                             {
-                                Debug.LogException(ex);
+                                EUNDebug.LogException(ex);
 
                                 continue;
                             }
@@ -218,7 +219,7 @@
             if (method != null) method.Invoke(this, parameters);
             else
             {
-                Debug.LogError("Method " + eunRPCMethodName + " with parameters " + parameters + " not found");
+                EUNDebug.LogError("Method " + eunRPCMethodName + " with parameters " + parameters + " not found");
             }
         }
 

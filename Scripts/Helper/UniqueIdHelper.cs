@@ -12,7 +12,7 @@
             var deviceId = string.Empty;
 
 #if UNITY_EDITOR
-            deviceId = SystemInfo.deviceUniqueIdentifier;
+            deviceId = "_Editor_" + SystemInfo.deviceUniqueIdentifier;
 #else
 #if UNITY_IOS
             deviceId = PlayerPrefs.GetString(UniqueId);

@@ -35,6 +35,7 @@ namespace XmobiTea.EUN.Config.Editor
         SerializedProperty sendRateSynchronizationData;
         SerializedProperty sendRateVoiceChat;
         SerializedProperty mode;
+        SerializedProperty logType;
         SerializedProperty useVoiceChat;
 
         bool useVoiceChatLastValue;
@@ -60,8 +61,9 @@ namespace XmobiTea.EUN.Config.Editor
             sendRateSynchronizationData = serializedObject.FindProperty("_sendRateSynchronizationData");
             sendRateVoiceChat = serializedObject.FindProperty("_sendRateVoiceChat");
             mode = serializedObject.FindProperty("_mode");
+            logType = serializedObject.FindProperty("_logType");
             useVoiceChat = serializedObject.FindProperty("_useVoiceChat");
-
+            
             useVoiceChatLastValue = useVoiceChat.boolValue;
         }
 
@@ -83,6 +85,7 @@ namespace XmobiTea.EUN.Config.Editor
 
             serializedObject.Update();
 
+            EditorGUILayout.PropertyField(logType);
             EditorGUILayout.PropertyField(mode);
 
             var eunMode = (EUNServerSettings.Mode)mode.intValue;

@@ -17,6 +17,7 @@
     using UnityEngine;
     using UnityEngine.SceneManagement;
     using XmobiTea.EUN.Entity;
+    using XmobiTea.EUN.Logger;
 
     public partial class NetworkingPeer : MonoBehaviour
     {
@@ -202,8 +203,8 @@
             eunSocketObject.Send(request, operationRequest.IsReliable());
 #endif
 
-            if (operationRequest.IsSynchronizationRequest()) Debug.Log("[SEND SYNC] " + operationRequest.ToString());
-            else Debug.Log("[SEND] " + operationRequest.ToString());
+            if (operationRequest.IsSynchronizationRequest()) EUNDebug.Log("[SEND SYNC] " + operationRequest.ToString());
+            else EUNDebug.Log("[SEND] " + operationRequest.ToString());
 
         }
 
