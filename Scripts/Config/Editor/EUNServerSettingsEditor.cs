@@ -353,9 +353,14 @@ namespace XmobiTea.EUN.Config.Editor
 
         private static void UpdateEUNRPCCommand()
         {
-            var assemblie = typeof(EUNServerSettings).Assembly;
+            var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
 
-            var types = assemblie.GetTypes();
+            var types = new List<Type>();
+
+            foreach (var assemblie in assemblies)
+            {
+                types.AddRange(assemblie.GetTypes());
+            }
 
             var methodNameLst = new List<string>();
 
