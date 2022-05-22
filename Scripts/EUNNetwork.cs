@@ -12,7 +12,7 @@
 
     public static partial class EUNNetwork
     {
-        public const string Version = "1.0.0";
+        public const string Version = "1.2.0";
         public static EUNServerSettings.Mode Mode => eunServerSettings != null ? eunServerSettings.mode : EUNServerSettings.Mode.OfflineMode;
 
         public static string UserId { get; private set; }
