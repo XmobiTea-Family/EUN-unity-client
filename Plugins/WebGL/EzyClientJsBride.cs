@@ -15,6 +15,9 @@
         public static extern void EzyConnect(string username, string password, string dataJson, string host);
 
         [DllImport("__Internal")]
+        public static extern void EzyDisconnect();
+
+        [DllImport("__Internal")]
         public static extern bool EzySend(string requestData);
 #endif
     }

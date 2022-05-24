@@ -8,10 +8,11 @@
 
     using UnityEngine;
     using XmobiTea.EUN.Entity;
+    using XmobiTea.EUN.Logger;
 
     public static partial class EUNNetwork
     {
-        public const string Version = "1.0.0";
+        public const string Version = "1.2.0";
         public static EUNServerSettings.Mode Mode => eunServerSettings != null ? eunServerSettings.mode : EUNServerSettings.Mode.OfflineMode;
 
         public static string UserId { get; private set; }
@@ -25,6 +26,7 @@
         static EUNNetwork()
         {
             InitServerSettings();
+            InitEUNDebug();
 
             if (!Application.isPlaying) return;
 
@@ -46,6 +48,13 @@
             }
         }
 
+        private static void InitEUNDebug()
+        {
+            if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
+
+            EUNDebug.Init(eunServerSettings.LogType);
+        }
+
         private static void InitEUNSocketObject()
         {
             peer = new GameObject("EUN NetworkingPeer").AddComponent<NetworkingPeer>();
@@ -64,6 +73,11 @@
             UserId = userId;
 
             peer.Connect(UserId, string.Empty, data);
+        }
+
+        public static void Disconnect()
+        {
+            peer.Disconnect();
         }
 
         public static void Send(OperationRequest request, Action<OperationResponse> onResponse = null)

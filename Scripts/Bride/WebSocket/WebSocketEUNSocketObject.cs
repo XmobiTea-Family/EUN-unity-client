@@ -44,6 +44,14 @@
 #endif
         }
 
+        public override void Disconnect()
+        {
+            base.Disconnect();
+#if EUN
+            EzyClientJsBride.EzyDisconnect();
+#endif
+        }
+
 #if EUN
         public override void Send(EzyObject request, bool reliable = true)
         {

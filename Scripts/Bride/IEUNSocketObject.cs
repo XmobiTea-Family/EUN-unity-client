@@ -14,6 +14,7 @@
     {
         void Init(string _zoneName, string _appName);
         void Connect(string username, string password, IEUNData data, string host, int port, int udpPort);
+        void Disconnect();
 #if EUN
         void Send(EzyObject request, bool reliable = true);
 #endif

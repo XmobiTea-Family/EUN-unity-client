@@ -35,6 +35,7 @@ namespace XmobiTea.EUN.Config.Editor
         SerializedProperty sendRateSynchronizationData;
         SerializedProperty sendRateVoiceChat;
         SerializedProperty mode;
+        SerializedProperty logType;
         SerializedProperty useVoiceChat;
 
         bool useVoiceChatLastValue;
@@ -60,8 +61,9 @@ namespace XmobiTea.EUN.Config.Editor
             sendRateSynchronizationData = serializedObject.FindProperty("_sendRateSynchronizationData");
             sendRateVoiceChat = serializedObject.FindProperty("_sendRateVoiceChat");
             mode = serializedObject.FindProperty("_mode");
+            logType = serializedObject.FindProperty("_logType");
             useVoiceChat = serializedObject.FindProperty("_useVoiceChat");
-
+            
             useVoiceChatLastValue = useVoiceChat.boolValue;
         }
 
@@ -83,6 +85,7 @@ namespace XmobiTea.EUN.Config.Editor
 
             serializedObject.Update();
 
+            EditorGUILayout.PropertyField(logType);
             EditorGUILayout.PropertyField(mode);
 
             var eunMode = (EUNServerSettings.Mode)mode.intValue;
@@ -350,9 +353,14 @@ namespace XmobiTea.EUN.Config.Editor
 
         private static void UpdateEUNRPCCommand()
         {
-            var assemblie = typeof(EUNServerSettings).Assembly;
+            var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
 
-            var types = assemblie.GetTypes();
+            var types = new List<Type>();
+
+            foreach (var assemblie in assemblies)
+            {
+                types.AddRange(assemblie.GetTypes());
+            }
 
             var methodNameLst = new List<string>();
 
@@ -394,6 +402,8 @@ namespace XmobiTea.EUN.Config.Editor
                 }
             }
 
+            needModifier = true;
+
             if (needModifier)
             {
                 var enableStringBuilder = new StringBuilder();
@@ -433,6 +443,7 @@ namespace XmobiTea.EUN.Config.Editor
                 var disableFilePath = Application.dataPath + EUNRPC_Disable_Path;
 
                 if (System.IO.File.Exists(enableFilePath)) System.IO.File.Delete(enableFilePath);
+                if (System.IO.File.Exists(disableFilePath)) System.IO.File.Delete(disableFilePath);
 
                 System.IO.File.WriteAllText(enableFilePath, enableStringBuilder.ToString());
                 System.IO.File.WriteAllText(disableFilePath, disableStringBuilder.ToString());

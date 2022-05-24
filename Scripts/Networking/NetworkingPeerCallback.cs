@@ -14,6 +14,7 @@
     using UnityEngine;
     using System.Linq;
     using XmobiTea.EUN.Entity;
+    using XmobiTea.EUN.Logger;
 
     public partial class NetworkingPeer
     {
@@ -46,7 +47,7 @@
 
             var operationEvent = new OperationEvent(eventCode, obj.GetEUNHashtable(1));
 
-            Debug.Log("[EVENT] " + operationEvent.ToString());
+            EUNDebug.Log("[EVENT] " + operationEvent.ToString());
 
             var serverEventHandler = serverEventHandlerDic[eventCode];
             serverEventHandler.Handle(operationEvent, this);
@@ -70,7 +71,7 @@
 
                 var operationResponse = new OperationResponse(operationPending.GetOperationRequest(), returnCode, debugMessage, parameters);
 
-                Debug.Log("[RECV] " + operationResponse.ToString());
+                EUNDebug.Log("[RECV] " + operationResponse.ToString());
 
                 operationPending.GetCallback()?.Invoke(operationResponse);
 
@@ -78,7 +79,7 @@
             }
             else
             {
-                Debug.LogError("OnResponseHandler " + obj);
+                EUNDebug.LogError("OnResponseHandler " + obj);
             }
         }
 
