@@ -1,9 +1,11 @@
 ﻿namespace XmobiTea.EUN.Networking
 {
-    using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and other room player request JoinRoom() and join this room success
+    /// </summary>
     internal class OnPlayerJoinRoomEventHandler : IServerEventHandler
     {
         public int GetEventCode()

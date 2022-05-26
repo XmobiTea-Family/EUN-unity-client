@@ -9,6 +9,7 @@
         {
             SelfHost = 0,
             OfflineMode = 1,
+            CloudHost = 2,
         }
 
         public const string ResourcesPath = "EUNServerSettings";

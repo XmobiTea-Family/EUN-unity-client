@@ -14,7 +14,7 @@
     {
         protected virtual void Awake()
         {
-            EUNNetwork.SubscriberEUNBehaviour(this);
+            EUNNetwork.SubscriberEUNManagerBehaviour(this);
         }
 
         protected virtual void OnEnable() { }
@@ -27,7 +27,7 @@
 
         protected virtual void OnDestroy()
         {
-            EUNNetwork.UnSubscriberEUNBehaviour(this);
+            EUNNetwork.UnSubscriberEUNManagerBehaviour(this);
         }
 
         public virtual void OnEUNCustomPlayerPropertiesChange(RoomPlayer player, EUNHashtable customPropertiesChange) { }
@@ -71,5 +71,7 @@
         public virtual EUNView OnEUNViewNeedCreate(RoomGameObject roomGameObject) { return null; }
 
         public virtual void OnEUNTransferOwnerGameObject(RoomGameObject roomGameObject, RoomPlayer newOwner) { }
+
+        public virtual void OnEUNDestroyGameObjectRoom(RoomGameObject roomGameObject) { }
     }
 }

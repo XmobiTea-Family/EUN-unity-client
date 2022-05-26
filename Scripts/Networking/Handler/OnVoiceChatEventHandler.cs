@@ -3,6 +3,9 @@
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and eunView send voice chat success
+    /// </summary>
     internal class OnVoiceChatEventHandler : IServerEventHandler
     {
         public int GetEventCode()

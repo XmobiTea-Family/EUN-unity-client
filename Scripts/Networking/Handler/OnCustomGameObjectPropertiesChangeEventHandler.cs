@@ -3,6 +3,9 @@ namespace XmobiTea.EUN.Networking
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and someone inroom send ChangeGameObjectCustomProperties() request
+    /// </summary>
     internal class OnCustomGameObjectPropertiesChangeEventHandler : IServerEventHandler
     {
         public int GetEventCode()

@@ -14,6 +14,12 @@
         {
             private IDictionary<int, object> originObject;
 
+            /// <summary>
+            /// Add key and value
+            /// </summary>
+            /// <param name="key">the key</param>
+            /// <param name="value">the value</param>
+            /// <returns></returns>
             public Builder Add(int key, object value)
             {
                 originObject[key] = value;
@@ -21,6 +27,11 @@
                 return this;
             }
 
+            /// <summary>
+            /// Add all key and value from a dictionary
+            /// </summary>
+            /// <param name="dict">the dict need add</param>
+            /// <returns></returns>
             public Builder AddAll(System.Collections.IDictionary dict)
             {
                 var keys = dict.Keys;
@@ -43,6 +54,10 @@
                 return this;
             }
 
+            /// <summary>
+            /// Build an EUNHashtable from this builder
+            /// </summary>
+            /// <returns></returns>
             public EUNHashtable Build()
             {
                 var awnser = new EUNHashtable();
@@ -69,41 +84,79 @@
             this.originObject = new Dictionary<int, object>();
         }
 
+        /// <summary>
+        /// Add a key and value
+        /// it will replace value if key exists
+        /// </summary>
+        /// <param name="key">key need add</param>
+        /// <param name="value">value need add</param>
         public void Add(int key, object value)
         {
             originObject[key] = CreateUseDataFromOriginData(value);
         }
 
+        /// <summary>
+        /// Get all Values this EUNHashtable
+        /// </summary>
+        /// <returns>Values of this EUNHashtable</returns>
         public ICollection<object> Values()
         {
             return originObject.Values;
         }
 
+        /// <summary>
+        /// Get all Keys this EUNHashtable
+        /// </summary>
+        /// <returns>Keys of this EUNHashtable</returns>
         public ICollection<int> Keys()
         {
             return originObject.Keys;
         }
 
+        /// <summary>
+        /// Check if EUNHashtable contains this key
+        /// </summary>
+        /// <param name="key">the key need check</param>
+        /// <returns>true if has key</returns>
         public bool ContainsKey(int key)
         {
             return originObject.ContainsKey(key);
         }
 
+        /// <summary>
+        /// Clear all key and value in EUNHashtable
+        /// </summary>
         public override void Clear()
         {
             originObject.Clear();
         }
 
+        /// <summary>
+        /// Remove the key
+        /// </summary>
+        /// <param name="key">the key need get</param>
+        /// <returns>true if has key</returns>
         public override bool Remove(int key)
         {
             return originObject.Remove(key);
         }
 
+        /// <summary>
+        /// Size of EUNHashtable
+        /// </summary>
+        /// <returns>size this EUNHashtable</returns>
         public override int Count()
         {
             return originObject.Count;
         }
 
+        /// <summary>
+        /// Get the object via k key
+        /// </summary>
+        /// <typeparam name="T">Type of object need get</typeparam>
+        /// <param name="k">the key need get</param>
+        /// <param name="defaultValue">default value if key does not contains in this EUNHashtable</param>
+        /// <returns>the object or defaultValue or null</returns>
         protected override object Get<T>(int k, T defaultValue = default(T))
         {
             if (originObject.ContainsKey(k))
@@ -123,6 +176,10 @@
             return defaultValue;
         }
 
+        /// <summary>
+        /// To Ezy Data
+        /// </summary>
+        /// <returns>EzyObject from this EUNHashtable</returns>
         public override object ToEzyData()
         {
 #if EUN
@@ -140,6 +197,10 @@
 #endif
         }
 
+        /// <summary>
+        /// To EUNHashtable string
+        /// </summary>
+        /// <returns>string like json, but it is EUNHashtable json</returns>
         public override string ToString()
         {
             var builder = new StringBuilder();

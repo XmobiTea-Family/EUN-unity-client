@@ -3,13 +3,13 @@
     using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
 
-    public class TransferGameObjectRoomOperationRequest : CustomOperationRequest
+    public class TransferOwnerGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.TransferGameObjectRoom;
+        protected override int Code => OperationCode.TransferOwnerGameObjectRoom;
 
         protected override bool Reliable => true;
 
-        public TransferGameObjectRoomOperationRequest(int objectId, int ownerId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public TransferOwnerGameObjectRoomOperationRequest(int objectId, int ownerId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.ObjectId, objectId)

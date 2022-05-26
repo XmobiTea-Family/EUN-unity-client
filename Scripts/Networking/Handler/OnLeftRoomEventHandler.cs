@@ -3,6 +3,9 @@
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and send LeaveRoom() success
+    /// </summary>
     internal class OnLeftRoomEventHandler : IServerEventHandler
     {
         public int GetEventCode()

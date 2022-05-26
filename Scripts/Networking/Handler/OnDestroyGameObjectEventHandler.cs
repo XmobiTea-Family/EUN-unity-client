@@ -3,6 +3,9 @@
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and someone inroom send DestroyGameObjectRoom() request
+    /// </summary>
     internal class OnDestroyGameObjectEventHandler : IServerEventHandler
     {
         public int GetEventCode()
@@ -18,7 +21,34 @@
             var eunArray = parameters.GetEUNArray(ParameterCode.Data);
             var objectId = eunArray.GetInt(0);
 
-            if (peer.room.GameObjectDic.ContainsKey(objectId)) peer.room.GameObjectDic.Remove(objectId);
+            RoomGameObject roomGameObject = null;
+
+            if (peer.room.GameObjectDic.ContainsKey(objectId))
+            {
+                roomGameObject = peer.room.GameObjectDic[objectId];
+                peer.room.GameObjectDic.Remove(objectId);
+            }
+
+            if (roomGameObject != null)
+            {
+                foreach (var view in peer.eunViewLst)
+                {
+                    if (view)
+                    {
+                        foreach (var behaviour in view.eunBehaviourLst)
+                        {
+                            if (behaviour != null) behaviour.OnEUNDestroyGameObjectRoom(roomGameObject);
+                        }
+                    }
+                }
+
+                var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
+                {
+                    var behaviour = eunManagerBehaviourLst[i];
+                    if (behaviour != null) behaviour.OnEUNDestroyGameObjectRoom(roomGameObject);
+                }
+            }
         }
     }
 }

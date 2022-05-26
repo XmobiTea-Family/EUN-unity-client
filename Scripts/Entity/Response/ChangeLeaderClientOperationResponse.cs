@@ -1,7 +1,5 @@
 ﻿namespace XmobiTea.EUN.Entity.Response
 {
-    using XmobiTea.EUN.Common;
-
     public class ChangeLeaderClientOperationResponse : CustomOperationResponse
     {
         public bool Success { get; private set; }

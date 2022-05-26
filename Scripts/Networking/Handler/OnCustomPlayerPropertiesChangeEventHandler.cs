@@ -3,6 +3,9 @@
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and someone inroom send ChangePlayerCustomProperties() request
+    /// </summary>
     internal class OnCustomPlayerPropertiesChangeEventHandler : IServerEventHandler
     {
         public int GetEventCode()

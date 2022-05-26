@@ -1,9 +1,11 @@
 ﻿namespace XmobiTea.EUN.Networking
 {
-    using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and someone inroom send CreateGameObjectRoom() request
+    /// </summary>
     internal class OnCreateGameObjectEventHandler : IServerEventHandler
     {
         public int GetEventCode()

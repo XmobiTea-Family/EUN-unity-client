@@ -1,6 +1,5 @@
 ﻿namespace XmobiTea.EUN.Entity.Response
 {
-    using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
 
     public class GetCurrentLobbyStatsOperationResponse : CustomOperationResponse

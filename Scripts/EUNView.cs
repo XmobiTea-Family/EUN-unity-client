@@ -92,7 +92,7 @@
 
         public void RPC(EUNTargets targets, EUNRPCCommand command, params object[] rpcData)
         {
-            EUNNetworkExtension.RPC(this, targets, command, rpcData);
+            EUNNetworkExtensions.RPC(this, targets, command, rpcData);
         }
     }
 }

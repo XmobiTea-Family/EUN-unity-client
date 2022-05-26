@@ -36,7 +36,7 @@
             if (eunView != null) eunView.UnSubscriberEUNBehaviour(this);
         }
 
-        public void EUNRPC(int eunRPCCommand, EUNArray rpcDataArray)
+        internal void EUNRPC(int eunRPCCommand, EUNArray rpcDataArray)
         {
             var type = GetType();
 
@@ -229,6 +229,8 @@
         public virtual void OnEUNCustomPlayerPropertiesChange(RoomPlayer player, EUNHashtable customPropertiesChange) { }
 
         public virtual void OnEUNCustomGameObjectPropertiesChange(EUNHashtable customPropertiesChange) { }
+
+        public virtual void OnEUNDestroyGameObjectRoom(RoomGameObject roomGameObject) { }
 
         public virtual void OnEUNCustomRoomPropertiesChange(EUNHashtable customPropertiesChange) { }
 

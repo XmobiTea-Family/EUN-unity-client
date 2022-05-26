@@ -14,20 +14,45 @@
 
     using XmobiTea.EUN.Entity.Request;
 
+    /// <summary>
+    /// In this partial it will contains all function API
+    /// </summary>
     public partial class NetworkingPeer
     {
+        /// <summary>
+        /// The current lobby id
+        /// </summary>
         internal int lobbyId = -1;
 
+        /// <summary>
+        /// The current room
+        /// </summary>
         internal Room room;
 
+        /// <summary>
+        /// The current player id in this room
+        /// </summary>
         internal int playerId;
 
+        /// <summary>
+        /// Dict of eunView
+        /// </summary>
         internal Dictionary<int, EUNView> eunViewDic;
 
+        /// <summary>
+        /// The server timestamp as long
+        /// </summary>
         internal long tsServerTime => (long)serverTimeStamp;
 
+        /// <summary>
+        /// Is the EUN Network connect EUN Server?
+        /// </summary>
         internal bool isConnected;
 
+        /// <summary>
+        /// Get the list game object does not have agent EUNView to handle this game object room
+        /// </summary>
+        /// <returns></returns>
         internal List<RoomGameObject> getListGameObjectNeedCreate()
         {
             if (room == null) return null;
@@ -85,6 +110,12 @@
             return roomGameObjectNeedCreateLst;
         }
 
+        /// <summary>
+        /// Set the send rate, this help peer send the OperationRequest follow rate
+        /// </summary>
+        /// <param name="sendRate">Send rate for normal OperationRequest</param>
+        /// <param name="sendRateSynchronizationData">Send rate for sync OperationRequest</param>
+        /// <param name="sendRateVoiceChat">Send rate for voice chat OperationRequest</param>
         internal void SetSendRate(int sendRate, int sendRateSynchronizationData, int sendRateVoiceChat)
         {
             if (sendRate < 1) sendRate = 1;
@@ -96,7 +127,15 @@
             perVoiceChatMsgTimer = 1f / sendRateVoiceChat;
         }
 
-        internal void Connect(string username, string password, IEUNData data)
+        /// <summary>
+        /// Connect to EUNServer, the username and password in the Ezyfox Server
+        /// In EUN, we use user id as user name, so you can see we use user name as user id as somewhere
+        /// </summary>
+        /// <param name="username"></param>
+        /// <param name="password"></param>
+        /// <param name="customData"></param>
+        /// <exception cref="NullReferenceException"></exception>
+        internal void Connect(string username, string password, IEUNData customData)
         {
             var eunServerSettings = EUNNetwork.eunServerSettings;
             if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
@@ -118,14 +157,19 @@
             }
             else
             {
+                if (customData == null) customData = new EUNArray();
+
 #if !UNITY_EDITOR && UNITY_WEBGL
-                eunSocketObject.Connect(username, password, data, eunServerSettings.webSocketHost, 0, 0);
+                eunSocketObject.Connect(username, password, customData, eunServerSettings.webSocketHost, 0, 0);
 #else
-                eunSocketObject.Connect(username, password, data, eunServerSettings.socketHost, eunServerSettings.socketTCPPort, eunServerSettings.socketUDPPort);
+                eunSocketObject.Connect(username, password, customData, eunServerSettings.socketHost, eunServerSettings.socketTCPPort, eunServerSettings.socketUDPPort);
 #endif
             }
         }
 
+        /// <summary>
+        /// Disconnect EUNNetwork to EUNServer
+        /// </summary>
         internal void Disconnect()
         {
             eunSocketObject.Disconnect();
@@ -271,6 +315,17 @@
             });
         }
 
+        internal void JoinRandomRoom(int targetExpectedCount, EUNHashtable expectedProperties, Action<JoinRandomRoomOperationResponse> onResponse)
+        {
+            var request = new JoinRandomRoomOperationRequest(targetExpectedCount, expectedProperties).Builder();
+
+            Enqueue(request, response =>
+            {
+                var joinOrCreateRoomOperationResponse = new JoinRandomRoomOperationResponse(response);
+                onResponse?.Invoke(joinOrCreateRoomOperationResponse);
+            });
+        }
+
         internal void JoinRoom(int roomId, string password, Action<JoinRoomOperationResponse> onResponse)
         {
             var request = new JoinRoomOperationRequest(roomId, password).Builder();
@@ -411,13 +466,13 @@
             Enqueue(request, null);
         }
 
-        internal void TransferGameObjectRoom(int objectId, int ownerId, Action<TransferGameObjectRoomOperationResponse> onResponse)
+        internal void TransferOwnerGameObjectRoom(int objectId, int ownerId, Action<TransferOwnerGameObjectRoomOperationResponse> onResponse)
         {
-            var request = new TransferGameObjectRoomOperationRequest(objectId, ownerId).Builder();
+            var request = new TransferOwnerGameObjectRoomOperationRequest(objectId, ownerId).Builder();
 
             Enqueue(request, response =>
             {
-                var transferGameObjectRoomOperationResponse = new TransferGameObjectRoomOperationResponse(response);
+                var transferGameObjectRoomOperationResponse = new TransferOwnerGameObjectRoomOperationResponse(response);
                 onResponse?.Invoke(transferGameObjectRoomOperationResponse);
             });
         }

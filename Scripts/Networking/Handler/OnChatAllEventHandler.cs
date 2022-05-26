@@ -1,9 +1,11 @@
 ﻿namespace XmobiTea.EUN.Networking
 {
-    using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client subscriber chat all and someone send ChatAll() request
+    /// </summary>
     internal class OnChatAllEventHandler : IServerEventHandler
     {
         public int GetEventCode()

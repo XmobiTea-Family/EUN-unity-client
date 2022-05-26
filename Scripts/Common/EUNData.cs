@@ -82,10 +82,22 @@
             return value;
         }
 
+        /// <summary>
+        /// Clear all data in this EUNData
+        /// </summary>
         public virtual void Clear() { }
 
+        /// <summary>
+        /// Remove a "k" in this EUNData
+        /// </summary>
+        /// <param name="k"></param>
+        /// <returns>true if k exists</returns>
         public virtual bool Remove(int k) { return false; }
 
+        /// <summary>
+        /// Size of this EUNData
+        /// </summary>
+        /// <returns>size of this EUNData</returns>
         public virtual int Count() { return 0; }
 
         protected virtual object Get<T>(int k, T defaultValue = default(T))

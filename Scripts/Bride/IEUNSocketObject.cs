@@ -15,9 +15,7 @@
         void Init(string _zoneName, string _appName);
         void Connect(string username, string password, IEUNData data, string host, int port, int udpPort);
         void Disconnect();
-#if EUN
         void Send(EzyObject request, bool reliable = true);
-#endif
         void SubscriberConnectionSuccessHandler(Action _onConnectionSuccess);
         void SubscriberConnectionFailureHandler(Action<EzyConnectionFailedReason> _onConnectionFailure);
         void SubscriberDisconnectionHandler(Action<EzyDisconnectReason> _onDisconnection);
