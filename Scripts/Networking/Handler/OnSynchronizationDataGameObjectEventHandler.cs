@@ -3,6 +3,9 @@
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and room game object send synchronization data success
+    /// </summary>
     internal class OnSynchronizationDataGameObjectEventHandler : IServerEventHandler
     {
         public int GetEventCode()

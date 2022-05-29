@@ -9,11 +9,17 @@
 
         protected override bool Reliable => true;
 
-        public ChangePlayerCustomPropertiesOperationRequest(int playerId, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        /// <summary>
+        /// ChangePlayerCustomPropertiesOperationRequest
+        /// </summary>
+        /// <param name="playerId">The player id need change</param>
+        /// <param name="customPlayerProperties">The custom player properties need change</param>
+        /// <param name="timeout"></param>
+        public ChangePlayerCustomPropertiesOperationRequest(int playerId, EUNHashtable customPlayerProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.OwnerId, playerId)
-                .Add(ParameterCode.CustomPlayerProperties, customGameObjectProperties)
+                .Add(ParameterCode.CustomPlayerProperties, customPlayerProperties)
                 .Build();
         }
     }

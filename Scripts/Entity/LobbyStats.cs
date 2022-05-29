@@ -4,15 +4,26 @@
 
     public class LobbyStats
     {
+        /// <summary>
+        /// The lobby id
+        /// </summary>
         public int LobbyId { get; private set; }
-        public int PlayerSize { get; private set; }
-        public int RoomSize { get; private set; }
+
+        /// <summary>
+        /// The player count in this lobby
+        /// </summary>
+        public int PlayerCount { get; private set; }
+
+        /// <summary>
+        /// The room count in this lobby
+        /// </summary>
+        public int RoomCount { get; private set; }
 
         public LobbyStats(EUNArray eunArray)
         {
             LobbyId = eunArray.GetInt(0);
-            PlayerSize = eunArray.GetInt(1);
-            RoomSize = eunArray.GetInt(2);
+            PlayerCount = eunArray.GetInt(1);
+            RoomCount = eunArray.GetInt(2);
         }
     }
 }

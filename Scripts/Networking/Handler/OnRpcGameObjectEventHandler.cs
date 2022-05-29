@@ -3,6 +3,9 @@
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and room game object send EUNRPC() success
+    /// </summary>
     internal class OnRpcGameObjectEventHandler : IServerEventHandler
     {
         public int GetEventCode()

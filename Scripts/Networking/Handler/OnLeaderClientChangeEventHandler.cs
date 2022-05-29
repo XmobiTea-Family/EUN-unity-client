@@ -1,9 +1,16 @@
 ﻿namespace XmobiTea.EUN.Networking
 {
-    using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and:
+    /// Current leader client in current room send ChangeLeaderClient
+    /// Current leader client disconnect or LeaveRoom()
+    /// 
+    /// And handle if client are not inroom and:
+    /// CreateRoom() success, JoinRoom() a room does not time to live to destroy room, but it empty room player because they LeaveRoom() or disconnect
+    /// </summary>
     internal class OnLeaderClientChangeEventHandler : IServerEventHandler
     {
         public int GetEventCode()

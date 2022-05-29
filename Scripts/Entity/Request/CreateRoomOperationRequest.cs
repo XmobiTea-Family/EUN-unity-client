@@ -9,6 +9,11 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// CreateRoomOperationRequest
+        /// </summary>
+        /// <param name="roomOption">The room option for new room</param>
+        /// <param name="timeout"></param>
         public CreateRoomOperationRequest(RoomOption roomOption, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

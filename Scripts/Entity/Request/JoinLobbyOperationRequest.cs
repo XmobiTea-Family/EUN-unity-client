@@ -9,6 +9,11 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// JoinLobbyOperationRequest
+        /// </summary>
+        /// <param name="lobbyId">The lobby id client want to join</param>
+        /// <param name="timeout"></param>
         public JoinLobbyOperationRequest(int lobbyId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

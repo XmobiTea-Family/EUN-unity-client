@@ -16,13 +16,29 @@
     using XmobiTea.EUN.Entity;
     using XmobiTea.EUN.Logger;
 
+    /// <summary>
+    /// In this partial it will contains all callback 
+    /// </summary>
     public partial class NetworkingPeer
     {
+        /// <summary>
+        /// all the class implement from IServerEventHandler
+        /// </summary>
         private Dictionary<int, IServerEventHandler> serverEventHandlerDic;
 
+        /// <summary>
+        /// All EUNView list
+        /// </summary>
         internal List<EUNView> eunViewLst;
+
+        /// <summary>
+        /// All IEUNManagerBehaviour subscriber to EUNNetwork
+        /// </summary>
         internal List<IEUNManagerBehaviour> eunManagerBehaviourLst;
 
+        /// <summary>
+        /// Check and subscriber all class implement server event handler
+        /// </summary>
         void SubscriberServerEventHandler()
         {
             var type = typeof(IServerEventHandler);
@@ -37,6 +53,10 @@
             }
         }
 
+        /// <summary>
+        /// Handle an event from EUN Server to EUN Network
+        /// </summary>
+        /// <param name="obj"></param>
         void OnEventHandler(EUNArray obj)
         {
             var eventCode = obj.GetInt(0);
@@ -53,6 +73,10 @@
             serverEventHandler.Handle(operationEvent, this);
         }
 
+        /// <summary>
+        /// Handle a response from EUN Server to EUN Network
+        /// </summary>
+        /// <param name="obj"></param>
         void OnResponseHandler(EUNArray obj)
         {
             var responseId = obj.GetInt(2);
@@ -83,6 +107,10 @@
             }
         }
 
+        /// <summary>
+        /// Handle if login to EUN Server error
+        /// </summary>
+        /// <param name="obj"></param>
         void OnLoginErrorHandler(EUNArray obj)
         {
             isConnected = false;
@@ -94,6 +122,10 @@
             }
         }
 
+        /// <summary>
+        /// Handle if has a disconnect call
+        /// </summary>
+        /// <param name="obj">EzyDisconnectReason</param>
         void OnDisconnectionHandler(EzyDisconnectReason obj)
         {
             isConnected = false;
@@ -108,6 +140,10 @@
             playerId = -1;
         }
 
+        /// <summary>
+        /// Handle if connection fail
+        /// </summary>
+        /// <param name="obj"></param>
         void OnConnectionFailureHandler(EzyConnectionFailedReason obj)
         {
             isConnected = false;
@@ -122,6 +158,9 @@
             playerId = -1;
         }
 
+        /// <summary>
+        /// Handle connect to EUNServer success
+        /// </summary>
         void OnConnectionSuccessHandler()
         {
             for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
@@ -131,6 +170,10 @@
             }
         }
 
+        /// <summary>
+        /// Handle if zone name, app name and plugin name correct and EUN Server access this client
+        /// </summary>
+        /// <param name="obj"></param>
         void OnAppAccessHandler(EUNArray obj)
         {
             isConnected = true;
@@ -145,22 +188,38 @@
             }
         }
 
+        /// <summary>
+        /// Subscriber a EUNView if eunViewLst does not contains it
+        /// </summary>
+        /// <param name="view"></param>
         internal void SubscriberEUNView(EUNView view)
         {
             if (!eunViewLst.Contains(view)) eunViewLst.Add(view);
         }
 
+        /// <summary>
+        /// Remove subscriber a EUNView if eunViewLst contains it
+        /// </summary>
+        /// <param name="view"></param>
         internal void UnSubscriberEUNView(EUNView view)
         {
             if (eunViewLst.Contains(view)) eunViewLst.Remove(view);
         }
 
-        internal void SubscriberEUNBehaviour(IEUNManagerBehaviour behaviour)
+        /// <summary>
+        /// Subscriber a EUNManagerBehaviour if eunManagerBehaviourLst does not contains it
+        /// </summary>
+        /// <param name="behaviour"></param>
+        internal void SubscriberEUNManagerBehaviour(IEUNManagerBehaviour behaviour)
         {
             if (!eunManagerBehaviourLst.Contains(behaviour)) eunManagerBehaviourLst.Add(behaviour);
         }
 
-        internal void UnSubscriberEUNBehaviour(IEUNManagerBehaviour behaviour)
+        /// <summary>
+        /// Remove subscriber a EUNManagerBehaviour if eunManagerBehaviourLst contains it
+        /// </summary>
+        /// <param name="behaviour"></param>
+        internal void UnSubscriberEUNManagerBehaviour(IEUNManagerBehaviour behaviour)
         {
             if (eunManagerBehaviourLst.Contains(behaviour)) eunManagerBehaviourLst.Remove(behaviour);
         }

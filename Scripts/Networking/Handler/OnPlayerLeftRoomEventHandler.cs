@@ -1,9 +1,11 @@
 ﻿namespace XmobiTea.EUN.Networking
 {
-    using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and other room player send LeaveRoom() and left this room success
+    /// </summary>
     internal class OnPlayerLeftRoomEventHandler : IServerEventHandler
     {
         public int GetEventCode()

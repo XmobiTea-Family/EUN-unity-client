@@ -9,6 +9,12 @@
 
         protected override bool Reliable => false;
 
+        /// <summary>
+        /// SynchronizationDataGameObjectRoomOperationRequest
+        /// </summary>
+        /// <param name="objectId">The object id room game object</param>
+        /// <param name="synchronizationData">The sync data</param>
+        /// <param name="timeout"></param>
         public SynchronizationDataGameObjectRoomOperationRequest(int objectId, object synchronizationData, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

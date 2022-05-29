@@ -1,5 +1,8 @@
 ﻿namespace XmobiTea.EUN.Constant
 {
+    /// <summary>
+    /// All operation code
+    /// </summary>
     public partial class OperationCode
     {
         public const int SyncTs = 0;
@@ -25,10 +28,11 @@
         public const int CreateGameObjectRoom = 18;
         public const int DestroyGameObjectRoom = 19;
         public const int SynchronizationDataGameObjectRoom = 20;
-        public const int TransferGameObjectRoom = 21;
+        public const int TransferOwnerGameObjectRoom = 21;
         public const int VoiceChat = 22;
         public const int RpcGameObjectRoomTo = 23;
 
         public const int ChangeGameObjectCustomProperties = 24;
+        public const int JoinRandomRoom = 25;
     }
 }

@@ -9,6 +9,12 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// GetLobbyStatsLstOperationRequest
+        /// </summary>
+        /// <param name="skip">The lobby count need skip</param>
+        /// <param name="limit">The lobby count need get</param>
+        /// <param name="timeout"></param>
         public GetLobbyStatsLstOperationRequest(int skip, int limit, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

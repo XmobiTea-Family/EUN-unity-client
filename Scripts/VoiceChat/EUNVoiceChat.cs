@@ -4,6 +4,9 @@
 
     using UnityEngine;
 
+    /// <summary>
+    /// EUN Mic Record
+    /// </summary>
     public class EUNMicRecord
     {
         private AudioClip mic;

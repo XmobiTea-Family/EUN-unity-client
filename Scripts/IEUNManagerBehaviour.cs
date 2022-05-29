@@ -17,6 +17,8 @@
 
         void OnEUNCustomGameObjectPropertiesChange(RoomGameObject roomGameObject, EUNHashtable customPropertiesChange);
 
+        void OnEUNDestroyGameObjectRoom(RoomGameObject roomGameObject);
+
         void OnEUNZoneConnected();
 
         void OnEUNConnected();

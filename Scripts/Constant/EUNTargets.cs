@@ -1,10 +1,33 @@
 ﻿namespace XmobiTea.EUN.Constant
 {
+    /// <summary>
+    /// The targets will receive EUNRPC
+    /// </summary>
     public enum EUNTargets : byte
     {
-        All = 0,
+        /// <summary>
+        /// All player in this room
+        /// </summary>
+        All = 4,
+
+        /// <summary>
+        /// All player in this room, but via server
+        /// </summary>
+        AllViaServer = 0,
+
+        /// <summary>
+        /// Others player but this client can not receive
+        /// </summary>
         Others = 1,
+
+        /// <summary>
+        /// Only leaderclient can receive
+        /// </summary>
         LeaderClient = 2,
-        OnlyMe = 3
+
+        /// <summary>
+        /// Only me can receive
+        /// </summary>
+        OnlyMe = 3,
     }
 }

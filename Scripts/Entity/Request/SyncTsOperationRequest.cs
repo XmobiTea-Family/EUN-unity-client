@@ -9,6 +9,10 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// SyncTsOperationRequest
+        /// </summary>
+        /// <param name="timeout"></param>
         public SyncTsOperationRequest(int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
 

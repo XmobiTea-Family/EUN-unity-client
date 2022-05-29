@@ -3,6 +3,9 @@
     using XmobiTea.EUN.Entity;
     using XmobiTea.EUN.Constant;
 
+    /// <summary>
+    /// Handle if client inroom and leader client change room info, or room custom properties this room success
+    /// </summary>
     internal class OnRoomInfoChangeEventHandler : IServerEventHandler
     {
         public int GetEventCode()

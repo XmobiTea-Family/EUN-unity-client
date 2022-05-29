@@ -1,10 +1,10 @@
 ﻿namespace XmobiTea.EUN.Entity.Response
 {
-    public class CreateGameObjectRoomOperationResponse : CustomOperationResponse
+    public class JoinRandomRoomOperationResponse : CustomOperationResponse
     {
         public bool Success { get; private set; }
 
-        public CreateGameObjectRoomOperationResponse(OperationResponse operationResponse) : base(operationResponse)
+        public JoinRandomRoomOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
             if (!HasError)
             {

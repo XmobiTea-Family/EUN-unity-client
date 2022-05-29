@@ -9,6 +9,14 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// CreateGameObjectRoomOperationRequest
+        /// </summary>
+        /// <param name="prefabPath">The prefab path of game object</param>
+        /// <param name="initializeData">The initialize data of game object</param>
+        /// <param name="synchronizationData">The sync data of game object</param>
+        /// <param name="customGameObjectProperties">The custom game object properties</param>
+        /// <param name="timeout"></param>
         public CreateGameObjectRoomOperationRequest(string prefabPath, object initializeData, object synchronizationData, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

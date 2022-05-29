@@ -1,9 +1,11 @@
 ﻿namespace XmobiTea.EUN.Networking
 {
-    using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client inroom and someone inroom send ChatRoom() request
+    /// </summary>
     internal class OnChatRoomEventHandler : IServerEventHandler
     {
         public int GetEventCode()

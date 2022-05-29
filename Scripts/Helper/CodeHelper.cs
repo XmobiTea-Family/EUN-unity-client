@@ -14,16 +14,31 @@
         private static Dictionary<int, string> eventCodeDic;
         private static Dictionary<int, string> returnCodeDic;
 
+        /// <summary>
+        /// Get operation code name via id
+        /// </summary>
+        /// <param name="operationCode"></param>
+        /// <returns></returns>
         public static string GetOperationCodeName(int operationCode)
         {
             return operationCodeDic.ContainsKey(operationCode) ? operationCodeDic[operationCode] : UnknownCode;
         }
 
+        /// <summary>
+        /// Get event code name via id
+        /// </summary>
+        /// <param name="eventCode"></param>
+        /// <returns></returns>
         public static string GetEventCodeName(int eventCode)
         {
             return eventCodeDic.ContainsKey(eventCode) ? eventCodeDic[eventCode] : UnknownCode;
         }
 
+        /// <summary>
+        /// Get return code name via id
+        /// </summary>
+        /// <param name="returnCode"></param>
+        /// <returns></returns>
         public static string GetReturnCodeName(int returnCode)
         {
             return returnCodeDic.ContainsKey(returnCode) ? returnCodeDic[returnCode] : UnknownCode;

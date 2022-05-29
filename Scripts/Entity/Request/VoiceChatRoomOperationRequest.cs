@@ -9,6 +9,12 @@
 
         protected override bool Reliable => false;
 
+        /// <summary>
+        /// VoiceChatOperationRequest
+        /// </summary>
+        /// <param name="objectId">The object id room game object</param>
+        /// <param name="voiceChatData">The voice chat data for room game object</param>
+        /// <param name="timeout"></param>
         public VoiceChatOperationRequest(int objectId, object voiceChatData, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

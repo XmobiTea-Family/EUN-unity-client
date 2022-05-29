@@ -1,9 +1,11 @@
 ﻿namespace XmobiTea.EUN.Networking
 {
-    using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
     using XmobiTea.EUN.Entity;
 
+    /// <summary>
+    /// Handle if client subscriber chat lobby and someone send ChatLobby() to current lobby request
+    /// </summary>
     internal class OnChatLobbyEventHandler : IServerEventHandler
     {
         public int GetEventCode()

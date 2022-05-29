@@ -9,6 +9,11 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// DestroyGameObjectRoomOperationRequest
+        /// </summary>
+        /// <param name="objectId">The object id room game object need destroy</param>
+        /// <param name="timeout"></param>
         public DestroyGameObjectRoomOperationRequest(int objectId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

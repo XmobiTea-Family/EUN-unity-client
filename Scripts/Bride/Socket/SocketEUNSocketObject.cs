@@ -15,17 +15,19 @@
     using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
 
+    /// <summary>
+    /// The EUNSocketObject for Socket connection
+    /// </summary>
     public class SocketEUNSocketObject : EUNSocketObject
     {
 #if EUN
         private EzyClient socketClient;
 #endif
-        internal static int udpPort;
 
-        protected override void OnCustomStart()
-        {
-            base.OnCustomStart();
-        }
+        /// <summary>
+        /// only socket connection need udp port
+        /// </summary>
+        internal static int udpPort;
 
         public override void Init(string _zoneName, string _appName)
         {
@@ -209,11 +211,6 @@
                     username,
                     password,
                     (EzyData)data.ToEzyData());
-                //,
-                //    EUNEntityFactory.newArrayBuilder()
-                //        //.append("gameName", appName)
-                //        .build()
-                //    );
             }
         }
 

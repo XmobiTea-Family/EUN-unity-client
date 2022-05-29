@@ -9,6 +9,11 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// SubscriberChatLobbyOperationRequest
+        /// </summary>
+        /// <param name="isSubscribe">Subsribe chat</param>
+        /// <param name="timeout"></param>
         public SubscriberChatLobbyOperationRequest(bool isSubscribe, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

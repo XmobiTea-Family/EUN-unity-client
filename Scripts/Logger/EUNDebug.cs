@@ -12,6 +12,9 @@ namespace XmobiTea.EUN.Logger
         All
     }
 
+    /// <summary>
+    /// Debug for EUN
+    /// </summary>
     internal class EUNDebug
     {
         private static LogType logType;
