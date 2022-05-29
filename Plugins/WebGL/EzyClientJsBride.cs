@@ -42,7 +42,7 @@
         /// <summary>
         /// Send the request to EUNServer
         /// </summary>
-        /// <param name="requestData"></param>
+        /// <param name="requestData">The request data</param>
         /// <returns></returns>
         [DllImport("__Internal")]
         public static extern bool EzySend(string requestData);
