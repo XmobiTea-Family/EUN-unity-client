@@ -9,6 +9,11 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// ChangeGameObjectCustomPropertiesOperationRequest
+        /// </summary>
+        /// <param name="objectId">The room game object need change</param>
+        /// <param name="customGameObjectProperties">The custom properties need change</param>
         public ChangeGameObjectCustomPropertiesOperationRequest(int objectId, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

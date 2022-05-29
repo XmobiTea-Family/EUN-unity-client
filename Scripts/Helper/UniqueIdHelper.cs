@@ -7,6 +7,10 @@
     {
         private const string UniqueId = "UniqueId";
 
+        /// <summary>
+        /// Get an id for this device
+        /// </summary>
+        /// <returns></returns>
         public static string GetId()
         {
             var deviceId = string.Empty;
@@ -34,10 +38,10 @@
 #endif
 #endif
 
-            return CreateMD5(deviceId);
+            return GenerateMD5(deviceId);
         }
 
-        private static string CreateMD5(string input)
+        private static string GenerateMD5(string input)
         {
             // Use input string to calculate MD5 hash
             using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())

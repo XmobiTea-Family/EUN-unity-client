@@ -1,5 +1,8 @@
 ﻿namespace XmobiTea.EUN.Constant
 {
+    /// <summary>
+    /// Peer property code
+    /// </summary>
     public class PeerPropertyCode
     {
         public const int Lobby = 0;

@@ -333,8 +333,6 @@
 
         private void SerializeValue(object value)
         {
-            //if (value is IGSData)
-            //    value = (object)((IGSData)value).BaseData;
             if (value == null)
                 this.builder.Append("null");
             else if (value is string str)

@@ -35,9 +35,14 @@
                 {
                     if (view)
                     {
-                        foreach (var behaviour in view.eunBehaviourLst)
+                        if (view.RoomGameObject.ObjectId == objectId)
                         {
-                            if (behaviour != null) behaviour.OnEUNDestroyGameObjectRoom(roomGameObject);
+                            foreach (var behaviour in view.eunBehaviourLst)
+                            {
+                                if (behaviour != null) behaviour.OnEUNDestroyGameObjectRoom();
+                            }
+
+                            break;
                         }
                     }
                 }

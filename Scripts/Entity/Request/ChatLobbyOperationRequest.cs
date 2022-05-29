@@ -9,6 +9,11 @@
 
         protected override bool Reliable => false;
 
+        /// <summary>
+        /// ChatLobbyOperationRequest
+        /// </summary>
+        /// <param name="message">The message content need send</param>
+        /// <param name="timeout"></param>
         public ChatLobbyOperationRequest(string message, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

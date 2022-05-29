@@ -9,6 +9,10 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// LeaveLobbyOperationRequest
+        /// </summary>
+        /// <param name="timeout"></param>
         public LeaveLobbyOperationRequest(int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
 

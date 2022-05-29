@@ -1,5 +1,8 @@
 ﻿namespace XmobiTea.EUN.Constant
 {
+    /// <summary>
+    /// All operation code
+    /// </summary>
     public partial class OperationCode
     {
         public const int SyncTs = 0;

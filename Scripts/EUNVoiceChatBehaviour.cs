@@ -17,11 +17,14 @@
         }
 
         private EUNMicSpeaker micSpeaker;
+        /// <summary>
+        /// The mic speaker
+        /// </summary>
         public EUNMicSpeaker Speaker => micSpeaker;
 
-        protected override void Awake()
+        protected override void OnCustomAwake()
         {
-            base.Awake();
+            base.OnCustomAwake();
 
             var audioSource = GetComponent<AudioSource>();
 
@@ -30,17 +33,25 @@
             micSpeaker = new EUNMicSpeaker(audioSource);
         }
 
-        protected override void Start()
+        protected override void OnCustomStart()
         {
             if (eunView != null) eunView.SubscriberEUNBehaviour(this);
         }
 
-        protected override void OnDestroy()
+        protected override void OnCustomDestroy()
         {
             if (eunView != null) eunView.UnSubscriberEUNBehaviour(this);
         }
 
-        protected virtual void Update()
+        private void Update()
+        {
+            OnCustomUpdate();
+        }
+
+        /// <summary>
+        /// This is a MonoBehaviour.Update()
+        /// </summary>
+        protected virtual void OnCustomUpdate()
         {
             Speaker?.Service();
         }

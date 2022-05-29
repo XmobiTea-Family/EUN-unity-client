@@ -9,6 +9,12 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// JoinRoomOperationRequest
+        /// </summary>
+        /// <param name="roomId">The room id need join</param>
+        /// <param name="password">The password of room, if this room has password</param>
+        /// <param name="timeout"></param>
         public JoinRoomOperationRequest(int roomId, string password, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

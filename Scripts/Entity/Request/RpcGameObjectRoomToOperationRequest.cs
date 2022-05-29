@@ -11,6 +11,14 @@
 
         protected override bool Reliable => false;
 
+        /// <summary>
+        /// RpcGameObjectRoomToOperationRequest
+        /// </summary>
+        /// <param name="targetPlayerIds">The player id list in room you want send</param>
+        /// <param name="objectId">The object id room game object</param>
+        /// <param name="eunRPCCommand">The command RPC</param>
+        /// <param name="rpcData">The RPC data</param>
+        /// <param name="timeout"></param>
         public RpcGameObjectRoomToOperationRequest(IList<int> targetPlayerIds, int objectId, int eunRPCCommand, object rpcData, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

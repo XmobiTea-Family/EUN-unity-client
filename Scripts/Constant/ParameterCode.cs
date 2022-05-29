@@ -1,5 +1,8 @@
 ﻿namespace XmobiTea.EUN.Constant
 {
+    /// <summary>
+    /// All parameter code
+    /// </summary>
     public partial class ParameterCode
     {
         public const int LobbyId = 0;

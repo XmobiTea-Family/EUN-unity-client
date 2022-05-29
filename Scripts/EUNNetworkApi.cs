@@ -384,7 +384,7 @@
         {
             var rpcDataArray = new EUNArray.Builder().AddAll(rpcData as object[]).Build();
             
-            if (targets == EUNTargets.OnlyMe || targets == EUNTargets.Others || (targets == EUNTargets.LeaderClient && EUNNetwork.IsLeaderClient))
+            if (targets == EUNTargets.OnlyMe)
             {
                 if (peer.eunViewDic.ContainsKey(objectId))
                 {
@@ -398,17 +398,9 @@
                     }
                 }
             }
-
-            if (EUNNetwork.RoomPlayers.Length > 1)
+            else if (targets == EUNTargets.LeaderClient)
             {
-                if (targets != EUNTargets.OnlyMe)
-                {
-                    peer.RpcGameObjectRoom(targets, objectId, eunRPCCommand, rpcData);
-                }
-            }
-            else
-            {
-                if (targets == EUNTargets.All)
+                if (EUNNetwork.IsLeaderClient)
                 {
                     if (peer.eunViewDic.ContainsKey(objectId))
                     {
@@ -421,6 +413,60 @@
                             }
                         }
                     }
+                }
+                else
+                {
+                    if (EUNNetwork.RoomPlayers.Length > 1)
+                    {
+                        peer.RpcGameObjectRoom(targets, objectId, eunRPCCommand, rpcData);
+                    }
+                }
+            }
+            else if (targets == EUNTargets.AllViaServer)
+            {
+                if (EUNNetwork.RoomPlayers.Length > 1)
+                {
+                    peer.RpcGameObjectRoom(targets, objectId, eunRPCCommand, rpcData);
+                }
+                else
+                {
+                    if (peer.eunViewDic.ContainsKey(objectId))
+                    {
+                        var view = peer.eunViewDic[objectId];
+                        if (view)
+                        {
+                            foreach (var behaviour in view.eunBehaviourLst)
+                            {
+                                if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
+                            }
+                        }
+                    }
+                }
+            }
+            else if (targets == EUNTargets.All)
+            {
+                if (EUNNetwork.RoomPlayers.Length > 1)
+                {
+                    peer.RpcGameObjectRoom(targets, objectId, eunRPCCommand, rpcData);
+                }
+
+                if (peer.eunViewDic.ContainsKey(objectId))
+                {
+                    var view = peer.eunViewDic[objectId];
+                    if (view)
+                    {
+                        foreach (var behaviour in view.eunBehaviourLst)
+                        {
+                            if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
+                        }
+                    }
+                }
+            }
+            else if (targets == EUNTargets.Others)
+            {
+                if (EUNNetwork.RoomPlayers.Length > 1)
+                {
+                    peer.RpcGameObjectRoom(targets, objectId, eunRPCCommand, rpcData);
                 }
             }
         }

@@ -8,42 +8,89 @@
     using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Helper;
 
+    /// <summary>
+    /// The operation response
+    /// </summary>
     public class OperationResponse
     {
+        /// <summary>
+        /// The operation code this response
+        /// </summary>
         private int operationCode;
+
+        /// <summary>
+        /// The return code
+        /// </summary>
         private int returnCode;
+
+        /// <summary>
+        /// The debug message from EUN Server
+        /// </summary>
         private string debugMessage;
+
+        /// <summary>
+        /// The parameters EUN Server attactment
+        /// </summary>
         private EUNHashtable parameters;
 
+        /// <summary>
+        /// The response id, it corresponding with request id in OperationRequest
+        /// </summary>
         private int responseId;
 
+        /// <summary>
+        /// The execute time
+        /// </summary>
         private float executeTime;
 
+        /// <summary>
+        /// The operation code
+        /// </summary>
+        /// <returns></returns>
         public int GetOperationCode()
         {
-            return operationCode;
+            return this.operationCode;
         }
 
+        /// <summary>
+        /// The return code
+        /// </summary>
+        /// <returns></returns>
         public int GetReturnCode()
         {
-            return returnCode;
+            return this.returnCode;
         }
 
+        /// <summary>
+        /// The parameters EUN Server attactment
+        /// </summary>
+        /// <returns></returns>
         public EUNHashtable GetParameters()
         {
-            return parameters;
+            return this.parameters;
         }
 
+        /// <summary>
+        /// Get response id of this response
+        /// </summary>
+        /// <returns></returns>
         public int GetResponseId()
         {
-            return responseId;
+            return this.responseId;
         }
 
+        /// <summary>
+        /// The debug message
+        /// </summary>
+        /// <returns></returns>
         public string GetDebugMessage()
         {
-            return debugMessage;
+            return this.debugMessage;
         }
 
+        /// <summary>
+        /// This response has error from EUN Server or not
+        /// </summary>
         public bool HasError => GetReturnCode() != ReturnCode.Ok;
 
         public OperationResponse(OperationRequest operationRequest, int returnCode, string debugMessage, EUNHashtable parameters)
@@ -60,10 +107,10 @@
         {
             var stringBuilder = new StringBuilder();
 
-            stringBuilder.Append("Code: " + CodeHelper.GetOperationCodeName(operationCode) + " ExecuteTime " + executeTime + "ms ResponseId: " + responseId + " ReturnCode " + CodeHelper.GetReturnCodeName(returnCode));
+            stringBuilder.Append("Code: " + CodeHelper.GetOperationCodeName(this.operationCode) + " ExecuteTime " + this.executeTime + "ms ResponseId: " + this.responseId + " ReturnCode " + CodeHelper.GetReturnCodeName(this.returnCode));
 
-            if (returnCode == ReturnCode.Ok) stringBuilder.Append(" Parameters " + parameters);
-            else stringBuilder.Append(" DebugMessage " + debugMessage);
+            if (this.returnCode == ReturnCode.Ok) stringBuilder.Append(" Parameters " + this.parameters);
+            else stringBuilder.Append(" DebugMessage " + this.debugMessage);
 
             return stringBuilder.ToString();
         }

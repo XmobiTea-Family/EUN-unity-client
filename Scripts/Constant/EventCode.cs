@@ -1,5 +1,8 @@
 ﻿namespace XmobiTea.EUN.Constant
 {
+    /// <summary>
+    /// all event code
+    /// </summary>
     public partial class EventCode
     {
         public const int OnChatAll = 0;

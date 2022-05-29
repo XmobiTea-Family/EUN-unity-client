@@ -9,33 +9,94 @@
     using UnityEngine;
     using XmobiTea.EUN.Logger;
 
+    /// <summary>
+    /// What is EUNBehaviour?
+    /// This is controller for EUNView
+    /// one EUNView may be have multiple EUNBehaviour
+    /// </summary>
     [RequireComponent(typeof(EUNView))]
     public class EUNBehaviour : MonoBehaviour
     {
+        /// <summary>
+        /// All method info dict
+        /// </summary>
         private static Dictionary<Type, MethodInfo[]> methodInfoDic = new Dictionary<Type, MethodInfo[]>();
 
+        /// <summary>
+        /// The eunView for this EUN Behaviour
+        /// </summary>
         public EUNView eunView { get; private set; }
 
-        protected virtual void Awake()
+        void Awake()
+        {
+            OnCustomAwake();
+        }
+
+        void Start()
+        {
+            OnCustomStart();
+        }
+
+        void OnEnable()
+        {
+            OnCustomEnable();
+        }
+
+        void OnDisable()
+        {
+            OnCustomDisable();
+        }
+
+        void OnDestroy()
+        {
+            OnCustomDestroy();
+        }
+
+        /// <summary>
+        /// This is a MonoBehaviour.Awake()
+        /// </summary>
+        protected virtual void OnCustomAwake()
         {
             if (eunView == null) eunView = GetComponent<EUNView>();
         }
 
-        protected virtual void Start()
+        /// <summary>
+        /// This is a MonoBehaviour.Start()
+        /// </summary>
+        protected virtual void OnCustomStart()
         {
             if (eunView != null) eunView.SubscriberEUNBehaviour(this);
         }
 
-        protected virtual void OnDisable()
+        /// <summary>
+        /// This is a MonoBehaviour.OnEnable()
+        /// </summary>
+        protected virtual void OnCustomEnable()
         {
 
         }
 
-        protected virtual void OnDestroy()
+        /// <summary>
+        /// This is a MonoBehaviour.OnDisable()
+        /// </summary>
+        protected virtual void OnCustomDisable()
+        {
+
+        }
+
+        /// <summary>
+        /// This is a MonoBehaviour.OnDestroy()
+        /// </summary>
+        protected virtual void OnCustomDestroy()
         {
             if (eunView != null) eunView.UnSubscriberEUNBehaviour(this);
         }
 
+        /// <summary>
+        /// This is RPC callback from EUNNetwork.RpcGameObjectRoom
+        /// </summary>
+        /// <param name="eunRPCCommand"></param>
+        /// <param name="rpcDataArray"></param>
         internal void EUNRPC(int eunRPCCommand, EUNArray rpcDataArray)
         {
             var type = GetType();
@@ -223,33 +284,89 @@
             }
         }
 
+        /// <summary>
+        /// The default RPC
+        /// </summary>
         [EUNRPC]
         private void None() { }
 
+        /// <summary>
+        /// Callback if custom player properties change
+        /// </summary>
+        /// <param name="player"></param>
+        /// <param name="customPropertiesChange">The player custom properties change</param>
         public virtual void OnEUNCustomPlayerPropertiesChange(RoomPlayer player, EUNHashtable customPropertiesChange) { }
 
+        /// <summary>
+        /// Callback if custom game object properties change
+        /// </summary>
+        /// <param name="customPropertiesChange">The room game object custom properties change</param>
         public virtual void OnEUNCustomGameObjectPropertiesChange(EUNHashtable customPropertiesChange) { }
 
-        public virtual void OnEUNDestroyGameObjectRoom(RoomGameObject roomGameObject) { }
+        /// <summary>
+        /// Callback if this room game object need destroy
+        /// </summary>
+        public virtual void OnEUNDestroyGameObjectRoom() { }
 
+        /// <summary>
+        /// Callback if custom room properties change
+        /// </summary>
+        /// <param name="customPropertiesChange">The custom room properties change</param>
         public virtual void OnEUNCustomRoomPropertiesChange(EUNHashtable customPropertiesChange) { }
 
+        /// <summary>
+        /// Callback if leader client change
+        /// </summary>
+        /// <param name="newLeaderClientPlayer">The new leader client</param>
         public virtual void OnEUNLeaderClientChange(RoomPlayer newLeaderClientPlayer) { }
 
+        /// <summary>
+        /// Callback if other player join room
+        /// </summary>
+        /// <param name="player">The player join this room</param>
         public virtual void OnEUNOtherPlayerJoinRoom(RoomPlayer player) { }
 
+        /// <summary>
+        /// Callback if other player left room
+        /// </summary>
+        /// <param name="player">The player left this room</param>
         public virtual void OnEUNOtherPlayerLeftRoom(RoomPlayer player) { }
 
+        /// <summary>
+        /// Callback if has chat room
+        /// </summary>
+        /// <param name="message">The message chat receive</param>
+        /// <param name="sender">The sender of message</param>
         public virtual void OnEUNReceiveChatRoom(ChatMessage message, RoomPlayer sender) { }
 
+        /// <summary>
+        /// Callback if room info change
+        /// </summary>
+        /// <param name="customPropertiesChange">The custom properties change</param>
         public virtual void OnEUNRoomInfoChange(EUNHashtable customPropertiesChange) { }
 
+        /// <summary>
+        /// Callback if init room game object
+        /// </summary>
+        /// <param name="initializeData">The init data, it should as EUNArray</param>
         public virtual void OnEUNInitialize(object initializeData) { }
 
+        /// <summary>
+        /// Callback if sync request sent success from other client from room game object
+        /// </summary>
+        /// <param name="synchronizationData">The sync data, it should as EUNArray</param>
         public virtual void OnEUNSynchronization(object synchronizationData) { }
 
+        /// <summary>
+        /// Callback if EUN Client need get sync request for EUNBehaviour
+        /// </summary>
+        /// <returns>null to dont send this sync request</returns>
         public virtual object GetSynchronizationData() { return null; }
 
+        /// <summary>
+        /// Callback if the owner room game object EUNView was change
+        /// </summary>
+        /// <param name="newOwner">The new owner for this eunView</param>
         public virtual void OnEUNTransferOwnerGameObject(RoomPlayer newOwner) { }
     }
 }

@@ -9,6 +9,11 @@
 
         protected override bool Reliable => true;
 
+        /// <summary>
+        /// ChangeLeaderClientOperationRequest
+        /// </summary>
+        /// <param name="leaderClientPlayerId">Leader client player id need change</param>
+        /// <param name="timeout"></param>
         public ChangeLeaderClientOperationRequest(int leaderClientPlayerId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
             Parameters = new EUNHashtable.Builder()

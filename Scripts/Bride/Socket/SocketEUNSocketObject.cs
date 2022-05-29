@@ -211,11 +211,6 @@
                     username,
                     password,
                     (EzyData)data.ToEzyData());
-                //,
-                //    EUNEntityFactory.newArrayBuilder()
-                //        //.append("gameName", appName)
-                //        .build()
-                //    );
             }
         }
 

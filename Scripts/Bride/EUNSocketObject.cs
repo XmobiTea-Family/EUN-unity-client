@@ -58,6 +58,9 @@
             EUNSocketObject.data = data;
         }
 
+        /// <summary>
+        /// Disconnect current connection ezyfox server (EUN Server)
+        /// </summary>
         public virtual void Disconnect() { }
 
         /// <summary>
@@ -135,6 +138,11 @@
         }
 
 #if EUN
+        /// <summary>
+        /// Send EzyObject request to ezyfox server
+        /// </summary>
+        /// <param name="request"></param>
+        /// <param name="reliable"></param>
         public virtual void Send(EzyObject request, bool reliable = true)
         {
 
