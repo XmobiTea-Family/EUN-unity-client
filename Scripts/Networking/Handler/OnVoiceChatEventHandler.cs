@@ -28,7 +28,7 @@
                 var view = peer.eunViewDic[objectId];
                 if (view)
                 {
-                    var eunVoiceChatBehaviourLst = view.eunVoiceChatBehaviourLst;
+                    var eunVoiceChatBehaviourLst = view._eunVoiceChatBehaviourLst;
 
                     for (var i = 0; i < eunVoiceChatBehaviourLst.Count; i++)
                     {

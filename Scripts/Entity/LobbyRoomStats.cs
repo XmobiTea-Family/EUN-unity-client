@@ -7,41 +7,49 @@
         /// <summary>
         /// The room id
         /// </summary>
-        public int RoomId { get; private set; }
+        public int roomId { get; protected set; }
 
         /// <summary>
-        /// The room is open
+        /// The room is open or not
+        /// if isOpen = false, other client cant join this room
         /// </summary>
-        public bool IsOpen { get; private set; }
+        public bool isOpen { get; internal set; }
 
         /// <summary>
-        /// The max player of room
+        /// The max player in this room
+        /// If current player count in this room less than max player, other client can join this room
         /// </summary>
-        public int MaxPlayer { get; private set; }
+        public int maxPlayer { get; internal set; }
 
         /// <summary>
         /// The room has contains password
         /// </summary>
-        public bool HasPassword { get; private set; }
+        public virtual bool hasPassword { get; protected set; }
 
         /// <summary>
         /// The current player count in room
         /// </summary>
-        public int PlayerCount { get; private set; }
+        public virtual int playerCount { get; protected set; }
 
         /// <summary>
-        /// The custom room properties can get in lobby
+        /// Custom room properties in this room for all player does not inroom can see
+        /// And all player inroom can not see this info
         /// </summary>
-        public EUNHashtable CustomRoomPropertiesForLobby { get; private set; }
+        public EUNHashtable customRoomPropertiesForLobby { get; protected set; }
 
-        public LobbyRoomStats(EUNArray eunArray)
+        internal LobbyRoomStats(EUNArray eunArray)
         {
-            RoomId = eunArray.GetInt(0);
-            IsOpen = eunArray.GetBool(1);
-            MaxPlayer = eunArray.GetInt(2);
-            HasPassword = eunArray.GetBool(3);
-            PlayerCount = eunArray.GetInt(4);
-            CustomRoomPropertiesForLobby = eunArray.GetEUNHashtable(5);
+            roomId = eunArray.GetInt(0);
+            isOpen = eunArray.GetBool(1);
+            maxPlayer = eunArray.GetInt(2);
+            hasPassword = eunArray.GetBool(3);
+            playerCount = eunArray.GetInt(4);
+            customRoomPropertiesForLobby = eunArray.GetEUNHashtable(5);
+        }
+
+        internal LobbyRoomStats()
+        {
+
         }
     }
 }

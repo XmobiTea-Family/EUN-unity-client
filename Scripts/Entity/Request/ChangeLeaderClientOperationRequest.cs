@@ -5,9 +5,9 @@
 
     public class ChangeLeaderClientOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.ChangeLeaderClient;
+        protected override int code => OperationCode.ChangeLeaderClient;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// ChangeLeaderClientOperationRequest
@@ -16,7 +16,7 @@
         /// <param name="timeout"></param>
         public ChangeLeaderClientOperationRequest(int leaderClientPlayerId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.LeaderClientPlayerId, leaderClientPlayerId)
                 .Build();
         }

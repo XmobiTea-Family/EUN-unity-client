@@ -80,7 +80,7 @@
         {
             if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
 
-            EUNDebug.Init(eunServerSettings.logType);
+            EUNDebug.logType = eunServerSettings.logType;
         }
 
         /// <summary>

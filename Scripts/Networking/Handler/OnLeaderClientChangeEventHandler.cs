@@ -29,11 +29,11 @@
 
             var eunViewLst = peer.eunViewLst;
 
-            var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(roomPlayer.UserId));
+            var thisRoomPlayer = peer.room.roomPlayerLst.Find(x => x.userId.Equals(roomPlayer.userId));
             if (thisRoomPlayer == null)
             {
                 thisRoomPlayer = roomPlayer;
-                peer.room.RoomPlayerLst.Add(thisRoomPlayer);
+                peer.room.roomPlayerLst.Add(thisRoomPlayer);
 
                 for (var i = 0; i < eunViewLst.Count; i++)
                 {
@@ -41,7 +41,7 @@
 
                     if (view)
                     {
-                        var eunBehaviourLst = view.eunBehaviourLst;
+                        var eunBehaviourLst = view._eunBehaviourLst;
 
                         for (var j = 0; j < eunBehaviourLst.Count; j++)
                         {
@@ -59,7 +59,7 @@
                 }
             }
 
-            peer.room.LeaderClientUserId = thisRoomPlayer.UserId;
+            peer.room.leaderClientUserId = thisRoomPlayer.userId;
 
             for (var i = 0; i < eunViewLst.Count; i++)
             {
@@ -67,7 +67,7 @@
 
                 if (view)
                 {
-                    var eunBehaviourLst = view.eunBehaviourLst;
+                    var eunBehaviourLst = view._eunBehaviourLst;
 
                     for (var j = 0; j < eunBehaviourLst.Count; j++)
                     {

@@ -5,9 +5,9 @@
 
     public class ChangeRoomInfoOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.ChangeRoomInfo;
+        protected override int code => OperationCode.ChangeRoomInfo;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// ChangeRoomInfoOperationRequest
@@ -16,7 +16,7 @@
         /// <param name="timeout"></param>
         public ChangeRoomInfoOperationRequest(EUNHashtable eunHashtable, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                  .Add(ParameterCode.EUNHashtable, eunHashtable)
                  .Build();
         }

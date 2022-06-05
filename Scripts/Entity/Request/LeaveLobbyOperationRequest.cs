@@ -5,9 +5,9 @@
 
     public class LeaveLobbyOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.LeaveLobby;
+        protected override int code => OperationCode.LeaveLobby;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// LeaveLobbyOperationRequest

@@ -19,7 +19,7 @@
             var parameters = operationEvent.GetParameters();
 
             var roomGameObject = new RoomGameObject(parameters.GetEUNArray(ParameterCode.Data));
-            peer.room.GameObjectDic[roomGameObject.ObjectId] = roomGameObject;
+            peer.room.gameObjectDic[roomGameObject.objectId] = roomGameObject;
             
             var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
             for (var i = 0; i < eunManagerBehaviourLst.Count; i++)

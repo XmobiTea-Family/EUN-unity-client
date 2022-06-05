@@ -5,9 +5,9 @@
 
     public class TransferOwnerGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.TransferOwnerGameObjectRoom;
+        protected override int code => OperationCode.TransferOwnerGameObjectRoom;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// TransferOwnerGameObjectRoomOperationRequest
@@ -17,7 +17,7 @@
         /// <param name="timeout"></param>
         public TransferOwnerGameObjectRoomOperationRequest(int objectId, int ownerId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.ObjectId, objectId)
                 .Add(ParameterCode.OwnerId, ownerId)
                 .Build();

@@ -5,9 +5,9 @@
 
     public class JoinLobbyOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.JoinLobby;
+        protected override int code => OperationCode.JoinLobby;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// JoinLobbyOperationRequest
@@ -16,7 +16,7 @@
         /// <param name="timeout"></param>
         public JoinLobbyOperationRequest(int lobbyId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.LobbyId, lobbyId)
                 .Build();
         }

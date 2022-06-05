@@ -5,9 +5,9 @@
 
     public class RpcGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.RpcGameObjectRoom;
+        protected override int code => OperationCode.RpcGameObjectRoom;
 
-        protected override bool Reliable => false;
+        protected override bool reliable => false;
 
         /// <summary>
         /// RpcGameObjectRoomOperationRequest
@@ -19,13 +19,13 @@
         /// <param name="timeout"></param>
         public RpcGameObjectRoomOperationRequest(EUNTargets targets, int objectId, int eunRPCCommand, object rpcData, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.ObjectId, objectId)
                 .Add(ParameterCode.EunRPCCommand, eunRPCCommand)
                 .Add(ParameterCode.RpcData, rpcData)
                 .Build();
 
-            if (targets != EUNTargets.AllViaServer) Parameters.Add(ParameterCode.EUNTargets, (int)targets);
+            if (targets != EUNTargets.AllViaServer) parameters.Add(ParameterCode.EUNTargets, (int)targets);
 
         }
     }

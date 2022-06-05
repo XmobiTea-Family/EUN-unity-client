@@ -197,9 +197,9 @@
 
             if (view != null)
             {
-                if (view.RoomGameObject.IsValid())
+                if (view.roomGameObject.IsValid())
                 {
-                    eunViewDic[view.RoomGameObject.ObjectId] = view;
+                    eunViewDic[view.roomGameObject.objectId] = view;
                 }
             }
         }
@@ -214,9 +214,9 @@
 
             if (view != null)
             {
-                if (view.RoomGameObject.IsValid())
+                if (view.roomGameObject.IsValid())
                 {
-                    eunViewDic.Remove(view.RoomGameObject.ObjectId);
+                    eunViewDic.Remove(view.roomGameObject.objectId);
                 }
             }
         }

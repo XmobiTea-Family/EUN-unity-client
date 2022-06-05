@@ -30,12 +30,12 @@
 
                     if (value == null)
                     {
-                        if (currentRoom.CustomRoomProperties.ContainsKey(key))
+                        if (currentRoom.customRoomProperties.ContainsKey(key))
                         {
-                            currentRoom.CustomRoomProperties.Remove(key);
+                            currentRoom.customRoomProperties.Remove(key);
                         }
                     }
-                    else currentRoom.CustomRoomProperties.Add(key, value);
+                    else currentRoom.customRoomProperties.Add(key, value);
                 }
 
                 var eunViewLst = peer.eunViewLst;
@@ -46,7 +46,7 @@
 
                     if (view)
                     {
-                        var eunBehaviourLst = view.eunBehaviourLst;
+                        var eunBehaviourLst = view._eunBehaviourLst;
 
                         for (var j = 0; j < eunBehaviourLst.Count; j++)
                         {
@@ -72,11 +72,11 @@
             if (parameters.ContainsKey(ParameterCode.CustomRoomPropertiesForLobby))
             {
                 var data = parameters.GetEUNArray(ParameterCode.CustomRoomPropertiesForLobby);
-                currentRoom.CustomRoomPropertiesForLobby.Clear();
+                currentRoom.customRoomPropertiesForLobbyLst.Clear();
                 {
                     for (var i = 0; i < data.Count(); i++)
                     {
-                        currentRoom.CustomRoomPropertiesForLobby.Add(data.GetInt(i));
+                        currentRoom.customRoomPropertiesForLobbyLst.Add(data.GetInt(i));
                     }
                 }
 
@@ -86,7 +86,7 @@
             if (parameters.ContainsKey(ParameterCode.MaxPlayer))
             {
                 var data = parameters.GetInt(ParameterCode.MaxPlayer);
-                currentRoom.MaxPlayer = data;
+                currentRoom.maxPlayer = data;
 
                 canNotify = true;
             }
@@ -94,7 +94,7 @@
             if (parameters.ContainsKey(ParameterCode.IsOpen))
             {
                 var data = parameters.GetBool(ParameterCode.IsOpen);
-                currentRoom.IsOpen = data;
+                currentRoom.isOpen = data;
 
                 canNotify = true;
             }
@@ -102,7 +102,7 @@
             if (parameters.ContainsKey(ParameterCode.IsVisible))
             {
                 var data = parameters.GetBool(ParameterCode.IsVisible);
-                currentRoom.IsVisible = data;
+                currentRoom.isVisible = data;
 
                 canNotify = true;
             }
@@ -110,7 +110,7 @@
             if (parameters.ContainsKey(ParameterCode.Password))
             {
                 var data = parameters.GetString(ParameterCode.Password);
-                currentRoom.Password = data;
+                currentRoom.password = data;
 
                 canNotify = true;
             }
@@ -118,7 +118,7 @@
             if (parameters.ContainsKey(ParameterCode.Ttl))
             {
                 var data = parameters.GetInt(ParameterCode.Ttl);
-                currentRoom.Ttl = data;
+                currentRoom.ttl = data;
 
                 canNotify = true;
             }
@@ -133,7 +133,7 @@
 
                     if (view)
                     {
-                        var eunBehaviourLst = view.eunBehaviourLst;
+                        var eunBehaviourLst = view._eunBehaviourLst;
 
                         for (var j = 0; j < eunBehaviourLst.Count; j++)
                         {

@@ -23,10 +23,10 @@
 
             RoomGameObject roomGameObject = null;
 
-            if (peer.room.GameObjectDic.ContainsKey(objectId))
+            if (peer.room.gameObjectDic.ContainsKey(objectId))
             {
-                roomGameObject = peer.room.GameObjectDic[objectId];
-                peer.room.GameObjectDic.Remove(objectId);
+                roomGameObject = peer.room.gameObjectDic[objectId];
+                peer.room.gameObjectDic.Remove(objectId);
             }
 
             if (roomGameObject != null)
@@ -37,7 +37,7 @@
 
                     if (view)
                     {
-                        var eunBehaviourLst = view.eunBehaviourLst;
+                        var eunBehaviourLst = view._eunBehaviourLst;
 
                         for (var i = 0; i < eunBehaviourLst.Count; i++)
                         {

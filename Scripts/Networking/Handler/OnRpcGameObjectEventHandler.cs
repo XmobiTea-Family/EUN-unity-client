@@ -29,14 +29,14 @@
                 var view = peer.eunViewDic[objectId];
                 if (view)
                 {
-                    var eunBehaviourLst = view.eunBehaviourLst;
+                    var eunBehaviourLst = view._eunBehaviourLst;
                     for (var i = 0; i < eunBehaviourLst.Count; i++)
                     {
                         var behaviour = eunBehaviourLst[i];
                         if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcData);
                     }
 
-                    var eunManagerBehaviourLst = view.eunManagerBehaviourLst;
+                    var eunManagerBehaviourLst = view._eunManagerBehaviourLst;
                     for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                     {
                         var behaviour = eunManagerBehaviourLst[i];

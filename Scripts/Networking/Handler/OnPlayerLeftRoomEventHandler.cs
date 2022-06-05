@@ -20,10 +20,10 @@
             var parameters = operationEvent.GetParameters();
             var roomPlayer = new RoomPlayer(parameters.GetEUNArray(ParameterCode.Data));
 
-            var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(roomPlayer.UserId));
+            var thisRoomPlayer = peer.room.roomPlayerLst.Find(x => x.userId.Equals(roomPlayer.userId));
             if (thisRoomPlayer != null)
             {
-                peer.room.RoomPlayerLst.Remove(thisRoomPlayer);
+                peer.room.roomPlayerLst.Remove(thisRoomPlayer);
 
                 var eunViewLst = peer.eunViewLst;
 
@@ -33,7 +33,7 @@
 
                     if (view)
                     {
-                        var eunBehaviourLst = view.eunBehaviourLst;
+                        var eunBehaviourLst = view._eunBehaviourLst;
 
                         for (var j = 0; j < eunBehaviourLst.Count; j++)
                         {

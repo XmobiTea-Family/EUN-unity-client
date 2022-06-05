@@ -5,9 +5,9 @@
 
     public class SynchronizationDataGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.SynchronizationDataGameObjectRoom;
+        protected override int code => OperationCode.SynchronizationDataGameObjectRoom;
 
-        protected override bool Reliable => false;
+        protected override bool reliable => false;
 
         /// <summary>
         /// SynchronizationDataGameObjectRoomOperationRequest
@@ -17,12 +17,12 @@
         /// <param name="timeout"></param>
         public SynchronizationDataGameObjectRoomOperationRequest(int objectId, object synchronizationData, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.ObjectId, objectId)
                 .Build();
 
-            if (synchronizationData is object[] synchronizationDataObjects) Parameters.Add(ParameterCode.SynchronizationData, synchronizationDataObjects);
-            else Parameters.Add(ParameterCode.SynchronizationData, synchronizationData);
+            if (synchronizationData is object[] synchronizationDataObjects) parameters.Add(ParameterCode.SynchronizationData, synchronizationDataObjects);
+            else parameters.Add(ParameterCode.SynchronizationData, synchronizationData);
         }
     }
 }

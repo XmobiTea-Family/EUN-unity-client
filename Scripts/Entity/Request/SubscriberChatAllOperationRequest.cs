@@ -5,9 +5,9 @@
 
     public class SubscriberChatAllOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.SubscriberChatAll;
+        protected override int code => OperationCode.SubscriberChatAll;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// SubscriberChatAllOperationRequest
@@ -16,7 +16,7 @@
         /// <param name="timeout"></param>
         public SubscriberChatAllOperationRequest(bool isSubscribe, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.Subscribe, isSubscribe)
                 .Build();
         }

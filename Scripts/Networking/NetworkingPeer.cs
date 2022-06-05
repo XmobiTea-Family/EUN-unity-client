@@ -354,7 +354,7 @@
                 }
             }
 
-            if (room != null && room.RoomPlayerLst.Count > 1)
+            if (room != null && room.roomPlayerLst.Count > 1)
             {
                 // get and send the sync OperationRequest
                 if (nextSendSyncMsgTimer < Time.time)
@@ -365,7 +365,7 @@
 
                         if (view)
                         {
-                            var eunBehaviourLst = view.eunBehaviourLst;
+                            var eunBehaviourLst = view._eunBehaviourLst;
 
                             for (var j = 0; j < eunBehaviourLst.Count; j++)
                             {
@@ -376,7 +376,7 @@
                                     if (behaviour.gameObject.activeInHierarchy)
                                     {
                                         var objectData = behaviour.GetSynchronizationData();
-                                        if (objectData != null) SynchronizationDataGameObjectRoom(view.RoomGameObject.ObjectId, objectData);
+                                        if (objectData != null) SynchronizationDataGameObjectRoom(view.roomGameObject.objectId, objectData);
                                     }
                                 }
                             }
@@ -399,7 +399,7 @@
 
                         if (view)
                         {
-                            var eunVoiceChatBehaviourLst = view.eunVoiceChatBehaviourLst;
+                            var eunVoiceChatBehaviourLst = view._eunVoiceChatBehaviourLst;
 
                             for (var j = 0; j < eunVoiceChatBehaviourLst.Count; j++)
                             {
@@ -410,7 +410,7 @@
                                     if (behaviour.gameObject.activeInHierarchy)
                                     {
                                         var objectData = behaviour.GetSynchronizationData();
-                                        if (objectData != null) VoiceChatRoom(view.RoomGameObject.ObjectId, objectData);
+                                        if (objectData != null) VoiceChatRoom(view.roomGameObject.objectId, objectData);
                                     }
                                 }
                             }

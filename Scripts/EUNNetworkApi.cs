@@ -13,75 +13,76 @@
         /// <summary>
         /// The client has connected to EUN server
         /// </summary>
-        public static bool IsConnected => peer.isConnected;
+        public static bool isConnected => peer.isConnected;
 
         /// <summary>
         /// The room that client is inside, it null if the client is does not inroom
         /// You can join the room by request success: CreateRoom(), JoinOrCreateRoom() or JoinRandomRoom()
         /// </summary>
-        public static Room Room => peer.room;
+        public static Room room => peer.room;
 
         /// <summary>
         /// The client has inroom
         /// </summary>
-        public static bool InRoom => Room != null;
+        public static bool inRoom => room != null;
 
         /// <summary>
         /// The lobby id, where the client is in
         /// If the lobby id is -1, it mean the client is not in any lobby
         /// You can join the lobby by request success: JoinLobby(), JoinDefaultLobby()
         /// </summary>
-        public static int LobbyId => peer.lobbyId;
+        public static int lobbyId => peer.lobbyId;
 
         /// <summary>
         /// The sync current millis in the current EUN server
         /// The ServerTimestamp will sync first after NetworkingPeer.OnAppAccessHandler
         /// You can sync ServerTimestamp by request SyncTs()
         /// </summary>
-        public static long ServerTimestamp => peer.tsServerTime;
+        public static long serverTimestamp => peer.tsServerTime;
 
         /// <summary>
         /// The client 's RoomPlayer when client in room, it will null if the client is does not inroom
         /// </summary>
-        public static RoomPlayer LocalPlayer => GetRoomPlayer(PlayerId);
+        public static RoomPlayer localPlayer => GetRoomPlayer(playerId);
 
         /// <summary>
         /// The others player in this client room
         /// </summary>
-        public static RoomPlayer[] RoomPlayers => !InRoom ? new RoomPlayer[0] : Room.GetRoomPlayers();
+        public static RoomPlayer[] roomPlayers => !inRoom ? new RoomPlayer[0] : room.GetRoomPlayers();
 
         /// <summary>
         /// Get the RoomGameObject by objectId
         /// </summary>
         /// <param name="objectId">Id of object</param>
         /// <returns></returns>
-        public static RoomGameObject GetRoomGameObject(int objectId) => !InRoom ? null : !Room.GameObjectDic.ContainsKey(objectId) ? null : Room.GameObjectDic[objectId];
+        public static RoomGameObject GetRoomGameObject(int objectId) => !inRoom ? null : !room.gameObjectDic.ContainsKey(objectId) ? null : room.gameObjectDic[objectId];
 
         /// <summary>
         /// You can call this is MasterClient (a client with highest permission inroom)
         /// This is the LeaderClient in this client room
         /// It may null if at this time call, the room has valid leader client
+        /// The leader client player can be null
         /// </summary>
-        public static RoomPlayer LeaderClientPlayer => !InRoom ? null : Room.RoomPlayerLst.Find(x => x.UserId.Equals(Room.LeaderClientUserId));
+        public static RoomPlayer leaderClientPlayer => !inRoom ? null : room.roomPlayerLst.Find(x => x.userId.Equals(room.leaderClientUserId));
 
         /// <summary>
         /// It is unique id of client in this room
         /// It only valid if client inroom
         /// When client join or create room success, the EUN Server will auto provide a id in room for client.
         /// </summary>
-        public static int PlayerId => peer.playerId;
+        public static int playerId => peer.playerId;
 
         /// <summary>
         /// It true if client is Leader client
         /// </summary>
-        public static bool IsLeaderClient => InRoom && UserId.Equals(Room.LeaderClientUserId);
+        public static bool isLeaderClient => inRoom && UserId.Equals(room.leaderClientUserId);
 
         /// <summary>
         /// Get a room player by player id
         /// </summary>
         /// <param name="playerId"></param>
         /// <returns></returns>
-        public static RoomPlayer GetRoomPlayer(int playerId) => !InRoom ? null : Room.RoomPlayerLst.Find(x => x.PlayerId == playerId);
+        public static RoomPlayer GetRoomPlayer(int playerId) => !inRoom ? null : room.roomPlayerLst.Find(x => x.playerId == playerId);
 
         /// <summary>
         /// Sync the ServerTimestamp with the current millis on EUN Server
@@ -124,7 +125,7 @@
         public static void JoinLobby(int lobbyId, bool subscriberChat, Action<JoinLobbyOperationResponse> onResponse = null)
         {
             peer.JoinLobby(lobbyId, response => {
-                if (response.Success)
+                if (response.success)
                 {
                     if (subscriberChat) peer.SubscriberChatLobby(subscriberChat, null);
 
@@ -161,7 +162,7 @@
         public static void LeaveLobby(Action<LeaveLobbyOperationResponse> onResponse = null)
         {
             peer.LeaveLobby(response => {
-                if (response.Success)
+                if (response.success)
                 {
                     peer.lobbyId = -1;
 
@@ -391,14 +392,14 @@
                     var view = peer.eunViewDic[objectId];
                     if (view)
                     {
-                        var eunBehaviourLst = view.eunBehaviourLst;
+                        var eunBehaviourLst = view._eunBehaviourLst;
                         for (var i = 0; i < eunBehaviourLst.Count; i++)
                         {
                             var behaviour = eunBehaviourLst[i];
                             if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                         }
 
-                        var eunManagerBehaviourLst = view.eunManagerBehaviourLst;
+                        var eunManagerBehaviourLst = view._eunManagerBehaviourLst;
                         for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                         {
                             var behaviour = eunManagerBehaviourLst[i];
@@ -409,21 +410,21 @@
             }
             else if (targets == EUNTargets.LeaderClient)
             {
-                if (EUNNetwork.IsLeaderClient)
+                if (EUNNetwork.isLeaderClient)
                 {
                     if (peer.eunViewDic.ContainsKey(objectId))
                     {
                         var view = peer.eunViewDic[objectId];
                         if (view)
                         {
-                            var eunBehaviourLst = view.eunBehaviourLst;
+                            var eunBehaviourLst = view._eunBehaviourLst;
                             for (var i = 0; i < eunBehaviourLst.Count; i++)
                             {
                                 var behaviour = eunBehaviourLst[i];
                                 if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                             }
 
-                            var eunManagerBehaviourLst = view.eunManagerBehaviourLst;
+                            var eunManagerBehaviourLst = view._eunManagerBehaviourLst;
                             for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                             {
                                 var behaviour = eunManagerBehaviourLst[i];
@@ -434,7 +435,7 @@
                 }
                 else
                 {
-                    if (EUNNetwork.RoomPlayers.Length > 1)
+                    if (EUNNetwork.roomPlayers.Length > 1)
                     {
                         peer.RpcGameObjectRoom(targets, objectId, eunRPCCommand, rpcData);
                     }
@@ -442,7 +443,7 @@
             }
             else if (targets == EUNTargets.AllViaServer)
             {
-                if (EUNNetwork.RoomPlayers.Length > 1)
+                if (EUNNetwork.roomPlayers.Length > 1)
                 {
                     peer.RpcGameObjectRoom(targets, objectId, eunRPCCommand, rpcData);
                 }
@@ -453,14 +454,14 @@
                         var view = peer.eunViewDic[objectId];
                         if (view)
                         {
-                            var eunBehaviourLst = view.eunBehaviourLst;
+                            var eunBehaviourLst = view._eunBehaviourLst;
                             for (var i = 0; i < eunBehaviourLst.Count; i++)
                             {
                                 var behaviour = eunBehaviourLst[i];
                                 if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                             }
 
-                            var eunManagerBehaviourLst = view.eunManagerBehaviourLst;
+                            var eunManagerBehaviourLst = view._eunManagerBehaviourLst;
                             for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                             {
                                 var behaviour = eunManagerBehaviourLst[i];
@@ -472,7 +473,7 @@
             }
             else if (targets == EUNTargets.All)
             {
-                if (EUNNetwork.RoomPlayers.Length > 1)
+                if (EUNNetwork.roomPlayers.Length > 1)
                 {
                     peer.RpcGameObjectRoom(targets, objectId, eunRPCCommand, rpcData);
                 }
@@ -482,14 +483,14 @@
                     var view = peer.eunViewDic[objectId];
                     if (view)
                     {
-                        var eunBehaviourLst = view.eunBehaviourLst;
+                        var eunBehaviourLst = view._eunBehaviourLst;
                         for (var i = 0; i < eunBehaviourLst.Count; i++)
                         {
                             var behaviour = eunBehaviourLst[i];
                             if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                         }
 
-                        var eunManagerBehaviourLst = view.eunManagerBehaviourLst;
+                        var eunManagerBehaviourLst = view._eunManagerBehaviourLst;
                         for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                         {
                             var behaviour = eunManagerBehaviourLst[i];
@@ -500,7 +501,7 @@
             }
             else if (targets == EUNTargets.Others)
             {
-                if (EUNNetwork.RoomPlayers.Length > 1)
+                if (EUNNetwork.roomPlayers.Length > 1)
                 {
                     peer.RpcGameObjectRoom(targets, objectId, eunRPCCommand, rpcData);
                 }

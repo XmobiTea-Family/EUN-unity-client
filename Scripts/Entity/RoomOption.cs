@@ -11,48 +11,48 @@
         /// <summary>
         /// The custom room properties
         /// </summary>
-        public EUNHashtable CustomRoomProperties { get; private set; }
+        public EUNHashtable customRoomProperties { get; private set; }
 
         /// <summary>
         /// The custom room property keys for lobby
         /// </summary>
-        public List<int> CustomRoomPropertiesForLobby { get; private set; }
+        public List<int> customRoomPropertiesForLobby { get; private set; }
 
         /// <summary>
         /// The password room
         /// </summary>
-        public string Password { get; private set; }
+        public string password { get; private set; }
 
         /// <summary>
         /// The max player for this room
         /// </summary>
-        public int MaxPlayer { get; private set; }
+        public int maxPlayer { get; private set; }
 
         /// <summary>
         /// The room isVisible for this room
         /// </summary>
-        public bool IsVisible { get; private set; }
+        public bool isVisible { get; private set; }
 
         /// <summary>
         /// The room isOpen for this room
         /// </summary>
-        public bool IsOpen { get; private set; }
+        public bool isOpen { get; private set; }
 
         /// <summary>
         /// Time to live mean time client can rejoin for this room after they disconnect
         /// When nobody in this room after they disconnect, and end time to live, the room will remove in lobby, and nobody can continue join this room
         /// </summary>
-        public int Ttl { get; private set; }
+        public int ttl { get; private set; }
 
         private RoomOption(Builder builder)
         {
-            this.CustomRoomProperties = builder.customRoomProperties;
-            this.CustomRoomPropertiesForLobby = builder.customRoomPropertiesForLobby;
-            this.Password = builder.password;
-            this.MaxPlayer = builder.maxPlayer;
-            this.IsVisible = builder.isVisible;
-            this.IsOpen = builder.isOpen;
-            this.Ttl = builder.ttl;
+            this.customRoomProperties = builder.customRoomProperties;
+            this.customRoomPropertiesForLobby = builder.customRoomPropertiesForLobby;
+            this.password = builder.password;
+            this.maxPlayer = builder.maxPlayer;
+            this.isVisible = builder.isVisible;
+            this.isOpen = builder.isOpen;
+            this.ttl = builder.ttl;
         }
 
         private RoomOption() { }

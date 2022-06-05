@@ -21,7 +21,7 @@
             var eunArray = parameters.GetEUNArray(ParameterCode.Data);
             var playerId = eunArray.GetInt(0);
 
-            var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.PlayerId == playerId);
+            var thisRoomPlayer = peer.room.roomPlayerLst.Find(x => x.playerId == playerId);
             if (thisRoomPlayer != null)
             {
                 var customPlayerProperties = eunArray.GetEUNHashtable(1);
@@ -32,12 +32,12 @@
 
                     if (value == null)
                     {
-                        if (thisRoomPlayer.CustomProperties.ContainsKey(key))
+                        if (thisRoomPlayer.customProperties.ContainsKey(key))
                         {
-                            thisRoomPlayer.CustomProperties.Remove(key);
+                            thisRoomPlayer.customProperties.Remove(key);
                         }
                     }
-                    else thisRoomPlayer.CustomProperties.Add(key, value);
+                    else thisRoomPlayer.customProperties.Add(key, value);
                 }
 
                 var eunViewLst = peer.eunViewLst;
@@ -47,7 +47,7 @@
 
                     if (view)
                     {
-                        var eunBehaviourLst = view.eunBehaviourLst;
+                        var eunBehaviourLst = view._eunBehaviourLst;
 
                         for (var j = 0; j < eunBehaviourLst.Count; j++)
                         {

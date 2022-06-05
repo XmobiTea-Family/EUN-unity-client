@@ -23,12 +23,12 @@
             var objectId = eunArray.GetInt(0);
             var newOwnerId = eunArray.GetInt(1);
 
-            if (peer.room.GameObjectDic.ContainsKey(objectId))
+            if (peer.room.gameObjectDic.ContainsKey(objectId))
             {
-                var roomGameObject = peer.room.GameObjectDic[objectId];
-                roomGameObject.OwnerId = newOwnerId;
+                var roomGameObject = peer.room.gameObjectDic[objectId];
+                roomGameObject.ownerId = newOwnerId;
 
-                var newOwner = peer.room.RoomPlayerLst.Find(x => x.PlayerId == newOwnerId);
+                var newOwner = peer.room.roomPlayerLst.Find(x => x.playerId == newOwnerId);
 
                 if (newOwner != null)
                 {
@@ -38,7 +38,7 @@
 
                         if (view)
                         {
-                            var eunBehaviourLst = view.eunBehaviourLst;
+                            var eunBehaviourLst = view._eunBehaviourLst;
 
                             for (var i = 0; i < eunBehaviourLst.Count; i++)
                             {

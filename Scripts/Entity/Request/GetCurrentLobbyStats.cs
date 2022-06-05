@@ -5,9 +5,9 @@
 
     public class GetCurrentLobbyStatsOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.GetCurrentLobbyStats;
+        protected override int code => OperationCode.GetCurrentLobbyStats;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// GetCurrentLobbyStatsOperationRequest
@@ -17,7 +17,7 @@
         /// <param name="timeout"></param>
         public GetCurrentLobbyStatsOperationRequest(int skip, int limit, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.Skip, skip)
                 .Add(ParameterCode.Limit, limit)
                 .Build();

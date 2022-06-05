@@ -10,17 +10,17 @@
         /// <summary>
         /// The user id of sender
         /// </summary>
-        public string SenderId { get; private set; }
+        public string senderId { get; private set; }
 
         /// <summary>
         /// The message content
         /// </summary>
-        public string Message { get; private set; }
+        public string message { get; private set; }
 
         public ChatMessage(EUNArray eunArray)
         {
-            SenderId = eunArray.GetString(0);
-            Message = eunArray.GetString(1);
+            senderId = eunArray.GetString(0);
+            message = eunArray.GetString(1);
         }
     }
 }

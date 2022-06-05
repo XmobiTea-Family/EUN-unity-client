@@ -60,7 +60,7 @@
             var removeLst = new List<int>();
             var createLst = new List<int>();
 
-            foreach (var c in room.GameObjectDic)
+            foreach (var c in room.gameObjectDic)
             {
                 if (!eunViewDic.ContainsKey(c.Key))
                 {
@@ -70,7 +70,7 @@
 
             foreach (var c in eunViewDic)
             {
-                if (c.Key > 0 && !room.GameObjectDic.ContainsKey(c.Key))
+                if (c.Key > 0 && !room.gameObjectDic.ContainsKey(c.Key))
                 {
                     removeLst.Add(c.Key);
                 }
@@ -101,7 +101,7 @@
                 {
                     var id = createLst[i];
 
-                    roomGameObjectNeedCreateLst.Add(room.GameObjectDic[id]);
+                    roomGameObjectNeedCreateLst.Add(room.gameObjectDic[id]);
                 }
             }
 
@@ -199,9 +199,9 @@
         private void SyncTsResponse(OperationResponse response, Action<SyncTsOperationResponse> onResponse)
         {
             var syncTsOperationResponse = new SyncTsOperationResponse(response);
-            if (!syncTsOperationResponse.HasError)
+            if (!syncTsOperationResponse.hasError)
             {
-                serverTimeStamp = syncTsOperationResponse.ServerTimeStamp;
+                serverTimeStamp = syncTsOperationResponse.serverTimeStamp;
             }
 
             onResponse?.Invoke(syncTsOperationResponse);

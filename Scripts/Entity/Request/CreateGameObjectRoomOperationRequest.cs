@@ -5,9 +5,9 @@
 
     public class CreateGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.CreateGameObjectRoom;
+        protected override int code => OperationCode.CreateGameObjectRoom;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// CreateGameObjectRoomOperationRequest
@@ -19,7 +19,7 @@
         /// <param name="timeout"></param>
         public CreateGameObjectRoomOperationRequest(string prefabPath, object initializeData, object synchronizationData, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.PrefabPath, prefabPath)
                 .Add(ParameterCode.InitializeData, initializeData)
                 .Add(ParameterCode.SynchronizationData, synchronizationData)

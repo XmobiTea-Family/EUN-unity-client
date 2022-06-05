@@ -8,97 +8,97 @@
     public class RoomGameObject
     {
         [SerializeField]
-        private int objectId;
+        private int _objectId;
         /// <summary>
         /// The object id room game object
         /// </summary>
-        public int ObjectId
+        public int objectId
         {
-            get { return objectId; }
+            get { return _objectId; }
             set
             {
-                objectId = value;
+                _objectId = value;
             }
         }
 
         [SerializeField]
-        private int ownerId;
+        private int _ownerId;
         /// <summary>
         /// The owner player id for room game object
         /// </summary>
-        public int OwnerId
+        public int ownerId
         {
-            get { return ownerId; }
+            get { return _ownerId; }
             set
             {
-                ownerId = value;
+                _ownerId = value;
             }
         }
 
         [SerializeField]
-        private string prefabPath;
+        private string _prefabPath;
         /// <summary>
         /// The prefab path for this room game object
         /// </summary>
-        public string PrefabPath
+        public string prefabPath
         {
-            get { return prefabPath; }
+            get { return _prefabPath; }
             set
             {
-                prefabPath = value;
+                _prefabPath = value;
             }
         }
 
         [SerializeField]
-        private object synchronizationData;
+        private object _synchronizationData;
         /// <summary>
         /// The synchronization data
         /// </summary>
-        public object SynchronizationData
+        public object synchronizationData
         {
-            get { return synchronizationData; }
+            get { return _synchronizationData; }
             set
             {
-                synchronizationData = value;
+                _synchronizationData = value;
             }
         }
 
         [SerializeField]
-        private object initializeData;
+        private object _initializeData;
         /// <summary>
         /// The initialize data
         /// </summary>
-        public object InitializeData
+        public object initializeData
         {
-            get { return initializeData; }
+            get { return _initializeData; }
             set
             {
-                initializeData = value;
+                _initializeData = value;
             }
         }
 
         [SerializeField]
-        private EUNHashtable customProperties;
+        private EUNHashtable _customProperties;
         /// <summary>
         /// The room game object custom properties
         /// </summary>
-        public EUNHashtable CustomProperties
+        public EUNHashtable customProperties
         {
-            get { return customProperties; }
+            get { return _customProperties; }
             set
             {
-                customProperties = value;
+                _customProperties = value;
             }
         }
 
         public RoomGameObject(EUNArray eunArray)
         {
-            ObjectId = eunArray.GetInt(0);
-            OwnerId = eunArray.GetInt(1);
-            PrefabPath = eunArray.GetString(2);
-            SynchronizationData = eunArray.GetObject(3);
-            InitializeData = eunArray.GetObject(4);
-            CustomProperties = eunArray.GetEUNHashtable(5);
+            objectId = eunArray.GetInt(0);
+            ownerId = eunArray.GetInt(1);
+            prefabPath = eunArray.GetString(2);
+            synchronizationData = eunArray.GetObject(3);
+            initializeData = eunArray.GetObject(4);
+            customProperties = eunArray.GetEUNHashtable(5);
         }
 
         /// <summary>
@@ -107,7 +107,7 @@
         /// <returns></returns>
         public bool IsValid()
         {
-            return objectId != 0;
+            return _objectId != 0;
         }
     }
 }

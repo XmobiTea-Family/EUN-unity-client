@@ -17,34 +17,34 @@ namespace XmobiTea.EUN.Logger
     /// </summary>
     internal class EUNDebug
     {
-        private static LogType logType;
-
-        public static void Init(LogType logType)
+        private static LogType _logType;
+        public static LogType logType
         {
-            EUNDebug.logType = logType;
+            get => _logType;
+            set => _logType = value;
         }
 
         public static void Log(object message)
         {
-            if (logType >= LogType.All)
+            if (_logType >= LogType.All)
                 Debug.Log(message);
         }
 
         public static void LogException(Exception exception)
         {
-            if (logType >= LogType.Exception)
+            if (_logType >= LogType.Exception)
                 Debug.LogException(exception);
         }
 
         public static void LogWarning(object message)
         {
-            if (logType >= LogType.Warning)
+            if (_logType >= LogType.Warning)
                 Debug.LogWarning(message);
         }
 
         public static void LogError(object message)
         {
-            if (logType >= LogType.Error)
+            if (_logType >= LogType.Error)
                 Debug.LogError(message);
         }
     }

@@ -10,12 +10,15 @@ namespace XmobiTea.EUN.Editor
         EUNView eunView;
 
         SerializedProperty objectIdProperty;
+        SerializedProperty observedComponentLstProperty;
 
         private void OnEnable()
         {
-            var roomGameObjectProperty = serializedObject.FindProperty("roomGameObject");
+            var roomGameObjectProperty = serializedObject.FindProperty("_roomGameObject");
 
-            objectIdProperty = roomGameObjectProperty.FindPropertyRelative("objectId");
+            objectIdProperty = roomGameObjectProperty.FindPropertyRelative("_objectId");
+
+            observedComponentLstProperty = serializedObject.FindProperty("_observedComponentLst");
 
             eunView = (EUNView)target;
 
@@ -28,14 +31,14 @@ namespace XmobiTea.EUN.Editor
 
                 var id = -1;
 
-                while (eunViews.Count(x => x != eunView && x.RoomGameObject.ObjectId == id) != 0)
+                while (eunViews.Count(x => x != eunView && x.roomGameObject.objectId == id) != 0)
                 {
                     id -= 1;
                 }
 
                 objectIdProperty.intValue = id;
 
-                serializedObject.ApplyModifiedProperties();
+                if (serializedObject.hasModifiedProperties) serializedObject.ApplyModifiedProperties();
             }
         }
 
@@ -59,10 +62,11 @@ namespace XmobiTea.EUN.Editor
                 {
                     EditorGUILayout.PropertyField(objectIdProperty, new GUIContent("Object Id"));
                 }
-
             }
 
-            serializedObject.ApplyModifiedProperties();
+            EditorGUILayout.PropertyField(observedComponentLstProperty, true);
+
+            if (serializedObject.hasModifiedProperties) serializedObject.ApplyModifiedProperties();
         }
 
         public static bool IsPrefab(EUNView eunView)

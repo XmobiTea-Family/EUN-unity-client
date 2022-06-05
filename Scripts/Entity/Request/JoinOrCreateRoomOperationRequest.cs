@@ -5,9 +5,9 @@
 
     public class JoinOrCreateRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.JoinOrCreateRoom;
+        protected override int code => OperationCode.JoinOrCreateRoom;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// JoinOrCreateRoomOperationRequest
@@ -18,16 +18,16 @@
         /// <param name="timeout"></param>
         public JoinOrCreateRoomOperationRequest(int targetExpectedCount, EUNHashtable expectedProperties, RoomOption roomOption, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.MaxPlayer, roomOption.MaxPlayer)
+            parameters = new EUNHashtable.Builder()
+                .Add(ParameterCode.MaxPlayer, roomOption.maxPlayer)
                 .Add(ParameterCode.TargetExpectedCount, targetExpectedCount)
                 .Add(ParameterCode.ExpectedProperties, expectedProperties)
-                .Add(ParameterCode.CustomRoomProperties, roomOption.CustomRoomProperties)
-                .Add(ParameterCode.IsVisible, roomOption.IsVisible)
-                .Add(ParameterCode.IsOpen, roomOption.IsOpen)
-                .Add(ParameterCode.CustomRoomPropertiesForLobby, roomOption.CustomRoomPropertiesForLobby)
-                .Add(ParameterCode.Password, roomOption.Password)
-                .Add(ParameterCode.Ttl, roomOption.Ttl)
+                .Add(ParameterCode.CustomRoomProperties, roomOption.customRoomProperties)
+                .Add(ParameterCode.IsVisible, roomOption.isVisible)
+                .Add(ParameterCode.IsOpen, roomOption.isOpen)
+                .Add(ParameterCode.CustomRoomPropertiesForLobby, roomOption.customRoomPropertiesForLobby)
+                .Add(ParameterCode.Password, roomOption.password)
+                .Add(ParameterCode.Ttl, roomOption.ttl)
                 .Build();
         }
     }

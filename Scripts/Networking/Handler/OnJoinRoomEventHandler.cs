@@ -19,8 +19,8 @@
             var room = new Room(parameters.GetEUNArray(ParameterCode.Data));
             peer.room = room;
 
-            var roomPlayer = room.RoomPlayerLst.Find(x => x.UserId.Equals(EUNNetwork.UserId));
-            peer.playerId = roomPlayer == null ? -1 : roomPlayer.PlayerId;
+            var roomPlayer = room.roomPlayerLst.Find(x => x.userId.Equals(EUNNetwork.UserId));
+            peer.playerId = roomPlayer == null ? -1 : roomPlayer.playerId;
 
             var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
             for (var i = 0; i < eunManagerBehaviourLst.Count; i++)

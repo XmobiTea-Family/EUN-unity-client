@@ -23,9 +23,9 @@
             var objectId = eunArray.GetInt(0);
             var synchronizationData = eunArray.GetObject(1);
 
-            if (peer.room.GameObjectDic.ContainsKey(objectId))
+            if (peer.room.gameObjectDic.ContainsKey(objectId))
             {
-                peer.room.GameObjectDic[objectId].SynchronizationData = synchronizationData;
+                peer.room.gameObjectDic[objectId].synchronizationData = synchronizationData;
             }
 
             if (peer.eunViewDic.ContainsKey(objectId))
@@ -33,7 +33,7 @@
                 var view = peer.eunViewDic[objectId];
                 if (view)
                 {
-                    var eunBehaviourLst = view.eunBehaviourLst;
+                    var eunBehaviourLst = view._eunBehaviourLst;
 
                     for (var i = 0; i < eunBehaviourLst.Count; i++)
                     {

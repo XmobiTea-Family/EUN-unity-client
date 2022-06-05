@@ -7,23 +7,23 @@
         /// <summary>
         /// The operation code
         /// </summary>
-        protected abstract int Code { get; }
+        protected abstract int code { get; }
 
         /// <summary>
         /// This reliable or not
         /// It only valid in socket, if not reliable and EUN Client connect by socket, this operation request will send by UDP
         /// </summary>
-        protected virtual bool Reliable { get; }
+        protected virtual bool reliable { get; }
 
         /// <summary>
         /// The timeout in second for this operation request
         /// </summary>
-        protected int Timeout { get; }
+        protected int timeout { get; }
         
         /// <summary>
         /// The parameters for this operation request
         /// </summary>
-        protected EUNHashtable Parameters { get; set; }
+        protected EUNHashtable parameters { get; set; }
 
         /// <summary>
         /// CustomOperationRequest
@@ -31,7 +31,7 @@
         /// <param name="timeout">The time out in second for this request</param>
         public CustomOperationRequest(int timeout)
         {
-            this.Timeout = timeout;
+            this.timeout = timeout;
         }
 
         //public static explicit operator
@@ -42,9 +42,9 @@
         /// <returns></returns>
         public OperationRequest Builder()
         {
-            var request = new OperationRequest((int)Code, Reliable, Timeout);
+            var request = new OperationRequest((int)code, reliable, timeout);
             
-            if (this.Parameters != null) request.SetParameters(this.Parameters);
+            if (this.parameters != null) request.SetParameters(this.parameters);
 
             return request;
         }

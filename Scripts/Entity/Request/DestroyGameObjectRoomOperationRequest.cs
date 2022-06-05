@@ -5,9 +5,9 @@
 
     public class DestroyGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.DestroyGameObjectRoom;
+        protected override int code => OperationCode.DestroyGameObjectRoom;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// DestroyGameObjectRoomOperationRequest
@@ -16,7 +16,7 @@
         /// <param name="timeout"></param>
         public DestroyGameObjectRoomOperationRequest(int objectId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.ObjectId, objectId)
                 .Build();
         }

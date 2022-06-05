@@ -20,7 +20,7 @@
         /// <param name="onResponse"></param>
         public static void JoinLobby(this LobbyStats lobbyStats, bool subscriberChat, Action<JoinLobbyOperationResponse> onResponse = null)
         {
-            EUNNetwork.JoinLobby(lobbyStats.LobbyId, subscriberChat, response => {
+            EUNNetwork.JoinLobby(lobbyStats.lobbyId, subscriberChat, response => {
                 onResponse?.Invoke(response);
             });
         }
@@ -34,7 +34,7 @@
         /// <param name="onResponse"></param>
         public static void ChangeLeaderClient(this RoomPlayer newLeaderClient, Action<ChangeLeaderClientOperationResponse> onResponse = null)
         {
-            EUNNetwork.ChangeLeaderClient(newLeaderClient.PlayerId, onResponse);
+            EUNNetwork.ChangeLeaderClient(newLeaderClient.playerId, onResponse);
         }
 
         /// <summary>
@@ -46,7 +46,7 @@
         /// <param name="onResponse"></param>
         public static void ChangeCustomProperties(this RoomPlayer roomPlayer, EUNHashtable customPlayerProperties, Action<ChangePlayerCustomPropertiesOperationResponse> onResponse = null)
         {
-            EUNNetwork.ChangePlayerCustomProperties(roomPlayer.PlayerId, customPlayerProperties, onResponse);
+            EUNNetwork.ChangePlayerCustomProperties(roomPlayer.playerId, customPlayerProperties, onResponse);
         }
 
         /// <summary>
@@ -58,7 +58,7 @@
         /// <param name="onResponse"></param>
         public static void TransferOwnerGameObjectRoom(this RoomPlayer newOwner, EUNView eunView, Action<TransferOwnerGameObjectRoomOperationResponse> onResponse = null)
         {
-            EUNNetwork.TransferOwnerGameObjectRoom(eunView.RoomGameObject.ObjectId, newOwner.PlayerId, onResponse);
+            EUNNetwork.TransferOwnerGameObjectRoom(eunView.roomGameObject.objectId, newOwner.playerId, onResponse);
         }
 
         /// <summary>
@@ -70,7 +70,7 @@
         /// <param name="onResponse"></param>
         public static void TransferOwnerGameObjectRoom(this EUNView eunView, RoomPlayer newOwner, Action<TransferOwnerGameObjectRoomOperationResponse> onResponse = null)
         {
-            EUNNetwork.TransferOwnerGameObjectRoom(eunView.RoomGameObject.ObjectId, newOwner.PlayerId, onResponse);
+            EUNNetwork.TransferOwnerGameObjectRoom(eunView.roomGameObject.objectId, newOwner.playerId, onResponse);
         }
 
         /// <summary>
@@ -82,7 +82,7 @@
         /// <param name="onResponse"></param>
         public static void TransfeOwnerGameObjectRoom(this EUNView eunView, int newOwnerId, Action<TransferOwnerGameObjectRoomOperationResponse> onResponse = null)
         {
-            EUNNetwork.TransferOwnerGameObjectRoom(eunView.RoomGameObject.ObjectId, newOwnerId, onResponse);
+            EUNNetwork.TransferOwnerGameObjectRoom(eunView.roomGameObject.objectId, newOwnerId, onResponse);
         }
 
         /// <summary>
@@ -95,7 +95,7 @@
         /// <param name="rpcData">The rpc data attach with command</param>
         public static void RPC(this EUNView eunView, EUNTargets targets, EUNRPCCommand command, params object[] rpcData)
         {
-            EUNNetwork.RpcGameObjectRoom(targets, eunView.RoomGameObject.ObjectId, (int)command, rpcData);
+            EUNNetwork.RpcGameObjectRoom(targets, eunView.roomGameObject.objectId, (int)command, rpcData);
         }
 
         /// <summary>
@@ -106,7 +106,7 @@
         /// <param name="onResponse"></param>
         public static void DestroyGameObjectRoom(this RoomGameObject roomGameObject, Action<DestroyGameObjectRoomRoomOperationResponse> onResponse = null)
         {
-            EUNNetwork.DestroyGameObjectRoom(roomGameObject.ObjectId, onResponse);
+            EUNNetwork.DestroyGameObjectRoom(roomGameObject.objectId, onResponse);
         }
 
         /// <summary>
@@ -117,7 +117,7 @@
         /// <param name="onResponse"></param>
         public static void DestroyGameObjectRoom(this EUNView eunView, Action<DestroyGameObjectRoomRoomOperationResponse> onResponse = null)
         {
-            EUNNetwork.DestroyGameObjectRoom(eunView.RoomGameObject.ObjectId, onResponse);
+            EUNNetwork.DestroyGameObjectRoom(eunView.roomGameObject.objectId, onResponse);
         }
 
         /// <summary>
@@ -129,7 +129,7 @@
         /// <param name="onResponse"></param>
         public static void ChangeGameObjectCustomProperties(this RoomGameObject roomGameObject, EUNHashtable customProperties, Action<ChangeGameObjectRoomOperationResponse> onResponse = null)
         {
-            EUNNetwork.ChangeGameObjectCustomProperties(roomGameObject.ObjectId, customProperties, onResponse);
+            EUNNetwork.ChangeGameObjectCustomProperties(roomGameObject.objectId, customProperties, onResponse);
         }
 
         /// <summary>
@@ -141,7 +141,7 @@
         /// <param name="onResponse"></param>
         public static void ChangeGameObjectCustomProperties(this EUNView eunView, EUNHashtable customProperties, Action<ChangeGameObjectRoomOperationResponse> onResponse = null)
         {
-            EUNNetwork.ChangeGameObjectCustomProperties(eunView.RoomGameObject.ObjectId, customProperties, onResponse);
+            EUNNetwork.ChangeGameObjectCustomProperties(eunView.roomGameObject.objectId, customProperties, onResponse);
         }
 
         /// <summary>
@@ -154,7 +154,7 @@
         /// <param name="onResponse"></param>
         public static void JoinRoom(this LobbyRoomStats lobbyRoomStats, string password = null, Action<JoinRoomOperationResponse> onResponse = null)
         {
-            EUNNetwork.JoinRoom(lobbyRoomStats.RoomId, password, onResponse);
+            EUNNetwork.JoinRoom(lobbyRoomStats.roomId, password, onResponse);
         }
 
         /// <summary>

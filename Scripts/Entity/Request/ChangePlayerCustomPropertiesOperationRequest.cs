@@ -5,9 +5,9 @@
 
     public class ChangePlayerCustomPropertiesOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.ChangePlayerCustomProperties;
+        protected override int code => OperationCode.ChangePlayerCustomProperties;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// ChangePlayerCustomPropertiesOperationRequest
@@ -17,7 +17,7 @@
         /// <param name="timeout"></param>
         public ChangePlayerCustomPropertiesOperationRequest(int playerId, EUNHashtable customPlayerProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.OwnerId, playerId)
                 .Add(ParameterCode.CustomPlayerProperties, customPlayerProperties)
                 .Build();

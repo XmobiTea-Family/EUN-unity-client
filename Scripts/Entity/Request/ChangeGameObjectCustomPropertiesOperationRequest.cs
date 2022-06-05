@@ -5,9 +5,9 @@
 
     public class ChangeGameObjectCustomPropertiesOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.ChangeGameObjectCustomProperties;
+        protected override int code => OperationCode.ChangeGameObjectCustomProperties;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// ChangeGameObjectCustomPropertiesOperationRequest
@@ -16,7 +16,7 @@
         /// <param name="customGameObjectProperties">The custom properties need change</param>
         public ChangeGameObjectCustomPropertiesOperationRequest(int objectId, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
+            parameters = new EUNHashtable.Builder()
                 .Add(ParameterCode.ObjectId, objectId)
                 .Add(ParameterCode.CustomGameObjectProperties, customGameObjectProperties)
                 .Build();

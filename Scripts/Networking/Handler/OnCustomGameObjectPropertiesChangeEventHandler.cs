@@ -21,9 +21,9 @@ namespace XmobiTea.EUN.Networking
             var eunArray = parameters.GetEUNArray(ParameterCode.Data);
             var objectId = eunArray.GetInt(0);
 
-            if (!peer.room.GameObjectDic.ContainsKey(objectId)) return;
+            if (!peer.room.gameObjectDic.ContainsKey(objectId)) return;
 
-            var roomGameObject = peer.room.GameObjectDic[objectId];
+            var roomGameObject = peer.room.gameObjectDic[objectId];
 
             var customGameObjectProperties = eunArray.GetEUNHashtable(1);
             var keySet = customGameObjectProperties.Keys();
@@ -33,12 +33,12 @@ namespace XmobiTea.EUN.Networking
 
                 if (value == null)
                 {
-                    if (roomGameObject.CustomProperties.ContainsKey(key))
+                    if (roomGameObject.customProperties.ContainsKey(key))
                     {
-                        roomGameObject.CustomProperties.Remove(key);
+                        roomGameObject.customProperties.Remove(key);
                     }
                 }
-                else roomGameObject.CustomProperties.Add(key, value);
+                else roomGameObject.customProperties.Add(key, value);
             }
 
             if (peer.eunViewDic.ContainsKey(objectId))
@@ -47,7 +47,7 @@ namespace XmobiTea.EUN.Networking
 
                 if (view)
                 {
-                    var eunBehaviourLst = view.eunBehaviourLst;
+                    var eunBehaviourLst = view._eunBehaviourLst;
                     
                     for (var i = 0; i < eunBehaviourLst.Count; i++)
                     {

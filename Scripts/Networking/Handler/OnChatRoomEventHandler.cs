@@ -20,7 +20,7 @@
             var parameters = operationEvent.GetParameters();
             var message = new ChatMessage(parameters.GetEUNArray(ParameterCode.Message));
 
-            var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(message.SenderId));
+            var thisRoomPlayer = peer.room.roomPlayerLst.Find(x => x.userId.Equals(message.senderId));
             if (thisRoomPlayer != null)
             {
                 var eunViewLst = peer.eunViewLst;
@@ -30,7 +30,7 @@
 
                     if (view)
                     {
-                        var eunBehaviourLst = view.eunBehaviourLst;
+                        var eunBehaviourLst = view._eunBehaviourLst;
 
                         for (var j = 0; j < eunBehaviourLst.Count; j++)
                         {

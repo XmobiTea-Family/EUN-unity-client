@@ -4,15 +4,15 @@
 
     public class SyncTsOperationResponse : CustomOperationResponse
     {
-        public long ServerTimeStamp { get; private set; }
+        public long serverTimeStamp { get; private set; }
 
         public SyncTsOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
-            if (!HasError)
+            if (success)
             {
                 var parameters = operationResponse.GetParameters();
 
-                ServerTimeStamp = parameters.GetLong(ParameterCode.Ts);
+                serverTimeStamp = parameters.GetLong(ParameterCode.Ts);
             }
         }
     }
