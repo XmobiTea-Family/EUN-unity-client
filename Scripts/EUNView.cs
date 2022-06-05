@@ -14,7 +14,7 @@
     /// Each EUNView represents a room game object
     /// </summary>
     [DisallowMultipleComponent]
-    public sealed class EUNView : MonoBehaviour
+    public sealed class EUNView : Behaviour
     {
         [SerializeField]
         private RoomGameObject roomGameObject;
@@ -36,6 +36,11 @@
         internal List<EUNBehaviour> eunBehaviourLst { get; private set; } = new List<EUNBehaviour>();
 
         /// <summary>
+        /// Every EUNView has multiple eun manager behaviour
+        /// </summary>
+        internal List<EUNManagerBehaviour> eunManagerBehaviourLst { get; private set; } = new List<EUNManagerBehaviour>();
+
+        /// <summary>
         /// Every EUNView has multiple eun voice chat behaviour
         /// </summary>
         internal List<EUNVoiceChatBehaviour> eunVoiceChatBehaviourLst { get; private set; } = new List<EUNVoiceChatBehaviour>();
@@ -51,13 +56,17 @@
         /// </summary>
         public bool IsMine => RoomGameObject != null && RoomGameObject.OwnerId == EUNNetwork.PlayerId;
 
-        private void Awake()
+        protected override void OnCustomStart()
         {
+            base.OnCustomStart();
+
             EUNNetwork.SubscriberEUNView(this);
         }
 
-        private void OnDestroy()
+        protected override void OnCustomDestroy()
         {
+            base.OnCustomDestroy();
+
             EUNNetwork.UnSubscriberEUNView(this);
         }
 
@@ -102,15 +111,21 @@
         }
 
         /// <summary>
+        /// Subscriber a EUNManagerBehaviour behaviour
+        /// </summary>
+        /// <param name="behaviour"></param>
+        internal void SubscriberEUNManagerBehaviour(EUNManagerBehaviour behaviour)
+        {
+            if (!eunManagerBehaviourLst.Contains(behaviour)) eunManagerBehaviourLst.Add(behaviour);
+        }
+
+        /// <summary>
         /// Subscriber a EUNVoiceChatBehaviour behaviour
         /// </summary>
         /// <param name="behaviour"></param>
         internal void SubscriberEUNBehaviour(EUNVoiceChatBehaviour behaviour)
         {
-            if (!eunVoiceChatBehaviourLst.Contains(behaviour))
-            {
-                eunVoiceChatBehaviourLst.Add(behaviour);
-            }
+            if (!eunVoiceChatBehaviourLst.Contains(behaviour)) eunVoiceChatBehaviourLst.Add(behaviour);
         }
 
         /// <summary>
@@ -120,6 +135,15 @@
         internal void UnSubscriberEUNBehaviour(EUNBehaviour behaviour)
         {
             if (eunBehaviourLst.Contains(behaviour)) eunBehaviourLst.Remove(behaviour);
+        }
+
+        /// <summary>
+        /// Remove subscriber EUNManagerBehaviour
+        /// </summary>
+        /// <param name="behaviour"></param>
+        internal void UnSubscriberEUNManagerBehaviour(EUNManagerBehaviour behaviour)
+        {
+            if (eunManagerBehaviourLst.Contains(behaviour)) eunManagerBehaviourLst.Remove(behaviour);
         }
 
         /// <summary>

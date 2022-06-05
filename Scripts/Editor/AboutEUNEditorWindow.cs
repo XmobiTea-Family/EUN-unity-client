@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-namespace XmobiTea.EUN.Config.Editor
+﻿namespace XmobiTea.EUN.Editor
 {
     using UnityEditor;
 
@@ -23,4 +22,3 @@ namespace XmobiTea.EUN.Config.Editor
         }
     }
 }
-#endif

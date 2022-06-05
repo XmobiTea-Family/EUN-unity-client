@@ -15,7 +15,7 @@
         /// <summary>
         /// The current version of EUN client
         /// </summary>
-        public const string Version = "1.2.1";
+        public const string Version = "1.2.2";
 
         /// <summary>
         /// The mode for connection EUN client
@@ -80,7 +80,7 @@
         {
             if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
 
-            EUNDebug.Init(eunServerSettings.LogType);
+            EUNDebug.Init(eunServerSettings.logType);
         }
 
         /// <summary>

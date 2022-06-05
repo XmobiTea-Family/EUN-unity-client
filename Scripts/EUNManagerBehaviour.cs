@@ -8,67 +8,73 @@
     using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Entity;
 
-    using UnityEngine;
+    using System.Collections.Generic;
+    using System.Reflection;
+    using System;
+    using XmobiTea.EUN.Logger;
+    using System.Linq;
 
     /// <summary>
     /// The EUNManagerBehaviour, manager all callback from server
     /// </summary>
-    public class EUNManagerBehaviour : MonoBehaviour, IEUNManagerBehaviour
+    public class EUNManagerBehaviour : Behaviour, IEUNManagerBehaviour
     {
-        void Awake()
-        {
-            OnCustomAwake();
-        }
-
-        void Start()
-        {
-            OnCustomStart();
-        }
-
-        void OnEnable()
-        {
-            OnCustomEnable();
-        }
-
-        void OnDisable()
-        {
-            OnCustomDisable();
-        }
-
-        void OnDestroy()
-        {
-            OnCustomDestroy();
-        }
+        private static Dictionary<Type, MethodInfo[]> methodInfoDic => new Dictionary<Type, MethodInfo[]>();
 
         /// <summary>
-        /// This is a MonoBehaviour.Awake()
+        /// This is RPC callback from EUNNetwork.RpcGameObjectRoom
         /// </summary>
-        protected virtual void OnCustomAwake()
+        /// <param name="eunRPCCommand"></param>
+        /// <param name="rpcDataArray"></param>
+        internal void EUNRPC(int eunRPCCommand, EUNArray rpcDataArray)
         {
+            var type = GetType();
+
+            var methodInfos = EUNManagerBehaviour.getMethodInfos(type);
+
+            var eunRPCMethodName = ((EUNRPCCommand)eunRPCCommand).ToString();
+
+            if (EUNBehaviour.tryGetMethod(methodInfos, eunRPCMethodName, rpcDataArray, out MethodInfo method, out object[] parameters))
+            {
+                method.Invoke(this, parameters);
+            }
+            else
+            {
+                EUNDebug.LogError("Method " + eunRPCMethodName + " with parameters " + parameters + " not found");
+            }
+        }
+
+        private static MethodInfo[] getMethodInfos(Type type)
+        {
+            if (methodInfoDic.ContainsKey(type))
+            {
+                return methodInfoDic[type];
+            }
+            else
+            {
+                var methodInfos = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EUNRPCAttribute), true).Length > 0).ToArray();
+                methodInfoDic[type] = methodInfos;
+
+                return methodInfos;
+            }
+        }
+
+        protected override void OnCustomStart()
+        {
+            base.OnCustomStart();
+            
             EUNNetwork.SubscriberEUNManagerBehaviour(this);
+
+            if (eunView) eunView.SubscriberEUNManagerBehaviour(this);
         }
 
-        /// <summary>
-        /// This is a MonoBehaviour.OnEnable()
-        /// </summary>
-        protected virtual void OnCustomEnable() { }
-
-        /// <summary>
-        /// This is a MonoBehaviour.Start()
-        /// </summary>
-        protected virtual void OnCustomStart() { }
-
-        /// <summary>
-        /// This is a MonoBehaviour.OnDisable()
-        /// </summary>
-        protected virtual void OnCustomDisable() { }
-
-        /// <summary>
-        /// This is a MonoBehaviour.OnDestroy()
-        /// </summary>
-        protected virtual void OnCustomDestroy()
+        protected override void OnCustomDestroy()
         {
+            base.OnCustomDestroy();
+
             EUNNetwork.UnSubscriberEUNManagerBehaviour(this);
+
+            if (eunView) eunView.UnSubscriberEUNManagerBehaviour(this);
         }
 
         /// <summary>

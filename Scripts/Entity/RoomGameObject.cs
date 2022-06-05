@@ -8,7 +8,7 @@
     public class RoomGameObject
     {
         [SerializeField]
-        private int objectId = -1;
+        private int objectId;
         /// <summary>
         /// The object id room game object
         /// </summary>
@@ -107,7 +107,7 @@
         /// <returns></returns>
         public bool IsValid()
         {
-            return objectId > -1;
+            return objectId != 0;
         }
     }
 }

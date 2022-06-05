@@ -6,7 +6,6 @@
     using System.Collections.Generic;
     using System.Linq;
     using System.Reflection;
-    using UnityEngine;
     using XmobiTea.EUN.Logger;
 
     /// <summary>
@@ -14,82 +13,25 @@
     /// This is controller for EUNView
     /// one EUNView may be have multiple EUNBehaviour
     /// </summary>
-    [RequireComponent(typeof(EUNView))]
-    public class EUNBehaviour : MonoBehaviour
+    public class EUNBehaviour : Behaviour
     {
         /// <summary>
         /// All method info dict
         /// </summary>
-        private static Dictionary<Type, MethodInfo[]> methodInfoDic = new Dictionary<Type, MethodInfo[]>();
-
-        /// <summary>
-        /// The eunView for this EUN Behaviour
-        /// </summary>
-        public EUNView eunView { get; private set; }
-
-        void Awake()
+        private static Dictionary<Type, MethodInfo[]> methodInfoDic => new Dictionary<Type, MethodInfo[]>();
+        
+        protected override void OnCustomStart()
         {
-            OnCustomAwake();
+            base.OnCustomStart();
+
+            if (eunView) eunView.SubscriberEUNBehaviour(this);
         }
 
-        void Start()
+        protected override void OnCustomDestroy()
         {
-            OnCustomStart();
-        }
+            base.OnCustomDestroy();
 
-        void OnEnable()
-        {
-            OnCustomEnable();
-        }
-
-        void OnDisable()
-        {
-            OnCustomDisable();
-        }
-
-        void OnDestroy()
-        {
-            OnCustomDestroy();
-        }
-
-        /// <summary>
-        /// This is a MonoBehaviour.Awake()
-        /// </summary>
-        protected virtual void OnCustomAwake()
-        {
-            if (eunView == null) eunView = GetComponent<EUNView>();
-        }
-
-        /// <summary>
-        /// This is a MonoBehaviour.Start()
-        /// </summary>
-        protected virtual void OnCustomStart()
-        {
-            if (eunView != null) eunView.SubscriberEUNBehaviour(this);
-        }
-
-        /// <summary>
-        /// This is a MonoBehaviour.OnEnable()
-        /// </summary>
-        protected virtual void OnCustomEnable()
-        {
-
-        }
-
-        /// <summary>
-        /// This is a MonoBehaviour.OnDisable()
-        /// </summary>
-        protected virtual void OnCustomDisable()
-        {
-
-        }
-
-        /// <summary>
-        /// This is a MonoBehaviour.OnDestroy()
-        /// </summary>
-        protected virtual void OnCustomDestroy()
-        {
-            if (eunView != null) eunView.UnSubscriberEUNBehaviour(this);
+            if (eunView) eunView.UnSubscriberEUNBehaviour(this);
         }
 
         /// <summary>
@@ -101,22 +43,24 @@
         {
             var type = GetType();
 
-            MethodInfo[] methodInfos;
-            
-            if (methodInfoDic.ContainsKey(type))
-            {
-                methodInfos = methodInfoDic[type];
-            }
-            else
-            {
-                methodInfos = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EUNRPCAttribute), true).Length > 0).ToArray();
-                methodInfoDic[type] = methodInfos;
-            }
+            var methodInfos = EUNBehaviour.getMethodInfos(type);
 
             var eunRPCMethodName = ((EUNRPCCommand)eunRPCCommand).ToString();
 
-            MethodInfo method = null;
-            object[] parameters = null;// = rpcData != null ? rpcData.toList<object>().ToArray() : new object[0];
+            if (EUNBehaviour.tryGetMethod(methodInfos, eunRPCMethodName, rpcDataArray, out MethodInfo method, out object[] parameters))
+            {
+                method.Invoke(this, parameters);
+            }
+            else
+            {
+                EUNDebug.LogError("Method " + eunRPCMethodName + " with parameters " + parameters + " not found");
+            }
+        }
+
+        internal static bool tryGetMethod(MethodInfo[] methodInfos, string eunRPCMethodName, EUNArray rpcDataArray, out MethodInfo method, out object[] parameters)
+        {
+            method = null;
+            parameters = null;
 
             foreach (var methodInfo in methodInfos)
             {
@@ -277,10 +221,21 @@
                 }
             }
 
-            if (method != null) method.Invoke(this, parameters);
+            return method != null;
+        }
+
+        private static MethodInfo[] getMethodInfos(Type type)
+        {
+            if (methodInfoDic.ContainsKey(type))
+            {
+                return methodInfoDic[type];
+            }
             else
             {
-                EUNDebug.LogError("Method " + eunRPCMethodName + " with parameters " + parameters + " not found");
+                var methodInfos = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EUNRPCAttribute), true).Length > 0).ToArray();
+                methodInfoDic[type] = methodInfos;
+
+                return methodInfos;
             }
         }
 

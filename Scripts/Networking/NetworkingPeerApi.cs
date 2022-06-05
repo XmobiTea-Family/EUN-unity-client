@@ -37,7 +37,7 @@
         /// <summary>
         /// Dict of eunView
         /// </summary>
-        internal Dictionary<int, EUNView> eunViewDic;
+        internal Dictionary<int, EUNView> eunViewDic { get; private set; }
 
         /// <summary>
         /// The server timestamp as long

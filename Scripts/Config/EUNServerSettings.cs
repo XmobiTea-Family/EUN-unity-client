@@ -114,6 +114,6 @@
         /// <summary>
         /// The current log type EUN Client
         /// </summary>
-        public EUN.Logger.LogType LogType => _logType;
+        public EUN.Logger.LogType logType => _logType;
     }
 }

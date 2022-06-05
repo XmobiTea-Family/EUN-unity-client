@@ -1,5 +1,4 @@
-﻿#if UNITY_EDITOR
-namespace XmobiTea.EUN.Config.Editor
+﻿namespace XmobiTea.EUN.Editor
 {
     using System;
     using System.Collections.Generic;
@@ -9,10 +8,10 @@ namespace XmobiTea.EUN.Config.Editor
 
     using UnityEditor;
     using UnityEditor.Callbacks;
-
     using UnityEngine;
 
     using Debug = UnityEngine.Debug;
+    using XmobiTea.EUN.Config;
 
     [CustomEditor(typeof(EUNServerSettings))]
     public class EUNServerSettingsEditor : Editor
@@ -63,7 +62,7 @@ namespace XmobiTea.EUN.Config.Editor
             mode = serializedObject.FindProperty("_mode");
             logType = serializedObject.FindProperty("_logType");
             useVoiceChat = serializedObject.FindProperty("_useVoiceChat");
-            
+
             useVoiceChatLastValue = useVoiceChat.boolValue;
         }
 
@@ -353,26 +352,27 @@ namespace XmobiTea.EUN.Config.Editor
 
         private static void UpdateEUNRPCCommand()
         {
-            var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
-
-            var types = new List<Type>();
-
-            foreach (var assemblie in assemblies)
-            {
-                types.AddRange(assemblie.GetTypes());
-            }
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies().Where(a => !(a.ManifestModule is System.Reflection.Emit.ModuleBuilder)).ToArray();
 
             var methodNameLst = new List<string>();
 
-            var dic = new Dictionary<int, string>();
-
-            foreach (var type in types)
+            foreach (var assembly in assemblies)
             {
-                var methodInfos = type.GetMethods(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EUNRPCAttribute), false).Length > 0);
-
-                foreach (var methodInfo in methodInfos)
+                if (!assembly.Location.Contains("ScriptAssemblies") || assembly.FullName.StartsWith("Assembly-CSharp-Editor"))
                 {
-                    if (!methodNameLst.Contains(methodInfo.Name)) methodNameLst.Add(methodInfo.Name);
+                    continue;
+                }
+
+                var types = assembly.GetTypes().Where(t => t.IsSubclassOf(typeof(MonoBehaviour)));
+
+                foreach (var type in types)
+                {
+                    var methodInfos = type.GetMethods(System.Reflection.BindingFlags.NonPublic | System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EUNRPCAttribute), false).Length > 0);
+
+                    foreach (var methodInfo in methodInfos)
+                    {
+                        if (!methodNameLst.Contains(methodInfo.Name)) methodNameLst.Add(methodInfo.Name);
+                    }
                 }
             }
 
@@ -380,11 +380,15 @@ namespace XmobiTea.EUN.Config.Editor
 
             var eunRPCCommandValues = Enum.GetValues(typeof(EUNRPCCommand));
 
+            var dic = new Dictionary<int, string>();
+
             foreach (EUNRPCCommand eunRPCCommandValue in eunRPCCommandValues)
             {
                 if (methodNameLst.Contains(eunRPCCommandValue.ToString())) dic.Add((int)eunRPCCommandValue, eunRPCCommandValue.ToString());
                 else if (!needModifier) needModifier = true;
             }
+
+            if (!dic.ContainsValue("None")) dic.Add((int)0, "None");
 
             foreach (var methodName in methodNameLst)
             {
@@ -426,7 +430,7 @@ namespace XmobiTea.EUN.Config.Editor
                     enableStringBuilder.AppendLine("    " + c.Value + " = " + c.Key + ",");
                     disableStringBuilder.AppendLine("    " + c.Value + " = " + c.Key + ",");
 
-                    Debug.Log("EUNRPCCommand add " + c.Value + " = " + c.Key);
+                    Debug.Log("EUNRPCCommand set " + c.Value + " = " + c.Key);
                 }
 
                 enableStringBuilder.AppendLine("}");
@@ -453,4 +457,3 @@ namespace XmobiTea.EUN.Config.Editor
         }
     }
 }
-#endif

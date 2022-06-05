@@ -396,6 +396,24 @@
                             if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                         }
                     }
+
+                    return;
+                }
+
+                for (var i = 0; i < peer.eunManagerBehaviourLst.Count; i++)
+                {
+                    if (peer.eunManagerBehaviourLst[i] is EUNManagerBehaviour eunManagerBehaviour)
+                    {
+                        if (eunManagerBehaviour)
+                        {
+                            var view = eunManagerBehaviour.eunView;
+                            if (view.RoomGameObject.ObjectId == objectId)
+                            {
+                                eunManagerBehaviour.EUNRPC(eunRPCCommand, rpcDataArray);
+                                return;
+                            }
+                        }
+                    }
                 }
             }
             else if (targets == EUNTargets.LeaderClient)
@@ -410,6 +428,24 @@
                             foreach (var behaviour in view.eunBehaviourLst)
                             {
                                 if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
+                            }
+                        }
+
+                        return;
+                    }
+
+                    for (var i = 0; i < peer.eunManagerBehaviourLst.Count; i++)
+                    {
+                        if (peer.eunManagerBehaviourLst[i] is EUNManagerBehaviour eunManagerBehaviour)
+                        {
+                            if (eunManagerBehaviour)
+                            {
+                                var view = eunManagerBehaviour.eunView;
+                                if (view.RoomGameObject.ObjectId == objectId)
+                                {
+                                    eunManagerBehaviour.EUNRPC(eunRPCCommand, rpcDataArray);
+                                    return;
+                                }
                             }
                         }
                     }
@@ -440,6 +476,24 @@
                                 if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                             }
                         }
+
+                        return;
+                    }
+
+                    for (var i = 0; i < peer.eunManagerBehaviourLst.Count; i++)
+                    {
+                        if (peer.eunManagerBehaviourLst[i] is EUNManagerBehaviour eunManagerBehaviour)
+                        {
+                            if (eunManagerBehaviour)
+                            {
+                                var view = eunManagerBehaviour.eunView;
+                                if (view.RoomGameObject.ObjectId == objectId)
+                                {
+                                    eunManagerBehaviour.EUNRPC(eunRPCCommand, rpcDataArray);
+                                    return;
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -458,6 +512,24 @@
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
                             if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
+                        }
+                    }
+
+                    return;
+                }
+
+                for (var i = 0; i < peer.eunManagerBehaviourLst.Count; i++)
+                {
+                    if (peer.eunManagerBehaviourLst[i] is EUNManagerBehaviour eunManagerBehaviour)
+                    {
+                        if (eunManagerBehaviour)
+                        {
+                            var view = eunManagerBehaviour.eunView;
+                            if (view.RoomGameObject.ObjectId == objectId)
+                            {
+                                eunManagerBehaviour.EUNRPC(eunRPCCommand, rpcDataArray);
+                                return;
+                            }
                         }
                     }
                 }
