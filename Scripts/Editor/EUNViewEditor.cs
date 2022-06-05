@@ -10,7 +10,9 @@ namespace XmobiTea.EUN.Editor
         EUNView eunView;
 
         SerializedProperty objectIdProperty;
-        SerializedProperty observedComponentLstProperty;
+        SerializedProperty observedComponentsProperty;
+
+        private int observedComponentsLength;
 
         private void OnEnable()
         {
@@ -18,7 +20,9 @@ namespace XmobiTea.EUN.Editor
 
             objectIdProperty = roomGameObjectProperty.FindPropertyRelative("_objectId");
 
-            observedComponentLstProperty = serializedObject.FindProperty("_observedComponentLst");
+            observedComponentsProperty = serializedObject.FindProperty("_observedComponents");
+
+            observedComponentsLength = observedComponentsProperty.arraySize;
 
             eunView = (EUNView)target;
 
@@ -64,7 +68,17 @@ namespace XmobiTea.EUN.Editor
                 }
             }
 
-            EditorGUILayout.PropertyField(observedComponentLstProperty, true);
+            EditorGUILayout.Space(20);
+            EditorGUILayout.LabelField("The sync eun behaviour you want to send sync and get sync data");
+            EditorGUILayout.Space(10);
+
+            observedComponentsLength = EditorGUILayout.IntField(new GUIContent("Observed Compenents Length"), observedComponentsLength);
+            observedComponentsProperty.arraySize = observedComponentsLength;
+
+            for (var i = 0; i < observedComponentsProperty.arraySize; i++)
+            {
+                EditorGUILayout.PropertyField(observedComponentsProperty.GetArrayElementAtIndex(i));
+            }
 
             if (serializedObject.hasModifiedProperties) serializedObject.ApplyModifiedProperties();
         }

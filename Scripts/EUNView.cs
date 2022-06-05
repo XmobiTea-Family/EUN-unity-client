@@ -7,6 +7,7 @@
 
     using UnityEngine;
     using XmobiTea.EUN.Constant;
+    using System.Linq;
 
     /// <summary>
     /// What is EUNView?
@@ -30,14 +31,15 @@
             }
         }
 
+        [SerializeField]
+        private EUNBehaviour[] _observedComponents;
+        internal EUNBehaviour[] observedComponents => _observedComponents;
+
+
         /// <summary>
         /// Every EUNView has multiple eun behaviour
         /// </summary>
         internal List<EUNBehaviour> _eunBehaviourLst { get; private set; } = new List<EUNBehaviour>();
-
-        [SerializeField]
-        private ObservedComponent[] _observedComponentLst;
-        internal ObservedComponent[] observedComponentLst => _observedComponentLst;
 
         /// <summary>
         /// Every EUNView has multiple eun manager behaviour
@@ -90,11 +92,13 @@
                 for (var i = 0; i < _eunBehaviourLst.Count; i++)
                 {
                     var behaviour = _eunBehaviourLst[i];
-                    if (behaviour != null)
-                    {
-                        behaviour.OnEUNInitialize(this.roomGameObject.initializeData);
-                        behaviour.OnEUNSynchronization(this.roomGameObject.synchronizationData);
-                    }
+                    if (behaviour != null) behaviour.OnEUNInitialize(this.roomGameObject.initializeData);
+                }
+
+                for (var i = 0; i < _observedComponents.Length; i++)
+                {
+                    var behaviour = _observedComponents[i];
+                    if (behaviour != null) behaviour.OnEUNSynchronization(this.roomGameObject.synchronizationData);
                 }
             }
         }
@@ -111,8 +115,12 @@
 
                 if (roomGameObject.IsValid())
                 {
-                    behaviour.OnEUNInitialize(roomGameObject.initializeData);
-                    behaviour.OnEUNSynchronization(roomGameObject.synchronizationData);
+                    behaviour.OnEUNInitialize(this.roomGameObject.initializeData);
+                }
+
+                if (_observedComponents.Count(x => x == behaviour) != 0)
+                {
+                    behaviour.OnEUNSynchronization(this.roomGameObject.synchronizationData);
                 }
             }
         }

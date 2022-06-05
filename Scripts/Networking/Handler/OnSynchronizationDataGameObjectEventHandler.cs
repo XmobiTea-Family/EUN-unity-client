@@ -33,13 +33,17 @@
                 var view = peer.eunViewDic[objectId];
                 if (view)
                 {
-                    var eunBehaviourLst = view._eunBehaviourLst;
+                    var observedComponents = view.observedComponents;
 
-                    for (var i = 0; i < eunBehaviourLst.Count; i++)
+                    for (var j = 0; j < observedComponents.Length; j++)
                     {
-                        var behaviour = eunBehaviourLst[i];
+                        var behaviour = observedComponents[j];
 
-                        if (behaviour != null) behaviour.OnEUNSynchronization(synchronizationData);
+                        if (behaviour != null)
+                        {
+                            if (behaviour.gameObject.activeInHierarchy)
+                                behaviour.OnEUNSynchronization(synchronizationData);
+                        }
                     }
                 }
             }

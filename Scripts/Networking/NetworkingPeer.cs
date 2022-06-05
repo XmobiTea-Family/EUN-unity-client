@@ -365,13 +365,13 @@
 
                         if (view)
                         {
-                            var eunBehaviourLst = view._eunBehaviourLst;
+                            var observedComponents = view.observedComponents;
 
-                            for (var j = 0; j < eunBehaviourLst.Count; j++)
+                            for (var j = 0; j < observedComponents.Length; j++)
                             {
-                                var behaviour = eunBehaviourLst[j];
+                                var behaviour = observedComponents[j];
 
-                                if (behaviour)
+                                if (behaviour != null)
                                 {
                                     if (behaviour.gameObject.activeInHierarchy)
                                     {
