@@ -37,13 +37,15 @@
                     var behaviour = eunManagerBehaviourLst[i];
                     if (behaviour != null)
                     {
-                        foreach (var roomGameObject in roomGameObjectNeedCreateLst)
+                        for (var j = 0; j < roomGameObjectNeedCreateLst.Count; j++)
                         {
+                            var roomGameObject = roomGameObjectNeedCreateLst[j];
+
                             var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
+
                             if (view != null)
                             {
                                 view.Init(roomGameObject);
-                                peer.eunViewDic[view.RoomGameObject.ObjectId] = view;
                             }
                         }
                     }

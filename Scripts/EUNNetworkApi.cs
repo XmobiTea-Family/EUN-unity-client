@@ -391,27 +391,18 @@
                     var view = peer.eunViewDic[objectId];
                     if (view)
                     {
-                        foreach (var behaviour in view.eunBehaviourLst)
+                        var eunBehaviourLst = view.eunBehaviourLst;
+                        for (var i = 0; i < eunBehaviourLst.Count; i++)
                         {
+                            var behaviour = eunBehaviourLst[i];
                             if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                         }
-                    }
 
-                    return;
-                }
-
-                for (var i = 0; i < peer.eunManagerBehaviourLst.Count; i++)
-                {
-                    if (peer.eunManagerBehaviourLst[i] is EUNManagerBehaviour eunManagerBehaviour)
-                    {
-                        if (eunManagerBehaviour)
+                        var eunManagerBehaviourLst = view.eunManagerBehaviourLst;
+                        for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                         {
-                            var view = eunManagerBehaviour.eunView;
-                            if (view.RoomGameObject.ObjectId == objectId)
-                            {
-                                eunManagerBehaviour.EUNRPC(eunRPCCommand, rpcDataArray);
-                                return;
-                            }
+                            var behaviour = eunManagerBehaviourLst[i];
+                            if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                         }
                     }
                 }
@@ -425,27 +416,18 @@
                         var view = peer.eunViewDic[objectId];
                         if (view)
                         {
-                            foreach (var behaviour in view.eunBehaviourLst)
+                            var eunBehaviourLst = view.eunBehaviourLst;
+                            for (var i = 0; i < eunBehaviourLst.Count; i++)
                             {
+                                var behaviour = eunBehaviourLst[i];
                                 if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                             }
-                        }
 
-                        return;
-                    }
-
-                    for (var i = 0; i < peer.eunManagerBehaviourLst.Count; i++)
-                    {
-                        if (peer.eunManagerBehaviourLst[i] is EUNManagerBehaviour eunManagerBehaviour)
-                        {
-                            if (eunManagerBehaviour)
+                            var eunManagerBehaviourLst = view.eunManagerBehaviourLst;
+                            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                             {
-                                var view = eunManagerBehaviour.eunView;
-                                if (view.RoomGameObject.ObjectId == objectId)
-                                {
-                                    eunManagerBehaviour.EUNRPC(eunRPCCommand, rpcDataArray);
-                                    return;
-                                }
+                                var behaviour = eunManagerBehaviourLst[i];
+                                if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                             }
                         }
                     }
@@ -471,27 +453,18 @@
                         var view = peer.eunViewDic[objectId];
                         if (view)
                         {
-                            foreach (var behaviour in view.eunBehaviourLst)
+                            var eunBehaviourLst = view.eunBehaviourLst;
+                            for (var i = 0; i < eunBehaviourLst.Count; i++)
                             {
+                                var behaviour = eunBehaviourLst[i];
                                 if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                             }
-                        }
 
-                        return;
-                    }
-
-                    for (var i = 0; i < peer.eunManagerBehaviourLst.Count; i++)
-                    {
-                        if (peer.eunManagerBehaviourLst[i] is EUNManagerBehaviour eunManagerBehaviour)
-                        {
-                            if (eunManagerBehaviour)
+                            var eunManagerBehaviourLst = view.eunManagerBehaviourLst;
+                            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                             {
-                                var view = eunManagerBehaviour.eunView;
-                                if (view.RoomGameObject.ObjectId == objectId)
-                                {
-                                    eunManagerBehaviour.EUNRPC(eunRPCCommand, rpcDataArray);
-                                    return;
-                                }
+                                var behaviour = eunManagerBehaviourLst[i];
+                                if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                             }
                         }
                     }
@@ -509,27 +482,18 @@
                     var view = peer.eunViewDic[objectId];
                     if (view)
                     {
-                        foreach (var behaviour in view.eunBehaviourLst)
+                        var eunBehaviourLst = view.eunBehaviourLst;
+                        for (var i = 0; i < eunBehaviourLst.Count; i++)
                         {
+                            var behaviour = eunBehaviourLst[i];
                             if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                         }
-                    }
 
-                    return;
-                }
-
-                for (var i = 0; i < peer.eunManagerBehaviourLst.Count; i++)
-                {
-                    if (peer.eunManagerBehaviourLst[i] is EUNManagerBehaviour eunManagerBehaviour)
-                    {
-                        if (eunManagerBehaviour)
+                        var eunManagerBehaviourLst = view.eunManagerBehaviourLst;
+                        for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                         {
-                            var view = eunManagerBehaviour.eunView;
-                            if (view.RoomGameObject.ObjectId == objectId)
-                            {
-                                eunManagerBehaviour.EUNRPC(eunRPCCommand, rpcDataArray);
-                                return;
-                            }
+                            var behaviour = eunManagerBehaviourLst[i];
+                            if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcDataArray);
                         }
                     }
                 }

@@ -31,7 +31,6 @@
                     if (view != null)
                     {
                         view.Init(roomGameObject);
-                        peer.eunViewDic[view.RoomGameObject.ObjectId] = view;
                     }
                 }
             }

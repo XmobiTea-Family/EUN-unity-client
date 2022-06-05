@@ -59,8 +59,9 @@
         protected override void OnCustomStart()
         {
             base.OnCustomStart();
-
-            EUNNetwork.SubscriberEUNView(this);
+            
+            if (RoomGameObject.IsValid())
+                EUNNetwork.SubscriberEUNView(this);
         }
 
         protected override void OnCustomDestroy()
@@ -77,6 +78,8 @@
         internal void Init(RoomGameObject roomGameObject)
         {
             this.RoomGameObject = roomGameObject;
+
+            EUNNetwork.SubscriberEUNView(this);
 
             if (RoomGameObject.IsValid())
             {

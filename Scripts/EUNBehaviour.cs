@@ -62,8 +62,10 @@
             method = null;
             parameters = null;
 
-            foreach (var methodInfo in methodInfos)
+            for (var j = 0; j < methodInfos.Length; j++)
             {
+                var methodInfo = methodInfos[j];
+
                 if (methodInfo.Name.Equals(eunRPCMethodName))
                 {
                     var parameterInfos = methodInfo.GetParameters();

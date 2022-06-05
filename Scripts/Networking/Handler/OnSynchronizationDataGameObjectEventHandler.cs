@@ -33,8 +33,12 @@
                 var view = peer.eunViewDic[objectId];
                 if (view)
                 {
-                    foreach (var behaviour in view.eunBehaviourLst)
+                    var eunBehaviourLst = view.eunBehaviourLst;
+
+                    for (var i = 0; i < eunBehaviourLst.Count; i++)
                     {
+                        var behaviour = eunBehaviourLst[i];
+
                         if (behaviour != null) behaviour.OnEUNSynchronization(synchronizationData);
                     }
                 }

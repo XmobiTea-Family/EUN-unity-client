@@ -28,8 +28,12 @@
                 var view = peer.eunViewDic[objectId];
                 if (view)
                 {
-                    foreach (var behaviour in view.eunVoiceChatBehaviourLst)
+                    var eunVoiceChatBehaviourLst = view.eunVoiceChatBehaviourLst;
+
+                    for (var i = 0; i < eunVoiceChatBehaviourLst.Count; i++)
                     {
+                        var behaviour = eunVoiceChatBehaviourLst[i];
+
                         if (behaviour != null) behaviour.OnEUNSynchronization(voiceChatData);
                     }
                 }

@@ -31,18 +31,19 @@
 
             if (roomGameObject != null)
             {
-                foreach (var view in peer.eunViewLst)
+                if (peer.eunViewDic.ContainsKey(objectId))
                 {
+                    var view = peer.eunViewDic[objectId];
+
                     if (view)
                     {
-                        if (view.RoomGameObject.ObjectId == objectId)
-                        {
-                            foreach (var behaviour in view.eunBehaviourLst)
-                            {
-                                if (behaviour != null) behaviour.OnEUNDestroyGameObjectRoom();
-                            }
+                        var eunBehaviourLst = view.eunBehaviourLst;
 
-                            break;
+                        for (var i = 0; i < eunBehaviourLst.Count; i++)
+                        {
+                            var behaviour = eunBehaviourLst[i];
+
+                            if (behaviour != null) behaviour.OnEUNDestroyGameObjectRoom();
                         }
                     }
                 }

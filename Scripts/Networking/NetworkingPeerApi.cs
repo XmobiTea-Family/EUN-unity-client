@@ -35,7 +35,7 @@
         internal int playerId;
 
         /// <summary>
-        /// Dict of eunView
+        /// Dict of eunView, (objectId => EUNView)
         /// </summary>
         internal Dictionary<int, EUNView> eunViewDic { get; private set; }
 
@@ -62,15 +62,7 @@
 
             foreach (var c in room.GameObjectDic)
             {
-                if (eunViewDic.ContainsKey(c.Key))
-                {
-                    if (c.Value == null)
-                    {
-                        if (!removeLst.Contains(c.Key)) removeLst.Add(c.Key);
-                        if (!createLst.Contains(c.Key)) createLst.Add(c.Key);
-                    }
-                }
-                else
+                if (!eunViewDic.ContainsKey(c.Key))
                 {
                     createLst.Add(c.Key);
                 }
@@ -78,22 +70,26 @@
 
             foreach (var c in eunViewDic)
             {
-                if (!room.GameObjectDic.ContainsKey(c.Key))
+                if (c.Key > 0 && !room.GameObjectDic.ContainsKey(c.Key))
                 {
-                    if (!removeLst.Contains(c.Key)) removeLst.Add(c.Key);
-
-                    if (c.Value != null)
-                    {
-                        Destroy(c.Value.gameObject);
-                    }
+                    removeLst.Add(c.Key);
                 }
             }
 
             if (removeLst.Count != 0)
             {
-                foreach (var c in removeLst)
+                for (var i = 0; i < removeLst.Count; i++)
                 {
-                    eunViewDic.Remove(c);
+                    var id = removeLst[i];
+
+                    var eunView = eunViewDic[id];
+
+                    if (eunView)
+                    {
+                        Destroy(eunView.gameObject);
+                    }
+
+                    eunViewDic.Remove(id);
                 }
             }
 
@@ -101,9 +97,11 @@
 
             if (createLst.Count != 0)
             {
-                foreach (var c in createLst)
+                for (var i = 0; i < createLst.Count; i++)
                 {
-                    roomGameObjectNeedCreateLst.Add(room.GameObjectDic[c]);
+                    var id = createLst[i];
+
+                    roomGameObjectNeedCreateLst.Add(room.GameObjectDic[id]);
                 }
             }
 

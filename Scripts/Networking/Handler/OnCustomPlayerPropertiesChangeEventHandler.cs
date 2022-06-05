@@ -40,12 +40,19 @@
                     else thisRoomPlayer.CustomProperties.Add(key, value);
                 }
 
-                foreach (var view in peer.eunViewLst)
+                var eunViewLst = peer.eunViewLst;
+                for (var i = 0; i < eunViewLst.Count; i++)
                 {
+                    var view = eunViewLst[i];
+
                     if (view)
                     {
-                        foreach (var behaviour in view.eunBehaviourLst)
+                        var eunBehaviourLst = view.eunBehaviourLst;
+
+                        for (var j = 0; j < eunBehaviourLst.Count; j++)
                         {
+                            var behaviour = eunBehaviourLst[j];
+
                             if (behaviour != null) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
                         }
                     }

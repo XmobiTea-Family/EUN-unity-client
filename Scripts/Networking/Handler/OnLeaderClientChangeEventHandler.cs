@@ -27,18 +27,26 @@
 
             var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
 
+            var eunViewLst = peer.eunViewLst;
+
             var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(roomPlayer.UserId));
             if (thisRoomPlayer == null)
             {
                 thisRoomPlayer = roomPlayer;
                 peer.room.RoomPlayerLst.Add(thisRoomPlayer);
 
-                foreach (var view in peer.eunViewLst)
+                for (var i = 0; i < eunViewLst.Count; i++)
                 {
+                    var view = eunViewLst[i];
+
                     if (view)
                     {
-                        foreach (var behaviour in view.eunBehaviourLst)
+                        var eunBehaviourLst = view.eunBehaviourLst;
+
+                        for (var j = 0; j < eunBehaviourLst.Count; j++)
                         {
+                            var behaviour = eunBehaviourLst[j];
+
                             if (behaviour) behaviour.OnEUNOtherPlayerJoinRoom(thisRoomPlayer);
                         }
                     }
@@ -53,12 +61,18 @@
 
             peer.room.LeaderClientUserId = thisRoomPlayer.UserId;
 
-            foreach (var view in peer.eunViewLst)
+            for (var i = 0; i < eunViewLst.Count; i++)
             {
+                var view = eunViewLst[i];
+
                 if (view)
                 {
-                    foreach (var behaviour in view.eunBehaviourLst)
+                    var eunBehaviourLst = view.eunBehaviourLst;
+
+                    for (var j = 0; j < eunBehaviourLst.Count; j++)
                     {
+                        var behaviour = eunBehaviourLst[j];
+
                         if (behaviour) behaviour.OnEUNLeaderClientChange(thisRoomPlayer);
                     }
                 }

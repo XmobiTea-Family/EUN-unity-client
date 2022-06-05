@@ -147,7 +147,17 @@
         /// <returns></returns>
         public T[] ToArray<T>()
         {
-            return originArray.ToArray() as T[];
+            var answer = new T[originArray.Count];
+
+            for (var i = 0; i < originArray.Count; i++)
+            {
+                if (originArray[i] is T t)
+                {
+                    answer[i] = t;
+                }
+            }
+
+            return answer;
         }
 
         /// <summary>
@@ -157,7 +167,17 @@
         /// <returns></returns>
         public IList<T> ToList<T>()
         {
-            return originArray as IList<T>;
+            var answer = new List<T>();
+
+            for (var i = 0; i < originArray.Count; i++)
+            {
+                if (originArray[i] is T t)
+                {
+                    answer.Add(t);
+                }
+            }
+
+            return answer;
         }
 
         /// <summary>

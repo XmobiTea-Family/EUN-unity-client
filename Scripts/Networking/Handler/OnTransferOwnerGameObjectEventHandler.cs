@@ -26,30 +26,35 @@
             if (peer.room.GameObjectDic.ContainsKey(objectId))
             {
                 var roomGameObject = peer.room.GameObjectDic[objectId];
-
                 roomGameObject.OwnerId = newOwnerId;
 
                 var newOwner = peer.room.RoomPlayerLst.Find(x => x.PlayerId == newOwnerId);
 
-                foreach (var view in peer.eunViewLst)
+                if (newOwner != null)
                 {
-                    if (view)
+                    if (peer.eunViewDic.ContainsKey(objectId))
                     {
-                        if (objectId == view.RoomGameObject.ObjectId)
+                        var view = peer.eunViewDic[objectId];
+
+                        if (view)
                         {
-                            foreach (var behaviour in view.eunBehaviourLst)
+                            var eunBehaviourLst = view.eunBehaviourLst;
+
+                            for (var i = 0; i < eunBehaviourLst.Count; i++)
                             {
+                                var behaviour = eunBehaviourLst[i];
+
                                 if (behaviour != null) behaviour.OnEUNTransferOwnerGameObject(newOwner);
                             }
                         }
                     }
-                }
 
-                var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
-                for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
-                {
-                    var behaviour = eunManagerBehaviourLst[i];
-                    if (behaviour != null) behaviour.OnEUNTransferOwnerGameObject(roomGameObject, newOwner);
+                    var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
+                    for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
+                    {
+                        var behaviour = eunManagerBehaviourLst[i];
+                        if (behaviour != null) behaviour.OnEUNTransferOwnerGameObject(roomGameObject, newOwner);
+                    }
                 }
             }
         }

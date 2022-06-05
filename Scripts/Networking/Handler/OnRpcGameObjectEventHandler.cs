@@ -29,8 +29,17 @@
                 var view = peer.eunViewDic[objectId];
                 if (view)
                 {
-                    foreach (var behaviour in view.eunBehaviourLst)
+                    var eunBehaviourLst = view.eunBehaviourLst;
+                    for (var i = 0; i < eunBehaviourLst.Count; i++)
                     {
+                        var behaviour = eunBehaviourLst[i];
+                        if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcData);
+                    }
+
+                    var eunManagerBehaviourLst = view.eunManagerBehaviourLst;
+                    for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
+                    {
+                        var behaviour = eunManagerBehaviourLst[i];
                         if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcData);
                     }
                 }

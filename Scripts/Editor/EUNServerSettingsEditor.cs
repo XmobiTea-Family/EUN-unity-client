@@ -237,8 +237,10 @@
 
         private static bool IsEUNSetup()
         {
-            foreach (var buildTargetGroup in buildTargetGroups)
+            for (var i = 0; i < buildTargetGroups.Length; i++)
             {
+                var buildTargetGroup = buildTargetGroups[i];
+
                 if (!HasScriptingDefineSymbols(buildTargetGroup, "EUN")) return false;
             }
 
@@ -255,16 +257,20 @@
 
         private static void SetScriptingDefineSymbols(string symbol)
         {
-            foreach (var buildTargetGroup in buildTargetGroups)
+            for (var i = 0; i < buildTargetGroups.Length; i++)
             {
+                var buildTargetGroup = buildTargetGroups[i];
+
                 SetScriptingDefineSymbols(buildTargetGroup, symbol);
             }
         }
 
         private static void RemoveScriptingDefineSymbols(string symbol)
         {
-            foreach (var buildTargetGroup in buildTargetGroups)
+            for (var i = 0; i < buildTargetGroups.Length; i++)
             {
+                var buildTargetGroup = buildTargetGroups[i];
+
                 RemoveScriptingDefineSymbols(buildTargetGroup, symbol);
             }
         }
@@ -390,14 +396,16 @@
 
             if (!dic.ContainsValue("None")) dic.Add((int)0, "None");
 
-            foreach (var methodName in methodNameLst)
+            for (var i = 0; i < methodNameLst.Count; i++)
             {
+                var methodName = methodNameLst[i];
+
                 var dicValues = dic.Values.ToList();
 
                 if (!dicValues.Contains(methodName))
                 {
                     var dicKeys = dic.Keys.ToList();
-                    
+
                     var key = dicKeys.Max() + 1;
 
                     dic.Add(key, methodName);

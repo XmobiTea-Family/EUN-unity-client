@@ -11,7 +11,6 @@
     using System;
     using System.Collections.Generic;
 
-    using UnityEngine;
     using System.Linq;
     using XmobiTea.EUN.Entity;
     using XmobiTea.EUN.Logger;
@@ -195,6 +194,14 @@
         internal void SubscriberEUNView(EUNView view)
         {
             if (!eunViewLst.Contains(view)) eunViewLst.Add(view);
+
+            if (view != null)
+            {
+                if (view.RoomGameObject.IsValid())
+                {
+                    eunViewDic[view.RoomGameObject.ObjectId] = view;
+                }
+            }
         }
 
         /// <summary>
@@ -204,6 +211,14 @@
         internal void UnSubscriberEUNView(EUNView view)
         {
             if (eunViewLst.Contains(view)) eunViewLst.Remove(view);
+
+            if (view != null)
+            {
+                if (view.RoomGameObject.IsValid())
+                {
+                    eunViewDic.Remove(view.RoomGameObject.ObjectId);
+                }
+            }
         }
 
         /// <summary>

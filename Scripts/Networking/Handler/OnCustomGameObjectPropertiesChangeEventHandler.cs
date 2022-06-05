@@ -41,16 +41,19 @@ namespace XmobiTea.EUN.Networking
                 else roomGameObject.CustomProperties.Add(key, value);
             }
 
-            foreach (var view in peer.eunViewLst)
+            if (peer.eunViewDic.ContainsKey(objectId))
             {
+                var view = peer.eunViewDic[objectId];
+
                 if (view)
                 {
-                    if (objectId == view.RoomGameObject.ObjectId)
+                    var eunBehaviourLst = view.eunBehaviourLst;
+                    
+                    for (var i = 0; i < eunBehaviourLst.Count; i++)
                     {
-                        foreach (var behaviour in view.eunBehaviourLst)
-                        {
-                            if (behaviour != null) behaviour.OnEUNCustomGameObjectPropertiesChange(customGameObjectProperties);
-                        }
+                        var behaviour = eunBehaviourLst[i];
+
+                        if (behaviour != null) behaviour.OnEUNCustomGameObjectPropertiesChange(customGameObjectProperties);
                     }
                 }
             }

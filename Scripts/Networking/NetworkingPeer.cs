@@ -232,13 +232,14 @@
                     var behaviour = eunManagerBehaviourLst[i];
                     if (behaviour != null)
                     {
-                        foreach (var roomGameObject in roomGameObjectNeedCreateLst)
+                        for (var j = 0; j < roomGameObjectNeedCreateLst.Count; j++)
                         {
+                            var roomGameObject = roomGameObjectNeedCreateLst[j];
+
                             var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
                             if (view != null)
                             {
                                 view.Init(roomGameObject);
-                                eunViewDic[view.RoomGameObject.ObjectId] = view;
                             }
                         }
                     }
@@ -333,8 +334,10 @@
 
                     if (eunArrayLst.Count == 0)
                     {
-                        foreach (var eunArray in eunArrayLst)
+                        for (var i = 0; i < eunArrayLst.Count; i++)
                         {
+                            var eunArray = eunArrayLst[i];
+
                             OnResponseHandler(eunArray);
                         }
                     }
@@ -356,18 +359,24 @@
                 // get and send the sync OperationRequest
                 if (nextSendSyncMsgTimer < Time.time)
                 {
-                    foreach (var view in eunViewLst)
+                    for (var i = 0; i < eunViewLst.Count; i++)
                     {
+                        var view = eunViewLst[i];
+
                         if (view)
                         {
-                            foreach (var behaviour in view.eunBehaviourLst)
+                            var eunBehaviourLst = view.eunBehaviourLst;
+
+                            for (var j = 0; j < eunBehaviourLst.Count; j++)
                             {
+                                var behaviour = eunBehaviourLst[j];
+
                                 if (behaviour)
                                 {
                                     if (behaviour.gameObject.activeInHierarchy)
                                     {
                                         var objectData = behaviour.GetSynchronizationData();
-                                        if (objectData != null) SynchronizationDataGameObjectRoom(behaviour.eunView.RoomGameObject.ObjectId, objectData);
+                                        if (objectData != null) SynchronizationDataGameObjectRoom(view.RoomGameObject.ObjectId, objectData);
                                     }
                                 }
                             }
@@ -384,18 +393,24 @@
                 // get and send the voice chat OperationRequest
                 if (nextSendVoiceChatMsgTimer < Time.time)
                 {
-                    foreach (var view in eunViewLst)
+                    for (var i = 0; i < eunViewLst.Count; i++)
                     {
+                        var view = eunViewLst[i];
+
                         if (view)
                         {
-                            foreach (var behaviour in view.eunVoiceChatBehaviourLst)
+                            var eunVoiceChatBehaviourLst = view.eunVoiceChatBehaviourLst;
+
+                            for (var j = 0; j < eunVoiceChatBehaviourLst.Count; j++)
                             {
-                                if (behaviour != null)
+                                var behaviour = eunVoiceChatBehaviourLst[j];
+
+                                if (behaviour)
                                 {
                                     if (behaviour.gameObject.activeInHierarchy)
                                     {
                                         var objectData = behaviour.GetSynchronizationData();
-                                        if (objectData != null) VoiceChatRoom(behaviour.eunView.RoomGameObject.ObjectId, objectData);
+                                        if (objectData != null) VoiceChatRoom(view.RoomGameObject.ObjectId, objectData);
                                     }
                                 }
                             }
