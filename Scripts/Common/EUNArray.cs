@@ -151,10 +151,7 @@
 
             for (var i = 0; i < originArray.Count; i++)
             {
-                if (originArray[i] is T t)
-                {
-                    answer[i] = t;
-                }
+                answer[i] = (T)Get<T>(i);
             }
 
             return answer;
@@ -171,10 +168,7 @@
 
             for (var i = 0; i < originArray.Count; i++)
             {
-                if (originArray[i] is T t)
-                {
-                    answer.Add(t);
-                }
+                answer.Add((T)Get<T>(i));
             }
 
             return answer;
