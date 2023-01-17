@@ -128,7 +128,7 @@
                 EditorGUILayout.LabelField("This is offline mode, you can not play with other player.", italicStyle);
             }
 
-            serializedObject.ApplyModifiedProperties();
+            if (serializedObject.hasModifiedProperties) serializedObject.ApplyModifiedProperties();
 
             var eunRPCCommandValues = Enum.GetValues(typeof(EUNRPCCommand));
 
