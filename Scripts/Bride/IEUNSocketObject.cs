@@ -1,6 +1,6 @@
 ﻿namespace XmobiTea.EUN.Bride
 {
-#if EUN
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client.constant;
     using com.tvd12.ezyfoxserver.client.entity;
 #else
@@ -12,26 +12,30 @@
 
     public interface IEUNSocketObject
     {
-        void Init(string _zoneName, string _appName);
-        void Connect(string username, string password, IEUNData data, string host, int port, int udpPort);
-        void Disconnect();
-#if EUN
-        void Send(EzyObject request, bool reliable = true);
+        void init(string _zoneName, string _appName);
+        void connect(string username, string password, IEUNData data, string host, int port, int udpPort);
+        void disconnect();
+#if EUN_USING_ONLINE
+        void send(EzyObject request, bool reliable = true);
 #endif
-        void SubscriberConnectionSuccessHandler(Action _onConnectionSuccess);
-        void SubscriberConnectionFailureHandler(Action<EzyConnectionFailedReason> _onConnectionFailure);
-        void SubscriberDisconnectionHandler(Action<EzyDisconnectReason> _onDisconnection);
-        void SubscriberLoginErrorHandler(Action<EUNArray> _onLoginError);
-        void SubscriberAppAccessHandler(Action<EUNArray> _onAppAccess);
-        void SubscriberResponseHandler(Action<EUNArray> _onResponse);
-        void SubscriberEventHandler(Action<EUNArray> _onEvent);
+        void subscriberConnectionSuccessHandler(Action _onConnectionSuccess);
+        void subscriberConnectionFailureHandler(Action<EzyConnectionFailedReason> _onConnectionFailure);
+        void subscriberDisconnectionHandler(Action<EzyDisconnectReason> _onDisconnection);
+        void subscriberLoginErrorHandler(Action<EUNArray> _onLoginError);
+        void subscriberAppAccessHandler(Action<EUNArray> _onAppAccess);
+        void subscriberResponseHandler(Action<EUNArray> _onResponse);
+        void subscriberEventHandler(Action<EUNArray> _onEvent);
 
-        int GetPing();
+        void service();
 
-        long GetTotalSendBytes();
-        long GetTotalRecvBytes();
+        int getPing();
 
-        long GetTotalSendPackets();
-        long GetTotalRecvPackets();
+        long getTotalSendBytes();
+        long getTotalRecvBytes();
+
+        long getTotalSendPackets();
+        long getTotalRecvPackets();
+
     }
+
 }

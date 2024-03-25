@@ -5,20 +5,22 @@
 
     public class ChangeRoomInfoOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.ChangeRoomInfo;
+        protected override int code => OperationCode.ChangeRoomInfo;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// ChangeRoomInfoOperationRequest
         /// </summary>
         /// <param name="eunHashtable">The eun hashtable need change</param>
         /// <param name="timeout"></param>
-        public ChangeRoomInfoOperationRequest(EUNHashtable eunHashtable, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public ChangeRoomInfoOperationRequest(EUNHashtable eunHashtable, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                 .Add(ParameterCode.EUNHashtable, eunHashtable)
-                 .Build();
+            this.parameters = new EUNHashtable.Builder()
+                 .add(ParameterCode.EUNHashtable, eunHashtable)
+                 .build();
         }
+
     }
+
 }

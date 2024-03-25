@@ -7,9 +7,9 @@
 
     public class RpcGameObjectRoomToOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.RpcGameObjectRoomTo;
+        protected override int code => OperationCode.RpcGameObjectRoomTo;
 
-        protected override bool Reliable => false;
+        protected override bool reliable => false;
 
         /// <summary>
         /// RpcGameObjectRoomToOperationRequest
@@ -19,15 +19,17 @@
         /// <param name="eunRPCCommand">The command RPC</param>
         /// <param name="rpcData">The RPC data</param>
         /// <param name="timeout"></param>
-        public RpcGameObjectRoomToOperationRequest(IList<int> targetPlayerIds, int objectId, int eunRPCCommand, object rpcData, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public RpcGameObjectRoomToOperationRequest(IList<int> targetPlayerIds, int objectId, int eunRPCCommand, object rpcData, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.ObjectId, objectId)
-                .Add(ParameterCode.EunRPCCommand, eunRPCCommand)
-                .Add(ParameterCode.RpcData, rpcData)
-                .Add(ParameterCode.TargetPlayerIds, targetPlayerIds)
-                .Build();
+            this.parameters = new EUNHashtable.Builder()
+                .add(ParameterCode.ObjectId, objectId)
+                .add(ParameterCode.EunRPCCommand, eunRPCCommand)
+                .add(ParameterCode.RpcData, rpcData)
+                .add(ParameterCode.TargetPlayerIds, targetPlayerIds)
+                .build();
 
         }
+
     }
+
 }

@@ -14,13 +14,15 @@
         public const int OnLeaderClientChange = 6;
         public const int OnChatRoom = 7;
         public const int OnRoomInfoChange = 8;
-        public const int OnCustomPlayerPropertiesChange = 9;
+        public const int OnPlayerCustomPropertiesChange = 9;
         public const int OnCreateGameObject = 10;
         public const int OnDestroyGameObject = 11;
         public const int OnSynchronizationDataGameObject = 12;
         public const int OnRpcGameObject = 13;
         public const int OnTransferOwnerGameObject = 14;
         public const int OnVoiceChat = 15;
-        public const int OnCustomGameObjectPropertiesChange = 16;
+        public const int OnGameObjectCustomPropertiesChange = 16;
+
     }
+
 }

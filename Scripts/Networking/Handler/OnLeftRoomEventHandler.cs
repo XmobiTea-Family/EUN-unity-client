@@ -8,12 +8,12 @@
     /// </summary>
     internal class OnLeftRoomEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnLeftRoom;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             peer.room = null;
 
@@ -21,8 +21,12 @@
             for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
                 var behaviour = eunManagerBehaviourLst[i];
-                if (behaviour != null) behaviour.OnEUNLeftRoom();
+                if (behaviour != null) behaviour.onEUNLeftRoom();
             }
+
+            peer.eunViewDict.Clear();
         }
+
     }
+
 }

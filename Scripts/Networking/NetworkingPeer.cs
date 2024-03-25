@@ -1,21 +1,21 @@
 ﻿namespace XmobiTea.EUN.Networking
 {
-#if EUN
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client.factory;
 #endif
 
     using XmobiTea.EUN.Bride;
-    using XmobiTea.EUN.Bride.Socket;
+#if !UNITY_EDITOR && UNITY_WEBGL
     using XmobiTea.EUN.Bride.WebSocket;
-
+#else
+    using XmobiTea.EUN.Bride.Socket;
+#endif
     using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Constant;
 
     using System;
     using System.Collections.Generic;
 
-    using UnityEngine;
-    using UnityEngine.SceneManagement;
     using XmobiTea.EUN.Entity;
     using XmobiTea.EUN.Logger;
 
@@ -24,22 +24,29 @@
     /// In this partial, it will handle queue, sort all request from EUNNetwork, send request and receive response
     /// Find and send request or receive response via websocket or socket
     /// </summary>
-    public partial class NetworkingPeer : MonoBehaviour
+    public partial class NetworkingPeer
     {
         /// <summary>
         /// The operation pending, my think is add to queue and pending wait to send EUN Server
         /// </summary>
-        public struct OperationPending
+        class OperationPending
         {
             /// <summary>
             /// The operation request need send
             /// </summary>
             private OperationRequest operationRequest;
 
+            private OperationResponse operationResponse;
+
             /// <summary>
             /// the callback if receive the operation response from EUN Server
             /// </summary>
             private Action<OperationResponse> onOperationResponse;
+
+            private float timeout;
+
+            private float firstSend;
+            private float secondsSend;
 
             /// <summary>
             /// Constructor for OperationPending
@@ -50,17 +57,58 @@
             {
                 this.operationRequest = operationRequest;
                 this.onOperationResponse = onOperationResponse;
+
+                this.timeout = UnityEngine.Time.realtimeSinceStartup + operationRequest.getTimeout();
+                this.firstSend = 0;
+                this.secondsSend = 0;
             }
 
-            public OperationRequest GetOperationRequest()
+            public void onSend()
             {
-                return operationRequest;
+                this.firstSend = UnityEngine.Time.realtimeSinceStartup;
+                this.timeout = this.firstSend + this.operationRequest.getTimeout();
             }
 
-            public Action<OperationResponse> GetCallback()
+            public void onRecv()
             {
-                return onOperationResponse;
+                this.secondsSend = UnityEngine.Time.realtimeSinceStartup;
             }
+
+            public float getExecuteTimerInMs()
+            {
+                return (this.secondsSend - this.firstSend) * 1000;
+            }
+
+            public bool isTimeout()
+            {
+                return this.timeout < UnityEngine.Time.realtimeSinceStartup;
+            }
+
+            public OperationRequest getOperationRequest()
+            {
+                return this.operationRequest;
+            }
+
+            public OperationResponse getOperationResponse()
+            {
+                return this.operationResponse;
+            }
+
+            public void setOperationResponse(OperationResponse operationResponse)
+            {
+                this.operationResponse = operationResponse;
+            }
+
+            public bool HasCallback()
+            {
+                return this.onOperationResponse != null;
+            }
+
+            public void Invoke()
+            {
+                this.onOperationResponse?.Invoke(this.operationResponse);
+            }
+
         }
 
         /// <summary>
@@ -91,12 +139,12 @@
         /// <summary>
         /// The dict for OperationPending has sent to EUN Server and waiting for response
         /// </summary>
-        private Dictionary<int, OperationPending> operationWaitingResponseDic;
+        private Dictionary<int, OperationPending> operationWaitingResponseDict;
 
         /// <summary>
         /// The server timestamp of EUN Server
         /// </summary>
-        private double serverTimeStamp;
+        private double serverTimestamp;
 
         /// <summary>
         /// The seconds timer to send one normal OperationRequest
@@ -131,37 +179,37 @@
         /// <summary>
         /// Init peer, like constructor
         /// </summary>
-        internal void InitPeer()
+        internal void initPeer()
         {
-            serverTimeStamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
+            this.serverTimestamp = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds();
 
-            if (operationWaitingResponseDic == null) operationWaitingResponseDic = new Dictionary<int, OperationPending>();
-            if (operationPendingQueue == null) operationPendingQueue = new Queue<OperationPending>();
-            if (syncOperationPendingQueue == null) syncOperationPendingQueue = new Queue<OperationPending>();
-            if (voiceChatOperationPendingQueue == null) voiceChatOperationPendingQueue = new Queue<OperationPending>();
+            if (this.operationWaitingResponseDict == null) this.operationWaitingResponseDict = new Dictionary<int, OperationPending>();
+            if (this.operationPendingQueue == null) this.operationPendingQueue = new Queue<OperationPending>();
+            if (this.syncOperationPendingQueue == null) this.syncOperationPendingQueue = new Queue<OperationPending>();
+            if (this.voiceChatOperationPendingQueue == null) this.voiceChatOperationPendingQueue = new Queue<OperationPending>();
 
-            if (serverEventHandlerDic == null) serverEventHandlerDic = new Dictionary<int, IServerEventHandler>();
-            if (eunViewLst == null) eunViewLst = new List<EUNView>();
-            if (eunManagerBehaviourLst == null) eunManagerBehaviourLst = new List<IEUNManagerBehaviour>();
-            if (eunViewDic == null) eunViewDic = new Dictionary<int, EUNView>();
+            if (this.serverEventHandlerDict == null) this.serverEventHandlerDict = new Dictionary<int, IServerEventHandler>();
+            if (this.eunViewLst == null) this.eunViewLst = new List<EUNView>();
+            if (this.eunManagerBehaviourLst == null) this.eunManagerBehaviourLst = new List<IEUNManagerBehaviour>();
+            if (this.eunViewDict == null) this.eunViewDict = new Dictionary<int, EUNView>();
 
-            InitSendRate();
+            if (this.eventHandlerPending == null) this.eventHandlerPending = new List<OperationEvent>();
+            if (this.responseHandlerPending == null) this.responseHandlerPending = new List<OperationPending>();
 
-            InitEUNSocketObject();
+            this.initSendRate();
 
-            SubscriberHandler();
+            this.initEUNSocketObject();
 
-            SceneManager.sceneLoaded -= OnSceneLoaded;
-            SceneManager.sceneLoaded += OnSceneLoaded;
+            this.subscriberHandler();
 
-            SubscriberServerEventHandler();
+            this.subscriberServerEventHandler();
         }
 
         /// <summary>
         /// Init send rate
         /// </summary>
         /// <exception cref="NullReferenceException"></exception>
-        private void InitSendRate()
+        private void initSendRate()
         {
             var eunServerSettings = EUNNetwork.eunServerSettings;
             if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
@@ -170,60 +218,51 @@
             var sendRateSynchronizationData = eunServerSettings.sendRateSynchronizationData;
             var sendRateVoiceChat = eunServerSettings.sendRateVoiceChat;
 
-            SetSendRate(sendRate, sendRateSynchronizationData, sendRateVoiceChat);
+            this.setSendRate(sendRate, sendRateSynchronizationData, sendRateVoiceChat);
         }
 
         /// <summary>
         /// Init eunSocketObject
         /// </summary>
         /// <exception cref="NullReferenceException"></exception>
-        private void InitEUNSocketObject()
+        private void initEUNSocketObject()
         {
             var eunServerSettings = EUNNetwork.eunServerSettings;
 
             if (eunServerSettings == null) throw new NullReferenceException("Where is EUN Server Settings");
 
 #if !UNITY_EDITOR && UNITY_WEBGL
-            eunSocketObject = gameObject.AddComponent<WebSocketEUNSocketObject>();
+            this.eunSocketObject = new WebSocketEUNSocketObject();
 #else
-            eunSocketObject = gameObject.AddComponent<SocketEUNSocketObject>();
+            this.eunSocketObject = new SocketEUNSocketObject();
 #endif
 
             var zoneName = eunServerSettings.zoneName;
             var appName = eunServerSettings.appName;
 
-            eunSocketObject.Init(zoneName, appName);
+            this.eunSocketObject.init(zoneName, appName);
         }
 
         /// <summary>
         /// Subscriber ezy handler
         /// </summary>
-        private void SubscriberHandler()
+        private void subscriberHandler()
         {
-            eunSocketObject.SubscriberConnectionSuccessHandler(OnConnectionSuccessHandler);
-            eunSocketObject.SubscriberConnectionFailureHandler(OnConnectionFailureHandler);
-            eunSocketObject.SubscriberDisconnectionHandler(OnDisconnectionHandler);
-            eunSocketObject.SubscriberLoginErrorHandler(OnLoginErrorHandler);
-            eunSocketObject.SubscriberAppAccessHandler(OnAppAccessHandler);
-            eunSocketObject.SubscriberResponseHandler(OnResponseHandler);
-            eunSocketObject.SubscriberEventHandler(OnEventHandler);
+            this.eunSocketObject.subscriberConnectionSuccessHandler(this.onConnectionSuccessHandler);
+            this.eunSocketObject.subscriberConnectionFailureHandler(this.onConnectionFailureHandler);
+            this.eunSocketObject.subscriberDisconnectionHandler(this.onDisconnectionHandler);
+            this.eunSocketObject.subscriberLoginErrorHandler(this.onLoginErrorHandler);
+            this.eunSocketObject.subscriberAppAccessHandler(this.onAppAccessHandler);
+            this.eunSocketObject.subscriberResponseHandler(this.onResponseHandler);
+            this.eunSocketObject.subscriberEventHandler(this.onEventHandler);
         }
 
         /// <summary>
         /// this will call every scene loaded to find room game object not create game object
         /// </summary>
-        /// <param name="scene">the current scene</param>
-        /// <param name="loadSceneMode">the load scene mode</param>
-        private void OnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
+        public void onSceneLoaded()
         {
-            StartCoroutine(IEOnSceneLoaded(scene, loadSceneMode));
-        }
-
-        System.Collections.IEnumerator IEOnSceneLoaded(Scene scene, LoadSceneMode loadSceneMode)
-        {
-            yield return new WaitForSeconds(0.1f);
-
-            var roomGameObjectNeedCreateLst = getListGameObjectNeedCreate();
+            var roomGameObjectNeedCreateLst = this.getListGameObjectNeedCreate();
 
             if (roomGameObjectNeedCreateLst != null && roomGameObjectNeedCreateLst.Count != 0)
             {
@@ -234,11 +273,11 @@
                     {
                         foreach (var roomGameObject in roomGameObjectNeedCreateLst)
                         {
-                            var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
+                            var view = behaviour.onEUNViewNeedCreate(roomGameObject);
                             if (view != null)
                             {
-                                view.Init(roomGameObject);
-                                eunViewDic[view.RoomGameObject.ObjectId] = view;
+                                view.init(roomGameObject);
+                                this.eunViewDict[view.roomGameObject.objectId] = view;
                             }
                         }
                     }
@@ -253,110 +292,123 @@
         /// </summary>
         /// <param name="operationRequest"></param>
         /// <param name="onOperationResponse"></param>
-        internal void Enqueue(OperationRequest operationRequest, Action<OperationResponse> onOperationResponse)
+        internal void enqueue(OperationRequest operationRequest, Action<OperationResponse> onOperationResponse)
         {
             var operationPending = new OperationPending(operationRequest, onOperationResponse);
 
-            if (operationRequest.IsSynchronizationRequest())
+            if (operationRequest.isSynchronizationRequest())
             {
-                if (operationRequest.GetOperationCode() == OperationCode.VoiceChat) voiceChatOperationPendingQueue.Enqueue(operationPending);
-                else syncOperationPendingQueue.Enqueue(operationPending);
+                if (operationRequest.getOperationCode() == OperationCode.VoiceChat) lock (this.voiceChatOperationPendingQueue) this.voiceChatOperationPendingQueue.Enqueue(operationPending);
+                else lock (this.syncOperationPendingQueue) this.syncOperationPendingQueue.Enqueue(operationPending);
             }
-            else operationPendingQueue.Enqueue(operationPending);
+            else lock (this.operationPendingQueue) this.operationPendingQueue.Enqueue(operationPending);
         }
 
         /// <summary>
         /// Send a OperationPending
         /// </summary>
         /// <param name="operationPending">the operation pending</param>
-        private void Send(OperationPending operationPending)
+        private void send(OperationPending operationPending)
         {
-            var onOperationResponse = operationPending.GetCallback();
-            var operationRequest = operationPending.GetOperationRequest();
+            operationPending.onSend();
 
-            if (onOperationResponse != null) operationRequest.SetRequestId(currentRequestId++);
-            else operationRequest.SetRequestId(-1);
-#if EUN
+            var operationRequest = operationPending.getOperationRequest();
+
+            if (operationPending.HasCallback()) operationRequest.setRequestId(currentRequestId++);
+            else operationRequest.setRequestId(-1);
+#if EUN_USING_ONLINE
             var request = EzyEntityFactory.newObject();
             var data = EzyEntityFactory.newArray();
-            data.add((int)operationRequest.GetOperationCode());
-            data.add(operationRequest.GetParameters() == null ? null : operationRequest.GetParameters().ToEzyData());
+            data.add((int)operationRequest.getOperationCode());
+            data.add(operationRequest.getParameters() == null ? null : operationRequest.getParameters().toEzyData());
 
-            if (operationRequest.GetRequestId() != -1)
+            if (operationRequest.getRequestId() != -1)
             {
-                data.add(operationRequest.GetRequestId());
+                data.add(operationRequest.getRequestId());
 
-                operationRequest.SetEndTimeOut(Time.time + operationRequest.GetTimeOut());
-
-                operationWaitingResponseDic[operationRequest.GetRequestId()] = operationPending;
+                lock (this.operationWaitingResponseDict)
+                {
+                    this.operationWaitingResponseDict[operationRequest.getRequestId()] = operationPending;
+                }
             }
 
             request.put(Commands.Data, data);
 
-            eunSocketObject.Send(request, operationRequest.IsReliable());
+            this.eunSocketObject.send(request, operationRequest.isReliable());
 #endif
 
-            if (operationRequest.IsSynchronizationRequest()) EUNDebug.Log("[SEND SYNC] " + operationRequest.ToString());
-            else EUNDebug.Log("[SEND] " + operationRequest.ToString());
+            if (operationRequest.isSynchronizationRequest()) EUNDebug.log("[SEND SYNC] " + operationRequest.ToString());
+            else EUNDebug.log("[SEND] " + operationRequest.ToString());
 
         }
 
-        private void Update()
+        public virtual void service()
         {
-            serverTimeStamp += Time.deltaTime * 1000;
+            this.serviceOnMainThread();
+
+            this.eunSocketObject?.service();
+
+            this.serverTimestamp += UnityEngine.Time.deltaTime * 1000;
 
             // check the timeout of request has sent if this not receive any response
-            if (checkTimeoutOperationPending < Time.time)
+            if (this.checkTimeoutOperationPending < UnityEngine.Time.time)
             {
-                checkTimeoutOperationPending = Time.time + 0.1f;
+                this.checkTimeoutOperationPending = UnityEngine.Time.time + 0.1f;
 
-                if (operationWaitingResponseDic.Count != 0)
+                var eunArrayResponseLst = new List<EUNArray>();
+
+                lock (this.operationWaitingResponseDict)
                 {
-                    var eunArrayLst = new List<EUNArray>();
-
-                    foreach (var operationPendingPair in operationWaitingResponseDic)
+                    if (this.operationWaitingResponseDict.Count != 0)
                     {
-                        var operationPending = operationPendingPair.Value;
-                        var operationRequest = operationPending.GetOperationRequest();
-
-                        if (operationRequest.GetEndTimeOut() < Time.time)
+                        foreach (var operationPendingPair in this.operationWaitingResponseDict)
                         {
-                            var eunArray = new EUNArray();
+                            var operationPending = operationPendingPair.Value;
 
-                            eunArray.Add((int)ReturnCode.OperationTimeout);
-                            eunArray.Add((string)null);
-                            eunArray.Add(operationRequest.GetRequestId());
+                            if (operationPending.isTimeout())
+                            {
+                                var eunArray = new EUNArray();
 
-                            eunArrayLst.Add(eunArray);
+                                eunArray.add((int)ReturnCode.OperationTimeout);
+                                eunArray.add((string)null);
+                                eunArray.add(operationPending.getOperationRequest().getRequestId());
+
+                                eunArrayResponseLst.Add(eunArray);
+                            }
                         }
                     }
+                }
 
-                    if (eunArrayLst.Count == 0)
+                if (eunArrayResponseLst.Count == 0)
+                {
+                    foreach (var eunArray in eunArrayResponseLst)
                     {
-                        foreach (var eunArray in eunArrayLst)
-                        {
-                            OnResponseHandler(eunArray);
-                        }
+                        this.onResponseHandler(eunArray);
                     }
                 }
             }
 
             // check and send the normal OperationPending
-            if (nextSendMsgTimer < Time.time)
+            if (this.nextSendMsgTimer < UnityEngine.Time.time)
             {
-                if (operationPendingQueue.Count != 0)
+                OperationPending operationPending = null;
+                lock (this.operationPendingQueue)
                 {
-                    nextSendMsgTimer = Time.time + perMsgTimer;
-                    Send(operationPendingQueue.Dequeue());
+                    if (this.operationPendingQueue.Count != 0)
+                    {
+                        this.nextSendMsgTimer = UnityEngine.Time.time + this.perMsgTimer;
+                        operationPending = this.operationPendingQueue.Dequeue();
+                    }
                 }
+                if (operationPending != null) this.send(operationPending);
             }
 
-            if (room != null && room.RoomPlayerLst.Count > 1)
+            if (room != null && room.roomPlayerLst.Count > 1)
             {
                 // get and send the sync OperationRequest
-                if (nextSendSyncMsgTimer < Time.time)
+                if (this.nextSendSyncMsgTimer < UnityEngine.Time.time)
                 {
-                    foreach (var view in eunViewLst)
+                    foreach (var view in this.eunViewLst)
                     {
                         if (view)
                         {
@@ -366,25 +418,30 @@
                                 {
                                     if (behaviour.gameObject.activeInHierarchy)
                                     {
-                                        var objectData = behaviour.GetSynchronizationData();
-                                        if (objectData != null) SynchronizationDataGameObjectRoom(behaviour.eunView.RoomGameObject.ObjectId, objectData);
+                                        var objectData = behaviour.getSynchronizationData();
+                                        if (objectData != null) this.synchronizationDataGameObjectRoom(behaviour.eunView.roomGameObject.objectId, objectData, null);
                                     }
                                 }
                             }
                         }
                     }
 
-                    if (syncOperationPendingQueue.Count != 0)
+                    OperationPending operationPending = null;
+                    lock (this.syncOperationPendingQueue)
                     {
-                        nextSendSyncMsgTimer = Time.time + perSyncMsgTimer;
-                        Send(syncOperationPendingQueue.Dequeue());
+                        if (this.syncOperationPendingQueue.Count != 0)
+                        {
+                            this.nextSendSyncMsgTimer = UnityEngine.Time.time + this.perSyncMsgTimer;
+                            operationPending = this.syncOperationPendingQueue.Dequeue();
+                        }
                     }
+                    if (operationPending != null) this.send(operationPending);
                 }
 
                 // get and send the voice chat OperationRequest
-                if (nextSendVoiceChatMsgTimer < Time.time)
+                if (this.nextSendVoiceChatMsgTimer < UnityEngine.Time.time)
                 {
-                    foreach (var view in eunViewLst)
+                    foreach (var view in this.eunViewLst)
                     {
                         if (view)
                         {
@@ -394,21 +451,28 @@
                                 {
                                     if (behaviour.gameObject.activeInHierarchy)
                                     {
-                                        var objectData = behaviour.GetSynchronizationData();
-                                        if (objectData != null) VoiceChatRoom(behaviour.eunView.RoomGameObject.ObjectId, objectData);
+                                        var objectData = behaviour.getSynchronizationData();
+                                        if (objectData != null) this.voiceChatRoom(behaviour.eunView.roomGameObject.objectId, objectData, null);
                                     }
                                 }
                             }
                         }
                     }
 
-                    if (voiceChatOperationPendingQueue.Count != 0)
+                    OperationPending operationPending = null;
+                    lock (this.voiceChatOperationPendingQueue)
                     {
-                        nextSendVoiceChatMsgTimer = Time.time + perVoiceChatMsgTimer;
-                        Send(voiceChatOperationPendingQueue.Dequeue());
+                        if (this.voiceChatOperationPendingQueue.Count != 0)
+                        {
+                            this.nextSendVoiceChatMsgTimer = UnityEngine.Time.time + this.perVoiceChatMsgTimer;
+                            operationPending = this.voiceChatOperationPendingQueue.Dequeue();
+                        }
                     }
+                    if (operationPending != null) this.send(operationPending);
                 }
             }
         }
+
     }
+
 }

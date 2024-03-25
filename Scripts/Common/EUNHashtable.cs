@@ -1,10 +1,9 @@
 ﻿namespace XmobiTea.EUN.Common
 {
-#if EUN
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client.factory;
 #endif
 
-    using System;
     using System.Collections.Generic;
     using System.Text;
 
@@ -20,9 +19,9 @@
             /// <param name="key">the key</param>
             /// <param name="value">the value</param>
             /// <returns></returns>
-            public Builder Add(int key, object value)
+            public Builder add(int key, object value)
             {
-                originObject[key] = value;
+                this.originObject[key] = value;
 
                 return this;
             }
@@ -32,7 +31,7 @@
             /// </summary>
             /// <param name="dict">the dict need add</param>
             /// <returns></returns>
-            public Builder AddAll(System.Collections.IDictionary dict)
+            public Builder addAll(System.Collections.IDictionary dict)
             {
                 var keys = dict.Keys;
                 foreach (var key in keys)
@@ -42,12 +41,12 @@
                         int keyInt;
                         if (int.TryParse(keyStr, out keyInt))
                         {
-                            Add(keyInt, dict[key]);
+                            this.add(keyInt, dict[key]);
                         }
                     }
                     else if (key is int keyInt)
                     {
-                        Add(keyInt, dict[key]);
+                        this.add(keyInt, dict[key]);
                     }
                 }
 
@@ -58,14 +57,14 @@
             /// Build an EUNHashtable from this builder
             /// </summary>
             /// <returns></returns>
-            public EUNHashtable Build()
+            public EUNHashtable build()
             {
                 var awnser = new EUNHashtable();
 
-                var keys = originObject.Keys;
+                var keys = this.originObject.Keys;
                 foreach (var key in keys)
                 {
-                    awnser.Add(key, originObject[key]);
+                    awnser.add(key, this.originObject[key]);
                 }
 
                 return awnser;
@@ -73,7 +72,7 @@
 
             public Builder()
             {
-                originObject = new Dictionary<int, object>();
+                this.originObject = new Dictionary<int, object>();
             }
         }
 
@@ -90,27 +89,27 @@
         /// </summary>
         /// <param name="key">key need add</param>
         /// <param name="value">value need add</param>
-        public void Add(int key, object value)
+        public void add(int key, object value)
         {
-            originObject[key] = CreateUseDataFromOriginData(value);
+            this.originObject[key] = this.createUseDataFromOriginData(value);
         }
 
         /// <summary>
         /// Get all Values this EUNHashtable
         /// </summary>
         /// <returns>Values of this EUNHashtable</returns>
-        public ICollection<object> Values()
+        public ICollection<object> values()
         {
-            return originObject.Values;
+            return this.originObject.Values;
         }
 
         /// <summary>
         /// Get all Keys this EUNHashtable
         /// </summary>
         /// <returns>Keys of this EUNHashtable</returns>
-        public ICollection<int> Keys()
+        public ICollection<int> keys()
         {
-            return originObject.Keys;
+            return this.originObject.Keys;
         }
 
         /// <summary>
@@ -118,17 +117,17 @@
         /// </summary>
         /// <param name="key">the key need check</param>
         /// <returns>true if has key</returns>
-        public bool ContainsKey(int key)
+        public bool containsKey(int key)
         {
-            return originObject.ContainsKey(key);
+            return this.originObject.ContainsKey(key);
         }
 
         /// <summary>
         /// Clear all key and value in EUNHashtable
         /// </summary>
-        public override void Clear()
+        public override void clear()
         {
-            originObject.Clear();
+            this.originObject.Clear();
         }
 
         /// <summary>
@@ -136,18 +135,18 @@
         /// </summary>
         /// <param name="key">the key need get</param>
         /// <returns>true if has key</returns>
-        public override bool Remove(int key)
+        public override bool remove(int key)
         {
-            return originObject.Remove(key);
+            return this.originObject.Remove(key);
         }
 
         /// <summary>
         /// Size of EUNHashtable
         /// </summary>
         /// <returns>size this EUNHashtable</returns>
-        public override int Count()
+        public override int count()
         {
-            return originObject.Count;
+            return this.originObject.Count;
         }
 
         /// <summary>
@@ -157,11 +156,11 @@
         /// <param name="k">the key need get</param>
         /// <param name="defaultValue">default value if key does not contains in this EUNHashtable</param>
         /// <returns>the object or defaultValue or null</returns>
-        protected override object Get<T>(int k, T defaultValue = default(T))
+        protected override object get<T>(int k, T defaultValue = default(T))
         {
-            if (originObject.ContainsKey(k))
+            if (this.originObject.ContainsKey(k))
             {
-                var value = originObject[k];
+                var value = this.originObject[k];
 
                 if (value == null) return defaultValue;
 
@@ -180,40 +179,36 @@
         /// To Ezy Data
         /// </summary>
         /// <returns>EzyObject from this EUNHashtable</returns>
-        public override object ToEzyData()
+        public override object toEzyData()
         {
-#if EUN
+#if EUN_USING_ONLINE
             var ezyObject = EzyEntityFactory.newObject();
 
             var keys = originObject.Keys;
             foreach (var key in keys)
             {
-                ezyObject.put(key, CreateEUNDataFromUseData(originObject[key]));
+                ezyObject.put(key, this.createEUNDataFromUseData(this.originObject[key]));
             }
 
             return ezyObject;
 #else
-            return base.ToEzyData();
+            return null;
 #endif
         }
 
-        /// <summary>
-        /// To EUNHashtable string
-        /// </summary>
-        /// <returns>string like json, but it is EUNHashtable json</returns>
-        public override string ToString()
+        public override string toString()
         {
             var builder = new StringBuilder();
             builder.Append("{");
             var count = 0;
-            var commable = originObject.Count - 1;
-            var keys = Keys();
+            var commable = this.originObject.Count - 1;
+            var keys = this.keys();
             foreach (var key in keys)
             {
                 builder
                     .Append(key)
                     .Append(":")
-                    .Append(originObject[key]);
+                    .Append(this.originObject[key]);
                 if ((count++) < commable)
                 {
                     builder.Append(",");
@@ -222,5 +217,16 @@
             builder.Append("}");
             return builder.ToString();
         }
+
+        /// <summary>
+        /// To EUNHashtable string
+        /// </summary>
+        /// <returns>string like json, but it is EUNHashtable json</returns>
+        public override string ToString()
+        {
+            return this.toString();
+        }
+
     }
+
 }

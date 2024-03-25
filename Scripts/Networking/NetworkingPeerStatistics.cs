@@ -11,7 +11,7 @@
         /// <returns></returns>
         internal int GetPing()
         {
-            return eunSocketObject.GetPing();
+            return eunSocketObject.getPing();
         }
 
         /// <summary>
@@ -20,7 +20,7 @@
         /// <returns></returns>
         internal long GetTotalSendBytes()
         {
-            return eunSocketObject.GetTotalSendBytes();
+            return eunSocketObject.getTotalSendBytes();
         }
 
         /// <summary>
@@ -29,7 +29,7 @@
         /// <returns></returns>
         internal long GetTotalRecvBytes()
         {
-            return eunSocketObject.GetTotalRecvBytes();
+            return eunSocketObject.getTotalRecvBytes();
         }
 
         /// <summary>
@@ -38,7 +38,7 @@
         /// <returns></returns>
         internal long GetTotalSendPackets()
         {
-            return eunSocketObject.GetTotalSendPackets();
+            return eunSocketObject.getTotalSendPackets();
         }
 
         /// <summary>
@@ -47,7 +47,7 @@
         /// <returns></returns>
         internal long GetTotalRecvPackets()
         {
-            return eunSocketObject.GetTotalRecvPackets();
+            return eunSocketObject.getTotalRecvPackets();
         }
     }
 
@@ -73,63 +73,65 @@
         /// Get current ping
         /// </summary>
         /// <returns></returns>
-        public int GetPing()
+        public int getPing()
         {
-            return peer.GetPing();
+            return this.peer.GetPing();
         }
 
         /// <summary>
         /// Get total send bytes from EUN Network to EUN Server
         /// </summary>
         /// <returns></returns>
-        public long GetSendBytes()
+        public long getSendBytes()
         {
-            return peer.GetTotalSendBytes() - lastRemoveSendBytes;
+            return this.peer.GetTotalSendBytes() - this.lastRemoveSendBytes;
         }
 
         /// <summary>
         /// Get total receive bytes from EUN Server to EUN Network
         /// </summary>
         /// <returns></returns>
-        public long GetRecvBytes()
+        public long getRecvBytes()
         {
-            return peer.GetTotalRecvBytes() - lastRemoveRecvBytes;
+            return this.peer.GetTotalRecvBytes() - this.lastRemoveRecvBytes;
         }
 
         /// <summary>
         /// Clear all bytes send and receive
         /// </summary>
-        public void ClearBytes()
+        public void clearBytes()
         {
-            lastRemoveSendBytes += peer.GetTotalSendBytes();
-            lastRemoveRecvBytes += peer.GetTotalRecvBytes();
+            this.lastRemoveSendBytes += this.peer.GetTotalSendBytes();
+            this.lastRemoveRecvBytes += this.peer.GetTotalRecvBytes();
         }
 
         /// <summary>
         /// Get total sends packets from EUN Network to EUN Server
         /// </summary>
         /// <returns></returns>
-        public long GetSendPackets()
+        public long getSendPackets()
         {
-            return peer.GetTotalSendPackets() - lastRemoveSendPackets;
+            return this.peer.GetTotalSendPackets() - this.lastRemoveSendPackets;
         }
 
         /// <summary>
         /// Get total receive packets from EUN Server to EUN Network
         /// </summary>
         /// <returns></returns>
-        public long GetRecvPackets()
+        public long getRecvPackets()
         {
-            return peer.GetTotalRecvPackets() - lastRemoveRecvPackets;
+            return this.peer.GetTotalRecvPackets() - this.lastRemoveRecvPackets;
         }
 
         /// <summary>
         /// Clear all packets send and receive
         /// </summary>
-        public void ClearPackets()
+        public void clearPackets()
         {
-            lastRemoveSendPackets += peer.GetTotalSendPackets();
-            lastRemoveRecvPackets += peer.GetTotalRecvPackets();
+            this.lastRemoveSendPackets += this.peer.GetTotalSendPackets();
+            this.lastRemoveRecvPackets += this.peer.GetTotalRecvPackets();
         }
+
     }
+
 }

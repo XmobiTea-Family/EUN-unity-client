@@ -5,17 +5,19 @@
 
     public class SyncTsOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.SyncTs;
+        protected override int code => OperationCode.SyncTs;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// SyncTsOperationRequest
         /// </summary>
         /// <param name="timeout"></param>
-        public SyncTsOperationRequest(int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public SyncTsOperationRequest(int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-
+            this.parameters = null;
         }
+
     }
+
 }

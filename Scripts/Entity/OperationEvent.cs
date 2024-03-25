@@ -1,6 +1,5 @@
 ﻿namespace XmobiTea.EUN.Entity
 {
-    using System.Text;
     using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Helper;
 
@@ -23,7 +22,7 @@
         /// The event code in EventCode.cs
         /// </summary>
         /// <returns>The event code</returns>
-        public int GetEventCode()
+        public int getEventCode()
         {
             return this.eventCode;
         }
@@ -32,7 +31,7 @@
         /// The parameters of this event
         /// </summary>
         /// <returns></returns>
-        public EUNHashtable GetParameters()
+        public EUNHashtable getParameters()
         {
             return this.parameters;
         }
@@ -43,13 +42,20 @@
             this.parameters = parameters;
         }
 
-        public override string ToString()
+        public string toString()
         {
-            var stringBuilder = new StringBuilder();
+            var stringBuilder = new System.Text.StringBuilder();
 
-            stringBuilder.Append("Code: " + CodeHelper.GetEventCodeName(this.eventCode) + " parameters " + this.parameters);
+            stringBuilder.Append("Code: " + CodeHelper.getEventCodeName(this.eventCode) + ", parameters " + this.parameters);
 
             return stringBuilder.ToString();
         }
+
+        public override string ToString()
+        {
+            return this.toString();
+        }
+
     }
+
 }

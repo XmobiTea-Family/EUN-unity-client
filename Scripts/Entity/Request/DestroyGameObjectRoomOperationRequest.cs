@@ -5,20 +5,22 @@
 
     public class DestroyGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.DestroyGameObjectRoom;
+        protected override int code => OperationCode.DestroyGameObjectRoom;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// DestroyGameObjectRoomOperationRequest
         /// </summary>
         /// <param name="objectId">The object id room game object need destroy</param>
         /// <param name="timeout"></param>
-        public DestroyGameObjectRoomOperationRequest(int objectId, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public DestroyGameObjectRoomOperationRequest(int objectId, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.ObjectId, objectId)
-                .Build();
+            this.parameters = new EUNHashtable.Builder()
+                .add(ParameterCode.ObjectId, objectId)
+                .build();
         }
+
     }
+
 }

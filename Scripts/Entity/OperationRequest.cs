@@ -1,6 +1,5 @@
 ﻿namespace XmobiTea.EUN.Entity
 {
-    using System.Text;
     using XmobiTea.EUN.Common;
     using XmobiTea.EUN.Helper;
 
@@ -12,7 +11,7 @@
         /// <summary>
         /// The default time out
         /// </summary>
-        public const int DefaultTimeOut = 15;
+        public const int defaultTimeout = 15;
 
         /// <summary>
         /// The operation code this request
@@ -40,7 +39,7 @@
         /// <summary>
         /// The timeout in second for this operation request
         /// </summary>
-        private int timeOut;
+        private int timeout;
 
         /// <summary>
         /// The request is sync or not
@@ -49,15 +48,10 @@
         private bool synchronizationRequest;
 
         /// <summary>
-        /// The timeout end time
-        /// </summary>
-        private float endTimeOut = -1;
-
-        /// <summary>
         /// The operation code for this operation request
         /// </summary>
         /// <returns></returns>
-        public int GetOperationCode()
+        public int getOperationCode()
         {
             return this.operationCode;
         }
@@ -66,7 +60,7 @@
         /// The request id for this operation request
         /// </summary>
         /// <returns></returns>
-        public int GetRequestId()
+        public int getRequestId()
         {
             return this.requestId;
         }
@@ -75,7 +69,7 @@
         /// The parameter attactment
         /// </summary>
         /// <returns></returns>
-        public EUNHashtable GetParameters()
+        public EUNHashtable getParameters()
         {
             return this.parameters;
         }
@@ -87,7 +81,7 @@
         /// Default is false
         /// </summary>
         /// <returns></returns>
-        public bool IsReliable()
+        public bool isReliable()
         {
             return this.reliable;
         }
@@ -96,18 +90,9 @@
         /// The timeout in second for this operation request
         /// </summary>
         /// <returns></returns>
-        public int GetTimeOut()
+        public int getTimeout()
         {
-            return this.timeOut;
-        }
-
-        /// <summary>
-        /// The timeout end time
-        /// </summary>
-        /// <returns></returns>
-        public float GetEndTimeOut()
-        {
-            return this.endTimeOut;
+            return this.timeout;
         }
 
         /// <summary>
@@ -115,7 +100,7 @@
         /// If synchronizationRequest is true, the client can not receive callback, and the request id will set -1 after send this request to EUN Server
         /// </summary>
         /// <returns></returns>
-        public bool IsSynchronizationRequest()
+        public bool isSynchronizationRequest()
         {
             return this.synchronizationRequest;
         }
@@ -125,7 +110,7 @@
         /// </summary>
         /// <param name="requestId"></param>
         /// <returns></returns>
-        public OperationRequest SetRequestId(int requestId)
+        public OperationRequest setRequestId(int requestId)
         {
             this.requestId = requestId;
             return this;
@@ -137,11 +122,11 @@
         /// <param name="key"></param>
         /// <param name="value"></param>
         /// <returns></returns>
-        public OperationRequest SetScriptData(int key, object value)
+        public OperationRequest setParameter(int key, object value)
         {
             if (this.parameters == null) this.parameters = new EUNHashtable();
 
-            this.parameters.Add(key, value);
+            this.parameters.add(key, value);
 
             return this;
         }
@@ -151,7 +136,7 @@
         /// </summary>
         /// <param name="newParameters"></param>
         /// <returns></returns>
-        public OperationRequest SetParameters(EUNHashtable newParameters)
+        public OperationRequest setParameters(EUNHashtable newParameters)
         {
             this.parameters = newParameters;
             return this;
@@ -162,7 +147,7 @@
         /// </summary>
         /// <param name="reliable"></param>
         /// <returns></returns>
-        public OperationRequest SetReliable(bool reliable)
+        public OperationRequest setReliable(bool reliable)
         {
             this.reliable = reliable;
             return this;
@@ -173,9 +158,9 @@
         /// </summary>
         /// <param name="timeout"></param>
         /// <returns></returns>
-        public OperationRequest SetTimeOut(int timeout)
+        public OperationRequest setTimeout(int timeout)
         {
-            this.timeOut = timeout;
+            this.timeout = timeout;
             return this;
         }
 
@@ -184,37 +169,33 @@
         /// </summary>
         /// <param name="synchronizationRequest"></param>
         /// <returns></returns>
-        public OperationRequest SetSynchronizationRequest(bool synchronizationRequest)
+        public OperationRequest setSynchronizationRequest(bool synchronizationRequest)
         {
             this.synchronizationRequest = synchronizationRequest;
             return this;
         }
 
-        /// <summary>
-        /// Set end time out for this operation request
-        /// </summary>
-        /// <param name="endTimeOut"></param>
-        /// <returns></returns>
-        public OperationRequest SetEndTimeOut(float endTimeOut)
-        {
-            this.endTimeOut = endTimeOut;
-            return this;
-        }
-
-        public OperationRequest(int operationCode, bool reliable = true, int timeout = DefaultTimeOut)
+        public OperationRequest(int operationCode, bool reliable = true, int timeout = defaultTimeout)
         {
             this.operationCode = operationCode;
             this.reliable = reliable;
-            this.timeOut = timeout;
+            this.timeout = timeout;
+        }
+
+        public string toString()
+        {
+            var stringBuilder = new System.Text.StringBuilder();
+
+            stringBuilder.Append("Code: " + CodeHelper.getOperationCodeName(this.operationCode) + " RequestId: " + this.requestId + " parameters " + this.parameters);
+
+            return stringBuilder.ToString();
         }
 
         public override string ToString()
         {
-            var stringBuilder = new StringBuilder();
-
-            stringBuilder.Append("Code: " + CodeHelper.GetOperationCodeName(this.operationCode) + " RequestId: " + this.requestId + " parameters " + this.parameters);
-
-            return stringBuilder.ToString();
+            return this.toString();
         }
+
     }
+
 }

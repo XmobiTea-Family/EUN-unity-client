@@ -41,5 +41,7 @@
         public const int TargetPlayerIds = 32;
 
         public const int CustomGameObjectProperties = 33;
+
     }
+
 }

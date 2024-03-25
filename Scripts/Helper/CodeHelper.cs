@@ -8,20 +8,20 @@
 
     public class CodeHelper
     {
-        private static string UnknownCode = "Unknown";
+        private const string UnknownCode = "Unknown";
 
-        private static Dictionary<int, string> operationCodeDic;
-        private static Dictionary<int, string> eventCodeDic;
-        private static Dictionary<int, string> returnCodeDic;
+        private static Dictionary<int, string> operationCodeDict;
+        private static Dictionary<int, string> eventCodeDict;
+        private static Dictionary<int, string> returnCodeDict;
 
         /// <summary>
         /// Get operation code name via id
         /// </summary>
         /// <param name="operationCode"></param>
         /// <returns></returns>
-        public static string GetOperationCodeName(int operationCode)
+        public static string getOperationCodeName(int operationCode)
         {
-            return operationCodeDic.ContainsKey(operationCode) ? operationCodeDic[operationCode] : UnknownCode;
+            return operationCodeDict.ContainsKey(operationCode) ? operationCodeDict[operationCode] : UnknownCode;
         }
 
         /// <summary>
@@ -29,9 +29,9 @@
         /// </summary>
         /// <param name="eventCode"></param>
         /// <returns></returns>
-        public static string GetEventCodeName(int eventCode)
+        public static string getEventCodeName(int eventCode)
         {
-            return eventCodeDic.ContainsKey(eventCode) ? eventCodeDic[eventCode] : UnknownCode;
+            return eventCodeDict.ContainsKey(eventCode) ? eventCodeDict[eventCode] : UnknownCode;
         }
 
         /// <summary>
@@ -39,52 +39,54 @@
         /// </summary>
         /// <param name="returnCode"></param>
         /// <returns></returns>
-        public static string GetReturnCodeName(int returnCode)
+        public static string getReturnCodeName(int returnCode)
         {
-            return returnCodeDic.ContainsKey(returnCode) ? returnCodeDic[returnCode] : UnknownCode;
+            return returnCodeDict.ContainsKey(returnCode) ? returnCodeDict[returnCode] : UnknownCode;
         }
 
         static CodeHelper()
         {
-            SetOperationCodeDic();
-            SetEventCodeDic();
-            SetReturnCodeDic();
+            setOperationCodeDict();
+            setEventCodeDict();
+            setReturnCodeDict();
         }
 
-        private static void SetOperationCodeDic()
+        private static void setOperationCodeDict()
         {
-            operationCodeDic = new Dictionary<int, string>();
+            operationCodeDict = new Dictionary<int, string>();
 
             var fields = typeof(OperationCode).GetFields(BindingFlags.Public | BindingFlags.Static);
 
             foreach (var field in fields)
             {
-                operationCodeDic[Convert.ToInt32(field.GetValue(null))] = field.Name;
+                operationCodeDict[Convert.ToInt32(field.GetValue(null))] = field.Name;
             }
         }
 
-        private static void SetEventCodeDic()
+        private static void setEventCodeDict()
         {
-            eventCodeDic = new Dictionary<int, string>();
+            eventCodeDict = new Dictionary<int, string>();
 
             var fields = typeof(EventCode).GetFields(BindingFlags.Public | BindingFlags.Static);
 
             foreach (var field in fields)
             {
-                eventCodeDic[Convert.ToInt32(field.GetValue(null))] = field.Name;
+                eventCodeDict[Convert.ToInt32(field.GetValue(null))] = field.Name;
             }
         }
 
-        private static void SetReturnCodeDic()
+        private static void setReturnCodeDict()
         {
-            returnCodeDic = new Dictionary<int, string>();
+            returnCodeDict = new Dictionary<int, string>();
 
             var fields = typeof(ReturnCode).GetFields(BindingFlags.Public | BindingFlags.Static);
 
             foreach (var field in fields)
             {
-                returnCodeDic[Convert.ToInt32(field.GetValue(null))] = field.Name;
+                returnCodeDict[Convert.ToInt32(field.GetValue(null))] = field.Name;
             }
         }
+
     }
+
 }

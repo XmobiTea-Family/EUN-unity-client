@@ -29,5 +29,7 @@
         /// Only me can receive
         /// </summary>
         OnlyMe = 3,
+
     }
+
 }

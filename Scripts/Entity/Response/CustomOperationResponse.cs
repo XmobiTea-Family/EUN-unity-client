@@ -2,15 +2,17 @@
 {
     public abstract class CustomOperationResponse
     {
-        public int ReturnCode { get; private set; }
-        public string DebugMessage { get; private set; }
+        public int returnCode { get; private set; }
+        public string debugMessage { get; private set; }
 
-        public bool HasError => ReturnCode != Constant.ReturnCode.Ok;
+        public bool hasError => this.returnCode != Constant.ReturnCode.Ok;
 
         public CustomOperationResponse(OperationResponse operationResponse)
         {
-            ReturnCode = operationResponse.GetReturnCode();
-            DebugMessage = operationResponse.GetDebugMessage();
+            this.returnCode = operationResponse.getReturnCode();
+            this.debugMessage = operationResponse.getDebugMessage();
         }
+
     }
+
 }

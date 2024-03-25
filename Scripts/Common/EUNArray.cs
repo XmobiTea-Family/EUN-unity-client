@@ -2,9 +2,8 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Text;
 
-#if EUN
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client.factory;
 #endif
 
@@ -19,9 +18,9 @@
             /// </summary>
             /// <param name="value">the value</param>
             /// <returns></returns>
-            public Builder Add(object value)
+            public Builder add(object value)
             {
-                originArray.Add(value);
+                this.originArray.Add(value);
 
                 return this;
             }
@@ -31,11 +30,11 @@
             /// </summary>
             /// <param name="list">the list need add all value</param>
             /// <returns></returns>
-            public Builder AddAll(System.Collections.IList list)
+            public Builder addAll(System.Collections.IList list)
             {
                 foreach (var o in list)
                 {
-                    Add(o);
+                    this.add(o);
                 }
 
                 return this;
@@ -45,13 +44,13 @@
             /// Build an EUNArray from this builder
             /// </summary>
             /// <returns></returns>
-            public EUNArray Build()
+            public EUNArray build()
             {
                 var awnser = new EUNArray();
 
-                foreach (var o in originArray)
+                foreach (var o in this.originArray)
                 {
-                    awnser.Add(o);
+                    awnser.add(o);
                 }
 
                 return awnser;
@@ -59,7 +58,7 @@
 
             public Builder()
             {
-                originArray = new List<object>();
+                this.originArray = new List<object>();
             }
         }
 
@@ -74,26 +73,26 @@
         /// Add a value
         /// </summary>
         /// <param name="value">value need add</param>
-        public void Add(object value)
+        public void add(object value)
         {
-            originArray.Add(CreateUseDataFromOriginData(value));
+            this.originArray.Add(this.createUseDataFromOriginData(value));
         }
 
         /// <summary>
         /// Get all Values this EUNArray
         /// </summary>
         /// <returns>Values of this EUNArray</returns>
-        public ICollection<object> Values()
+        public ICollection<object> values()
         {
-            return originArray;
+            return this.originArray;
         }
 
         /// <summary>
         /// Clear all key and value in EUNArray
         /// </summary>
-        public override void Clear()
+        public override void clear()
         {
-            originArray.Clear();
+            this.originArray.Clear();
         }
 
         /// <summary>
@@ -101,9 +100,9 @@
         /// </summary>
         /// <param name="key">the key need get</param>
         /// <returns>true if has key</returns>
-        public override bool Remove(int k)
+        public override bool remove(int k)
         {
-            originArray.RemoveAt(k);
+            this.originArray.RemoveAt(k);
 
             return true;
         }
@@ -112,9 +111,9 @@
         /// Size of EUNArray
         /// </summary>
         /// <returns>size this EUNArray</returns>
-        public override int Count()
+        public override int count()
         {
-            return originArray.Count;
+            return this.originArray.Count;
         }
 
         /// <summary>
@@ -124,11 +123,11 @@
         /// <param name="k">the key need get</param>
         /// <param name="defaultValue">default value if key does not contains in this EUNArray</param>
         /// <returns>the object or defaultValue or null</returns>
-        protected override object Get<T>(int k, T defaultValue = default(T))
+        protected override object get<T>(int k, T defaultValue = default(T))
         {
-            if (k < 0 || k > originArray.Count - 1) return defaultValue;
+            if (k < 0 || k > this.originArray.Count - 1) return defaultValue;
 
-            var value = originArray[k];
+            var value = this.originArray[k];
 
             if (value == null) return defaultValue;
 
@@ -145,9 +144,9 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public T[] ToArray<T>()
+        public T[] toArray<T>()
         {
-            return originArray.ToArray() as T[];
+            return this.originArray.ToArray() as T[];
         }
 
         /// <summary>
@@ -155,29 +154,38 @@
         /// </summary>
         /// <typeparam name="T"></typeparam>
         /// <returns></returns>
-        public IList<T> ToList<T>()
+        public IList<T> toList<T>()
         {
-            return originArray as IList<T>;
+            return this.originArray as IList<T>;
         }
 
         /// <summary>
         /// To Ezy Data
         /// </summary>
         /// <returns>EzyArray from this EUNArray</returns>
-        public override object ToEzyData()
+        public override object toEzyData()
         {
-#if EUN
+#if EUN_USING_ONLINE
             var eunArray = EzyEntityFactory.newArray();
 
-            for (var i = 0; i < originArray.Count; i++)
+            for (var i = 0; i < this.originArray.Count; i++)
             {
-                eunArray.add(CreateEUNDataFromUseData(originArray[i]));
+                eunArray.add(this.createEUNDataFromUseData(this.originArray[i]));
             }
 
             return eunArray;
 #else
-            return base.ToEzyData();
+            return null;
 #endif
+        }
+
+        public override string toString()
+        {
+            return new System.Text.StringBuilder()
+                .Append("[")
+                .Append(String.Join(",", this.originArray))
+                .Append("]")
+                .ToString();
         }
 
         /// <summary>
@@ -186,11 +194,9 @@
         /// <returns>string like json, but it is EUNArray json</returns>
         public override string ToString()
         {
-            return new StringBuilder()
-                .Append("[")
-                .Append(String.Join(",", originArray))
-                .Append("]")
-                .ToString();
+            return this.toString();
         }
+
     }
+
 }

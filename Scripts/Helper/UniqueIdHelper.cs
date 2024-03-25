@@ -1,6 +1,5 @@
 ﻿namespace XmobiTea.EUN.Helper
 {
-    using System.Text;
     using UnityEngine;
 
     public static class UniqueIdHelper
@@ -26,37 +25,21 @@
                 PlayerPrefs.SetString(UniqueId, deviceId);
             }
 #elif UNITY_WEBGL
-            deviceId = EUN.Plugin.WebGL.CookieJsBride.GetCookie(UniqueId);
+            deviceId = EUN.Plugin.WebGL.CookieJsBride.getCookie(UniqueId);
             Debug.LogError(deviceId);
             if (string.IsNullOrEmpty(deviceId))
             {
                 deviceId = System.Guid.NewGuid().ToString();
-                EUN.Plugin.WebGL.CookieJsBride.SetCookie(UniqueId, deviceId, 1000 * 60 * 60 * 24 * 7);
+                EUN.Plugin.WebGL.CookieJsBride.setCookie(UniqueId, deviceId, 1000 * 60 * 60 * 24 * 7);
             }
 #else
             deviceId = SystemInfo.deviceUniqueIdentifier;
 #endif
 #endif
 
-            return GenerateMD5(deviceId);
+            return deviceId;
         }
 
-        private static string GenerateMD5(string input)
-        {
-            // Use input string to calculate MD5 hash
-            using (System.Security.Cryptography.MD5 md5 = System.Security.Cryptography.MD5.Create())
-            {
-                byte[] inputBytes = System.Text.Encoding.ASCII.GetBytes(input);
-                byte[] hashBytes = md5.ComputeHash(inputBytes);
-
-                // Convert the byte array to hexadecimal string
-                StringBuilder sb = new StringBuilder();
-                for (int i = 0; i < hashBytes.Length; i++)
-                {
-                    sb.Append(hashBytes[i].ToString("X2"));
-                }
-                return sb.ToString();
-            }
-        }
     }
+
 }

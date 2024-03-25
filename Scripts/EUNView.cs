@@ -1,7 +1,6 @@
 ﻿namespace XmobiTea.EUN
 {
     using XmobiTea.EUN.Entity;
-    using XmobiTea.EUN.Extension;
 
     using System.Collections.Generic;
 
@@ -17,16 +16,16 @@
     public sealed class EUNView : MonoBehaviour
     {
         [SerializeField]
-        private RoomGameObject roomGameObject;
+        private RoomGameObject _roomGameObject;
         /// <summary>
         /// The room game object for this EUNView
         /// </summary>
-        public RoomGameObject RoomGameObject
+        public RoomGameObject roomGameObject
         {
-            get { return roomGameObject; }
+            get { return this._roomGameObject; }
             private set
             {
-                roomGameObject = value;
+                this._roomGameObject = value;
             }
         }
 
@@ -44,40 +43,40 @@
         /// Get Owner room player for this EUNView
         /// It can be null
         /// </summary>
-        public RoomPlayer Owner => EUNNetwork.GetRoomPlayer(RoomGameObject.OwnerId);
+        public RoomPlayer owner => EUNNetwork.getRoomPlayer(this.roomGameObject.ownerId);
 
         /// <summary>
         /// Check if EUNView is mine
         /// </summary>
-        public bool IsMine => RoomGameObject != null && RoomGameObject.OwnerId == EUNNetwork.PlayerId;
+        public bool isMine => this.roomGameObject != null && this.roomGameObject.ownerId == EUNNetwork.playerId;
 
         private void Awake()
         {
-            EUNNetwork.SubscriberEUNView(this);
+            EUNNetwork.subscriberEUNView(this);
         }
 
         private void OnDestroy()
         {
-            EUNNetwork.UnSubscriberEUNView(this);
+            EUNNetwork.unSubscriberEUNView(this);
         }
 
         /// <summary>
         /// Init the room game object for this EUN View
         /// </summary>
         /// <param name="roomGameObject"></param>
-        internal void Init(RoomGameObject roomGameObject)
+        internal void init(RoomGameObject roomGameObject)
         {
-            this.RoomGameObject = roomGameObject;
+            this.roomGameObject = roomGameObject;
 
-            if (RoomGameObject.IsValid())
+            if (this.roomGameObject.isValid())
             {
-                for (var i = 0; i < eunBehaviourLst.Count; i++)
+                for (var i = 0; i < this.eunBehaviourLst.Count; i++)
                 {
-                    var behaviour = eunBehaviourLst[i];
+                    var behaviour = this.eunBehaviourLst[i];
                     if (behaviour != null)
                     {
-                        behaviour.OnEUNInitialize(RoomGameObject.InitializeData);
-                        behaviour.OnEUNSynchronization(RoomGameObject.SynchronizationData);
+                        behaviour.onEUNInitialize(this.roomGameObject.initializeData);
+                        behaviour.onEUNSynchronization(this.roomGameObject.synchronizationData);
                     }
                 }
             }
@@ -87,16 +86,16 @@
         /// Subscriber a EUNBehaviour behaviour
         /// </summary>
         /// <param name="behaviour"></param>
-        internal void SubscriberEUNBehaviour(EUNBehaviour behaviour)
+        internal void subscriberEUNBehaviour(EUNBehaviour behaviour)
         {
-            if (!eunBehaviourLst.Contains(behaviour))
+            if (!this.eunBehaviourLst.Contains(behaviour))
             {
-                eunBehaviourLst.Add(behaviour);
+                this.eunBehaviourLst.Add(behaviour);
 
-                if (RoomGameObject.IsValid())
+                if (this.roomGameObject.isValid())
                 {
-                    behaviour.OnEUNInitialize(RoomGameObject.InitializeData);
-                    behaviour.OnEUNSynchronization(RoomGameObject.SynchronizationData);
+                    behaviour.onEUNInitialize(roomGameObject.initializeData);
+                    behaviour.onEUNSynchronization(roomGameObject.synchronizationData);
                 }
             }
         }
@@ -105,11 +104,11 @@
         /// Subscriber a EUNVoiceChatBehaviour behaviour
         /// </summary>
         /// <param name="behaviour"></param>
-        internal void SubscriberEUNBehaviour(EUNVoiceChatBehaviour behaviour)
+        internal void subscriberEUNBehaviour(EUNVoiceChatBehaviour behaviour)
         {
-            if (!eunVoiceChatBehaviourLst.Contains(behaviour))
+            if (!this.eunVoiceChatBehaviourLst.Contains(behaviour))
             {
-                eunVoiceChatBehaviourLst.Add(behaviour);
+                this.eunVoiceChatBehaviourLst.Add(behaviour);
             }
         }
 
@@ -117,18 +116,18 @@
         /// Remove subscriber EUNBehaviour
         /// </summary>
         /// <param name="behaviour"></param>
-        internal void UnSubscriberEUNBehaviour(EUNBehaviour behaviour)
+        internal void unSubscriberEUNBehaviour(EUNBehaviour behaviour)
         {
-            if (eunBehaviourLst.Contains(behaviour)) eunBehaviourLst.Remove(behaviour);
+            if (this.eunBehaviourLst.Contains(behaviour)) this.eunBehaviourLst.Remove(behaviour);
         }
 
         /// <summary>
         /// Remove subscriber EUNVoiceChatBehaviour
         /// </summary>
         /// <param name="behaviour"></param>
-        internal void UnSubscriberEUNBehaviour(EUNVoiceChatBehaviour behaviour)
+        internal void unSubscriberEUNBehaviour(EUNVoiceChatBehaviour behaviour)
         {
-            if (eunVoiceChatBehaviourLst.Contains(behaviour)) eunVoiceChatBehaviourLst.Remove(behaviour);
+            if (this.eunVoiceChatBehaviourLst.Contains(behaviour)) this.eunVoiceChatBehaviourLst.Remove(behaviour);
         }
 
         /// <summary>
@@ -137,9 +136,11 @@
         /// <param name="targets">The targets room player want to receive RPC</param>
         /// <param name="command">The command</param>
         /// <param name="rpcData">The data rpc</param>
-        public void RPC(EUNTargets targets, EUNRPCCommand command, params object[] rpcData)
+        public void rpc(EUNTargets targets, EUNRPCCommand command, params object[] rpcData)
         {
-            EUNNetworkExtensions.RPC(this, targets, command, rpcData);
+            EUNNetwork.rpcGameObjectRoom(targets, this.roomGameObject.objectId, (int)command, rpcData);
         }
+
     }
+
 }

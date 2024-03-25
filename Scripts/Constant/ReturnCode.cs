@@ -71,5 +71,7 @@
         /// The user is in the room, you can not join other room before left room
         /// </summary>
         public const int UserInRoom = 16;
+
     }
+
 }

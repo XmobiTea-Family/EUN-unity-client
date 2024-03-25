@@ -5,17 +5,19 @@
 
     public class LeaveLobbyOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.LeaveLobby;
+        protected override int code => OperationCode.LeaveLobby;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// LeaveLobbyOperationRequest
         /// </summary>
         /// <param name="timeout"></param>
-        public LeaveLobbyOperationRequest(int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public LeaveLobbyOperationRequest(int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-
+            this.parameters = null;
         }
+
     }
+
 }

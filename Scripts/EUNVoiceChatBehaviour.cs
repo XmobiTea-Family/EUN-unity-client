@@ -9,58 +9,58 @@
     {
         [SerializeField]
         [Range(16, 128)]
-        private int bufferSize = 64;
-        public int BufferSize
+        private int _bufferSize = 64;
+        public int bufferSize
         {
-            set { bufferSize = value; }
-            get => bufferSize;
+            set { this._bufferSize = value; }
+            get => this._bufferSize;
         }
 
-        private EUNMicSpeaker micSpeaker;
+        private EUNMicSpeaker _micSpeaker;
         /// <summary>
         /// The mic speaker
         /// </summary>
-        public EUNMicSpeaker Speaker => micSpeaker;
+        public EUNMicSpeaker speaker => this._micSpeaker;
 
-        protected override void OnCustomAwake()
+        protected override void onCustomAwake()
         {
-            base.OnCustomAwake();
+            base.onCustomAwake();
 
             var audioSource = GetComponent<AudioSource>();
 
             if (audioSource == null) throw new Exception("EUN init microphone failed");
 
-            micSpeaker = new EUNMicSpeaker(audioSource);
+            this._micSpeaker = new EUNMicSpeaker(audioSource);
         }
 
-        protected override void OnCustomStart()
+        protected override void onCustomStart()
         {
-            if (eunView != null) eunView.SubscriberEUNBehaviour(this);
+            if (this.eunView != null) this.eunView.subscriberEUNBehaviour(this);
         }
 
-        protected override void OnCustomDestroy()
+        protected override void onCustomDestroy()
         {
-            if (eunView != null) eunView.UnSubscriberEUNBehaviour(this);
+            if (this.eunView != null) this.eunView.unSubscriberEUNBehaviour(this);
         }
 
         private void Update()
         {
-            OnCustomUpdate();
+            this.onCustomUpdate();
         }
 
         /// <summary>
         /// This is a MonoBehaviour.Update()
         /// </summary>
-        protected virtual void OnCustomUpdate()
+        protected virtual void onCustomUpdate()
         {
-            Speaker?.Service();
+            this.speaker?.service();
         }
 
-        public override object GetSynchronizationData()
+        public override object getSynchronizationData()
         {
-            var frame = new float[BufferSize];
+            var frame = new float[this.bufferSize];
             
-            if (EUNMicRecord.DetectedVoice(frame))
+            if (EUNMicRecord.detectedVoice(frame))
             {
                 var buffer = new short[frame.Length];
 
@@ -75,9 +75,9 @@
             return null;
         }
 
-        public override void OnEUNSynchronization(object voiceChatData)
+        public override void onEUNSynchronization(object voiceChatData)
         {
-            if (Speaker != null && voiceChatData != null)
+            if (this.speaker != null && voiceChatData != null)
             {
                 if (voiceChatData is short[] buffer)
                 {
@@ -88,9 +88,11 @@
                         frame[i] = (float)buffer[i] / short.MaxValue;
                     }
 
-                    Speaker.OnAudioFrame(frame);
+                    this.speaker.onAudioFrame(frame);
                 }
             }
         }
+
     }
+
 }

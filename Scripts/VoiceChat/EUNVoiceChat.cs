@@ -14,7 +14,7 @@
 
         public EUNMicRecord(string device, int suggestedFrequency)
         {
-#if EUN_VOICE_CHAT
+#if EUN_USING_VOICE_CHAT
             if (Microphone.devices.Length < 1)
             {
                 return;
@@ -35,16 +35,16 @@
 #endif
         }
 
-        public int SamplingRate => this.mic == null ? -1 : this.mic.frequency;
-        public int Channels => this.mic == null ? - 1 : this.mic.channels;
+        public int samplingRate => this.mic == null ? -1 : this.mic.frequency;
+        public int channels => this.mic == null ? - 1 : this.mic.channels;
 
         private int micPrevPos;
         private int micLoopCnt;
         private int readAbsPos;
 
-        public bool Read(float[] buffer)
+        public bool read(float[] buffer)
         {
-#if EUN_VOICE_CHAT
+#if EUN_USING_VOICE_CHAT
             int micPos = Microphone.GetPosition(this.device);
             // loop detection
             if (micPos < micPrevPos)
@@ -73,9 +73,9 @@
             return false;
         }
 
-        public static bool DetectedVoice(float[] buffer)
+        public static bool detectedVoice(float[] buffer)
         {
-#if EUN_VOICE_CHAT
+#if EUN_USING_VOICE_CHAT
             const int activityDelayValuesCount = 44100 / 1000 * 100;
 
             var detected = false;
@@ -105,12 +105,13 @@
             return false;
         }
 
-        public void Dispose()
+        public void dispose()
         {
-#if EUN_VOICE_CHAT
+#if EUN_USING_VOICE_CHAT
             Microphone.End(this.device);
 #endif
         }
+
     }
 
     public class EUNMicSpeaker
@@ -126,9 +127,9 @@
         private int frameSamples;
         private int streamSamplePos;
 
-        public int CurrentBufferLag { get; private set; }
+        public int currentBufferLag { get; private set; }
 
-        public AudioSource AudioSource => this.source;
+        public AudioSource audioSource => this.source;
 
         private int streamSamplePosAvg;
 
@@ -162,12 +163,12 @@
         private int sourceTimeSamplesPrev;
         private int playLoopCount;
 
-        public bool IsPlaying
+        public bool isPlaying
         {
             get { return this.source.isPlaying; }
         }
 
-        public void Start(int frequency, int channels, int frameSamples, int playDelayMs)
+        public void start(int frequency, int channels, int frameSamples, int playDelayMs)
         {
             this.bufferSamples = (maxPlayLagMs + playDelayMs) * frequency / 1000 + frameSamples + frequency; // frame + max delay + 1 sec. just in case
 
@@ -178,7 +179,7 @@
             this.maxPlayLagSamples = maxPlayLagMs * frequency / 1000 + this.frameSamples;
             this.playDelaySamples = playDelayMs * frequency / 1000 + this.frameSamples;
 
-            this.CurrentBufferLag = this.playDelaySamples;
+            this.currentBufferLag = this.playDelaySamples;
             this.streamSamplePosAvg = this.playDelaySamples;
 
             this.source.loop = true;
@@ -191,19 +192,19 @@
             this.source.Pause();
         }
 
-        public void Pause()
+        public void pause()
         {
             this.source.Pause();
         }
 
-        public void Play()
+        public void play()
         {
             this.source.Play();
         }
 
         Queue<float[]> frameQueue;
 
-        public void Service()
+        public void service()
         {
             if (this.source.clip != null)
             {
@@ -216,18 +217,18 @@
 
                 if (this.source.isPlaying)
                 {
-                    if (this.source.timeSamples < sourceTimeSamplesPrev)
+                    if (this.source.timeSamples < this.sourceTimeSamplesPrev)
                     {
-                        playLoopCount++;
+                        this.playLoopCount++;
                     }
-                    sourceTimeSamplesPrev = this.source.timeSamples;
+                    this.sourceTimeSamplesPrev = this.source.timeSamples;
                 }
 
                 var playPos = this.playSamplePos;
 
-                this.CurrentBufferLag = (this.CurrentBufferLag * 39 + (this.streamSamplePos - playPos)) / 40;
+                this.currentBufferLag = (this.currentBufferLag * 39 + (this.streamSamplePos - playPos)) / 40;
 
-                this.streamSamplePosAvg = playPos + this.CurrentBufferLag;
+                this.streamSamplePosAvg = playPos + this.currentBufferLag;
                 if (this.streamSamplePosAvg > this.streamSamplePos)
                 {
                     this.streamSamplePosAvg = this.streamSamplePos;
@@ -249,7 +250,7 @@
 
                         playPos = this.streamSamplePos;
                         this.playSamplePos = playPos;
-                        this.CurrentBufferLag = this.playDelaySamples;
+                        this.currentBufferLag = this.playDelaySamples;
                     }
                 }
                 if (this.source.isPlaying)
@@ -259,13 +260,13 @@
                     {                 
                         playPos = this.streamSamplePos - this.playDelaySamples;
                         this.playSamplePos = playPos;
-                        this.CurrentBufferLag = this.playDelaySamples;
+                        this.currentBufferLag = this.playDelaySamples;
                     }
                 }
             }
         }
 
-        public void OnAudioFrame(float[] frame)
+        public void onAudioFrame(float[] frame)
         {
             if (frame.Length == 0)
             {
@@ -281,10 +282,12 @@
             frameQueue.Enqueue(b);
         }
 
-        public void Stop()
+        public void stop()
         {
             this.source.Stop();
             this.source.clip = null;
         }
+
     }
+
 }

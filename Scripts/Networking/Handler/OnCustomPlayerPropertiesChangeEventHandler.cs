@@ -6,38 +6,38 @@
     /// <summary>
     /// Handle if client inroom and someone inroom send ChangePlayerCustomProperties() request
     /// </summary>
-    internal class OnCustomPlayerPropertiesChangeEventHandler : IServerEventHandler
+    internal class OnPlayerCustomPropertiesChangeEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
-            return EventCode.OnCustomPlayerPropertiesChange;
+            return EventCode.OnPlayerCustomPropertiesChange;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             if (peer.room == null) return;
 
-            var parameters = operationEvent.GetParameters();
-            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
-            var playerId = eunArray.GetInt(0);
+            var parameters = operationEvent.getParameters();
+            var eunArray = parameters.getEUNArray(ParameterCode.Data);
+            var playerId = eunArray.getInt(0);
 
-            var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.PlayerId == playerId);
+            var thisRoomPlayer = peer.room.roomPlayerLst.Find(x => x.playerId == playerId);
             if (thisRoomPlayer != null)
             {
-                var customPlayerProperties = eunArray.GetEUNHashtable(1);
-                var keySet = customPlayerProperties.Keys();
+                var customPlayerProperties = eunArray.getEUNHashtable(1);
+                var keySet = customPlayerProperties.keys();
                 foreach (int key in keySet)
                 {
-                    var value = customPlayerProperties.GetObject(key);
+                    var value = customPlayerProperties.getObject(key);
 
                     if (value == null)
                     {
-                        if (thisRoomPlayer.CustomProperties.ContainsKey(key))
+                        if (thisRoomPlayer.customProperties.containsKey(key))
                         {
-                            thisRoomPlayer.CustomProperties.Remove(key);
+                            thisRoomPlayer.customProperties.remove(key);
                         }
                     }
-                    else thisRoomPlayer.CustomProperties.Add(key, value);
+                    else thisRoomPlayer.customProperties.add(key, value);
                 }
 
                 foreach (var view in peer.eunViewLst)
@@ -46,7 +46,7 @@
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour != null) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
+                            if (behaviour != null) behaviour.onEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
                         }
                     }
                 }
@@ -55,9 +55,11 @@
                 for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
                     var behaviour = eunManagerBehaviourLst[i];
-                    if (behaviour != null) behaviour.OnEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
+                    if (behaviour != null) behaviour.onEUNCustomPlayerPropertiesChange(thisRoomPlayer, customPlayerProperties);
                 }
             }
         }
+
     }
+
 }

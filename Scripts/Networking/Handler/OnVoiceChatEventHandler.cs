@@ -8,32 +8,34 @@
     /// </summary>
     internal class OnVoiceChatEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnVoiceChat;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             if (peer.room == null) return;
 
-            var parameters = operationEvent.GetParameters();
-            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
+            var parameters = operationEvent.getParameters();
+            var eunArray = parameters.getEUNArray(ParameterCode.Data);
 
-            var objectId = eunArray.GetInt(0);
-            var voiceChatData = eunArray.GetObject(1);
+            var objectId = eunArray.getInt(0);
+            var voiceChatData = eunArray.getObject(1);
 
-            if (peer.eunViewDic.ContainsKey(objectId))
+            if (peer.eunViewDict.ContainsKey(objectId))
             {
-                var view = peer.eunViewDic[objectId];
+                var view = peer.eunViewDict[objectId];
                 if (view)
                 {
                     foreach (var behaviour in view.eunVoiceChatBehaviourLst)
                     {
-                        if (behaviour != null) behaviour.OnEUNSynchronization(voiceChatData);
+                        if (behaviour != null) behaviour.onEUNSynchronization(voiceChatData);
                     }
                 }
             }
         }
+
     }
+
 }

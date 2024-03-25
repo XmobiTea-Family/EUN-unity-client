@@ -5,9 +5,9 @@
 
     public class JoinRandomRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.JoinRandomRoom;
+        protected override int code => OperationCode.JoinRandomRoom;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// JoinRandomRoomOperationRequest
@@ -15,12 +15,14 @@
         /// <param name="targetExpectedCount">The target expected count in expectedProperties match to can join the room match</param>
         /// <param name="expectedProperties">The expected properties match to join room match</param>
         /// <param name="timeout"></param>
-        public JoinRandomRoomOperationRequest(int targetExpectedCount, EUNHashtable expectedProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public JoinRandomRoomOperationRequest(int targetExpectedCount, EUNHashtable expectedProperties, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.TargetExpectedCount, targetExpectedCount)
-                .Add(ParameterCode.ExpectedProperties, expectedProperties)
-                .Build();
+            this.parameters = new EUNHashtable.Builder()
+                .add(ParameterCode.TargetExpectedCount, targetExpectedCount)
+                .add(ParameterCode.ExpectedProperties, expectedProperties)
+                .build();
         }
+
     }
+
 }

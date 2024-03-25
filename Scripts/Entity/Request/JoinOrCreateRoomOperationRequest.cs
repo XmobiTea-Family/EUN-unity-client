@@ -5,9 +5,9 @@
 
     public class JoinOrCreateRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.JoinOrCreateRoom;
+        protected override int code => OperationCode.JoinOrCreateRoom;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// JoinOrCreateRoomOperationRequest
@@ -16,19 +16,21 @@
         /// <param name="expectedProperties">The expected properties match to join room match</param>
         /// <param name="roomOption">The room option if in this lobby does not contains room match</param>
         /// <param name="timeout"></param>
-        public JoinOrCreateRoomOperationRequest(int targetExpectedCount, EUNHashtable expectedProperties, RoomOption roomOption, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public JoinOrCreateRoomOperationRequest(int targetExpectedCount, EUNHashtable expectedProperties, RoomOption roomOption, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.MaxPlayer, roomOption.MaxPlayer)
-                .Add(ParameterCode.TargetExpectedCount, targetExpectedCount)
-                .Add(ParameterCode.ExpectedProperties, expectedProperties)
-                .Add(ParameterCode.CustomRoomProperties, roomOption.CustomRoomProperties)
-                .Add(ParameterCode.IsVisible, roomOption.IsVisible)
-                .Add(ParameterCode.IsOpen, roomOption.IsOpen)
-                .Add(ParameterCode.CustomRoomPropertiesForLobby, roomOption.CustomRoomPropertiesForLobby)
-                .Add(ParameterCode.Password, roomOption.Password)
-                .Add(ParameterCode.Ttl, roomOption.Ttl)
-                .Build();
+            this.parameters = new EUNHashtable.Builder()
+                .add(ParameterCode.MaxPlayer, roomOption.maxPlayer)
+                .add(ParameterCode.TargetExpectedCount, targetExpectedCount)
+                .add(ParameterCode.ExpectedProperties, expectedProperties)
+                .add(ParameterCode.CustomRoomProperties, roomOption.customRoomProperties)
+                .add(ParameterCode.IsVisible, roomOption.isVisible)
+                .add(ParameterCode.IsOpen, roomOption.isOpen)
+                .add(ParameterCode.CustomRoomPropertiesForLobby, roomOption.customRoomPropertiesForLobby)
+                .add(ParameterCode.Password, roomOption.password)
+                .add(ParameterCode.Ttl, roomOption.ttl)
+                .build();
         }
+
     }
+
 }

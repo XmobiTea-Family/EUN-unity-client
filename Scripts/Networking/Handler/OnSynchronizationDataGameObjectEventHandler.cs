@@ -8,37 +8,39 @@
     /// </summary>
     internal class OnSynchronizationDataGameObjectEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnSynchronizationDataGameObject;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             if (peer.room == null) return;
 
-            var parameters = operationEvent.GetParameters();
-            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
+            var parameters = operationEvent.getParameters();
+            var eunArray = parameters.getEUNArray(ParameterCode.Data);
 
-            var objectId = eunArray.GetInt(0);
-            var synchronizationData = eunArray.GetObject(1);
+            var objectId = eunArray.getInt(0);
+            var synchronizationData = eunArray.getObject(1);
 
-            if (peer.room.GameObjectDic.ContainsKey(objectId))
+            if (peer.room.gameObjectDict.ContainsKey(objectId))
             {
-                peer.room.GameObjectDic[objectId].SynchronizationData = synchronizationData;
+                peer.room.gameObjectDict[objectId].synchronizationData = synchronizationData;
             }
 
-            if (peer.eunViewDic.ContainsKey(objectId))
+            if (peer.eunViewDict.ContainsKey(objectId))
             {
-                var view = peer.eunViewDic[objectId];
+                var view = peer.eunViewDict[objectId];
                 if (view)
                 {
                     foreach (var behaviour in view.eunBehaviourLst)
                     {
-                        if (behaviour != null) behaviour.OnEUNSynchronization(synchronizationData);
+                        if (behaviour != null) behaviour.onEUNSynchronization(synchronizationData);
                     }
                 }
             }
         }
+
     }
+
 }

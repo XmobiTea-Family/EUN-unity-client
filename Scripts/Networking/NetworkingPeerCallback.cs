@@ -1,7 +1,8 @@
 ﻿namespace XmobiTea.EUN.Networking
 {
-#if EUN
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client.constant;
+    using com.tvd12.ezyfoxserver.client.entity;
 #else
     using XmobiTea.EUN.Entity.Support;
 #endif
@@ -11,7 +12,6 @@
     using System;
     using System.Collections.Generic;
 
-    using UnityEngine;
     using System.Linq;
     using XmobiTea.EUN.Entity;
     using XmobiTea.EUN.Logger;
@@ -24,7 +24,7 @@
         /// <summary>
         /// all the class implement from IServerEventHandler
         /// </summary>
-        private Dictionary<int, IServerEventHandler> serverEventHandlerDic;
+        private Dictionary<int, IServerEventHandler> serverEventHandlerDict;
 
         /// <summary>
         /// All EUNView list
@@ -39,7 +39,7 @@
         /// <summary>
         /// Check and subscriber all class implement server event handler
         /// </summary>
-        void SubscriberServerEventHandler()
+        void subscriberServerEventHandler()
         {
             var type = typeof(IServerEventHandler);
             var types = AppDomain.CurrentDomain.GetAssemblies()
@@ -49,7 +49,7 @@
             foreach (var t in types)
             {
                 var srvMsg = Activator.CreateInstance(t) as IServerEventHandler;
-                if (srvMsg != null) serverEventHandlerDic[(int)srvMsg.GetEventCode()] = srvMsg;
+                if (srvMsg != null) this.serverEventHandlerDict[(int)srvMsg.getEventCode()] = srvMsg;
             }
         }
 
@@ -57,53 +57,72 @@
         /// Handle an event from EUN Server to EUN Network
         /// </summary>
         /// <param name="obj"></param>
-        void OnEventHandler(EUNArray obj)
+        void onEventHandler(EUNArray obj)
         {
-            var eventCode = obj.GetInt(0);
-            if (!serverEventHandlerDic.ContainsKey(eventCode))
+            var eventCode = obj.getInt(0);
+            
+            lock (this.serverEventHandlerDict)
             {
-                return;
+                if (!this.serverEventHandlerDict.ContainsKey(eventCode))
+                {
+                    return;
+                }
             }
 
-            var operationEvent = new OperationEvent(eventCode, obj.GetEUNHashtable(1));
+            var operationEvent = new OperationEvent(eventCode, obj.getEUNHashtable(1));
 
-            EUNDebug.Log("[EVENT] " + operationEvent.ToString());
-
-            var serverEventHandler = serverEventHandlerDic[eventCode];
-            serverEventHandler.Handle(operationEvent, this);
+            lock (this.eventHandlerPending)
+            {
+                this.eventHandlerPending.Add(operationEvent);
+            }
         }
 
         /// <summary>
         /// Handle a response from EUN Server to EUN Network
         /// </summary>
         /// <param name="obj"></param>
-        void OnResponseHandler(EUNArray obj)
+        void onResponseHandler(EUNArray obj)
         {
-            var responseId = obj.GetInt(2);
+            var responseId = obj.getInt(2);
 
-            if (operationWaitingResponseDic.ContainsKey(responseId))
+            OperationPending operationPending = null;
+
+            lock (this.operationWaitingResponseDict)
             {
-                var returnCode = obj.GetInt(0);
+                if (this.operationWaitingResponseDict.ContainsKey(responseId))
+                {
+                    operationPending = this.operationWaitingResponseDict[responseId];
+
+                    this.operationWaitingResponseDict.Remove(responseId);
+                }
+                else
+                {
+                    EUNDebug.logError("OnResponseHandler, unavailable request id " + obj);
+                }
+            }
+
+            if (operationPending != null)
+            {
+                operationPending.onRecv();
+
+                var returnCode = obj.getInt(0);
 
                 EUNHashtable parameters = null;
                 string debugMessage = null;
 
-                if (returnCode == 0) parameters = obj.GetEUNHashtable(1);
-                else debugMessage = obj.GetString(1);
+                if (returnCode == 0) parameters = obj.getEUNHashtable(1);
+                else debugMessage = obj.getString(1);
 
-                var operationPending = operationWaitingResponseDic[responseId];
+                var request = operationPending.getOperationRequest();
 
-                var operationResponse = new OperationResponse(operationPending.GetOperationRequest(), returnCode, debugMessage, parameters);
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(returnCode);
+                response.setDebugMessage(debugMessage);
+                response.setParameters(parameters);
 
-                EUNDebug.Log("[RECV] " + operationResponse.ToString());
+                operationPending.setOperationResponse(response);
 
-                operationPending.GetCallback()?.Invoke(operationResponse);
-
-                operationWaitingResponseDic.Remove(responseId);
-            }
-            else
-            {
-                EUNDebug.LogError("OnResponseHandler " + obj);
+                this.responseHandlerPending.Add(operationPending);
             }
         }
 
@@ -111,80 +130,174 @@
         /// Handle if login to EUN Server error
         /// </summary>
         /// <param name="obj"></param>
-        void OnLoginErrorHandler(EUNArray obj)
+        void onLoginErrorHandler(EUNArray obj)
         {
-            isConnected = false;
+            this.isConnected = false;
 
-            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
-            {
-                var behaviour = eunManagerBehaviourLst[i];
-                if (behaviour != null) behaviour.OnEUNLoginError();
-            }
+            this.loginErrorHandlerPending = obj;
         }
 
         /// <summary>
         /// Handle if has a disconnect call
         /// </summary>
         /// <param name="obj">EzyDisconnectReason</param>
-        void OnDisconnectionHandler(EzyDisconnectReason obj)
+        void onDisconnectionHandler(EzyDisconnectReason obj)
         {
-            isConnected = false;
+            this.isConnected = false;
 
-            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
-            {
-                var behaviour = eunManagerBehaviourLst[i];
-                if (behaviour != null) behaviour.OnEUNDisconnected(obj);
-            }
-
-            room = null;
-            playerId = -1;
+            this.disconnectionHandlerPending = obj;
         }
 
         /// <summary>
         /// Handle if connection fail
         /// </summary>
         /// <param name="obj"></param>
-        void OnConnectionFailureHandler(EzyConnectionFailedReason obj)
+        void onConnectionFailureHandler(EzyConnectionFailedReason obj)
         {
-            isConnected = false;
+            this.isConnected = false;
 
-            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
-            {
-                var behaviour = eunManagerBehaviourLst[i];
-                if (behaviour != null) behaviour.OnEUNConnectionFailure(obj);
-            }
-
-            room = null;
-            playerId = -1;
+            this.connectionFailureHandlerPending = obj;
         }
 
         /// <summary>
         /// Handle connect to EUNServer success
         /// </summary>
-        void OnConnectionSuccessHandler()
+        void onConnectionSuccessHandler()
         {
-            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
-            {
-                var behaviour = eunManagerBehaviourLst[i];
-                if (behaviour != null) behaviour.OnEUNZoneConnected();
-            }
+            this.connectionSuccessHandlerPending = true;
         }
 
         /// <summary>
         /// Handle if zone name, app name and plugin name correct and EUN Server access this client
         /// </summary>
         /// <param name="obj"></param>
-        void OnAppAccessHandler(EUNArray obj)
+        void onAppAccessHandler(EUNArray obj)
         {
-            isConnected = true;
+            this.isConnected = true;
 
-            var outputEUNArray = obj.GetEUNArray(2);
-            serverTimeStamp = outputEUNArray.GetLong(0);
+            this.appAccessHandlerPending = obj;
+        }
 
-            for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
+        private List<OperationEvent> eventHandlerPending;
+        private List<OperationPending> responseHandlerPending;
+        private EUNArray loginErrorHandlerPending;
+        private bool connectionSuccessHandlerPending;
+        private EzyConnectionFailedReason? connectionFailureHandlerPending;
+        private EzyDisconnectReason? disconnectionHandlerPending;
+        private EUNArray appAccessHandlerPending;
+
+        void serviceOnMainThread()
+        {
+            if (this.appAccessHandlerPending != null)
             {
-                var behaviour = eunManagerBehaviourLst[i];
-                if (behaviour != null) behaviour.OnEUNConnected();
+                var outputEUNArray = appAccessHandlerPending.getEUNArray(2);
+                this.serverTimestamp = outputEUNArray.getLong(0);
+
+                lock (this.eunManagerBehaviourLst)
+                {
+                    for (var i = 0; i < this.eunManagerBehaviourLst.Count; i++)
+                    {
+                        var behaviour = this.eunManagerBehaviourLst[i];
+                        if (behaviour != null) behaviour.onEUNConnected();
+                    }
+                }
+
+                this.appAccessHandlerPending = null;
+            }
+
+            if (this.connectionSuccessHandlerPending)
+            {
+                lock (this.eunManagerBehaviourLst)
+                {
+                    for (var i = 0; i < this.eunManagerBehaviourLst.Count; i++)
+                    {
+                        var behaviour = this.eunManagerBehaviourLst[i];
+                        if (behaviour != null) behaviour.onEUNZoneConnected();
+                    }
+                }
+
+                this.connectionSuccessHandlerPending = false;
+            }
+
+            if (this.connectionFailureHandlerPending != null)
+            {
+                lock (this.eunManagerBehaviourLst)
+                {
+                    for (var i = 0; i < this.eunManagerBehaviourLst.Count; i++)
+                    {
+                        var behaviour = this.eunManagerBehaviourLst[i];
+                        if (behaviour != null) behaviour.onEUNConnectionFailure(connectionFailureHandlerPending.GetValueOrDefault());
+                    }
+                }
+
+                this.room = null;
+                this.playerId = -1;
+                this.eunViewDict.Clear();
+
+                this.connectionFailureHandlerPending = null;
+            }
+
+            if (this.disconnectionHandlerPending != null)
+            {
+                lock (this.eunManagerBehaviourLst)
+                {
+                    for (var i = 0; i < this.eunManagerBehaviourLst.Count; i++)
+                    {
+                        var behaviour = this.eunManagerBehaviourLst[i];
+                        if (behaviour != null) behaviour.onEUNDisconnected(this.disconnectionHandlerPending.GetValueOrDefault());
+                    }
+                }
+
+                this.room = null;
+                this.playerId = -1;
+                this.eunViewDict.Clear();
+
+                this.disconnectionHandlerPending = null;
+            }
+
+            if (this.loginErrorHandlerPending != null)
+            {
+                lock (this.eunManagerBehaviourLst)
+                {
+                    for (var i = 0; i < this.eunManagerBehaviourLst.Count; i++)
+                    {
+                        var behaviour = this.eunManagerBehaviourLst[i];
+                        if (behaviour != null) behaviour.onEUNLoginError();
+                    }
+                }
+
+                this.loginErrorHandlerPending = null;
+            }
+
+            lock (this.responseHandlerPending)
+            {
+                if (this.responseHandlerPending.Count != 0)
+                {
+                    foreach (var operationPending in this.responseHandlerPending)
+                    {
+                        EUNDebug.log("[RECV] " + operationPending.getOperationResponse().ToString());
+
+                        operationPending.Invoke();
+                    }
+
+                    this.responseHandlerPending.Clear();
+                }
+            }
+
+            lock (this.eventHandlerPending)
+            {
+                if (this.eventHandlerPending.Count != 0)
+                {
+                    foreach (var operationEvent in this.eventHandlerPending)
+                    {
+                        EUNDebug.log("[EVENT] " + operationEvent.ToString());
+
+                        var serverEventHandler = this.serverEventHandlerDict[operationEvent.getEventCode()];
+                        serverEventHandler.handle(operationEvent, this);
+                    }
+
+                    this.eventHandlerPending.Clear();
+                }
             }
         }
 
@@ -192,36 +305,38 @@
         /// Subscriber a EUNView if eunViewLst does not contains it
         /// </summary>
         /// <param name="view"></param>
-        internal void SubscriberEUNView(EUNView view)
+        internal void subscriberEUNView(EUNView view)
         {
-            if (!eunViewLst.Contains(view)) eunViewLst.Add(view);
+            lock (this.eunViewLst) if (!this.eunViewLst.Contains(view)) this.eunViewLst.Add(view);
         }
 
         /// <summary>
         /// Remove subscriber a EUNView if eunViewLst contains it
         /// </summary>
         /// <param name="view"></param>
-        internal void UnSubscriberEUNView(EUNView view)
+        internal void unSubscriberEUNView(EUNView view)
         {
-            if (eunViewLst.Contains(view)) eunViewLst.Remove(view);
+            lock (this.eunViewLst) if(this.eunViewLst.Contains(view)) this.eunViewLst.Remove(view);
         }
 
         /// <summary>
         /// Subscriber a EUNManagerBehaviour if eunManagerBehaviourLst does not contains it
         /// </summary>
         /// <param name="behaviour"></param>
-        internal void SubscriberEUNManagerBehaviour(IEUNManagerBehaviour behaviour)
+        internal void subscriberEUNManagerBehaviour(IEUNManagerBehaviour behaviour)
         {
-            if (!eunManagerBehaviourLst.Contains(behaviour)) eunManagerBehaviourLst.Add(behaviour);
+            lock (this.eunManagerBehaviourLst) if (!this.eunManagerBehaviourLst.Contains(behaviour)) this.eunManagerBehaviourLst.Add(behaviour);
         }
 
         /// <summary>
         /// Remove subscriber a EUNManagerBehaviour if eunManagerBehaviourLst contains it
         /// </summary>
         /// <param name="behaviour"></param>
-        internal void UnSubscriberEUNManagerBehaviour(IEUNManagerBehaviour behaviour)
+        internal void unSubscriberEUNManagerBehaviour(IEUNManagerBehaviour behaviour)
         {
-            if (eunManagerBehaviourLst.Contains(behaviour)) eunManagerBehaviourLst.Remove(behaviour);
+            lock (this.eunManagerBehaviourLst) if(this.eunManagerBehaviourLst.Contains(behaviour)) this.eunManagerBehaviourLst.Remove(behaviour);
         }
+
     }
+
 }

@@ -8,38 +8,38 @@
     /// </summary>
     internal class OnTransferOwnerGameObjectEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnTransferOwnerGameObject;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             if (peer.room == null) return;
 
-            var parameters = operationEvent.GetParameters();
-            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
+            var parameters = operationEvent.getParameters();
+            var eunArray = parameters.getEUNArray(ParameterCode.Data);
 
-            var objectId = eunArray.GetInt(0);
-            var newOwnerId = eunArray.GetInt(1);
+            var objectId = eunArray.getInt(0);
+            var newOwnerId = eunArray.getInt(1);
 
-            if (peer.room.GameObjectDic.ContainsKey(objectId))
+            if (peer.room.gameObjectDict.ContainsKey(objectId))
             {
-                var roomGameObject = peer.room.GameObjectDic[objectId];
+                var roomGameObject = peer.room.gameObjectDict[objectId];
 
-                roomGameObject.OwnerId = newOwnerId;
+                roomGameObject.ownerId = newOwnerId;
 
-                var newOwner = peer.room.RoomPlayerLst.Find(x => x.PlayerId == newOwnerId);
+                var newOwner = peer.room.roomPlayerLst.Find(x => x.playerId == newOwnerId);
 
                 foreach (var view in peer.eunViewLst)
                 {
                     if (view)
                     {
-                        if (objectId == view.RoomGameObject.ObjectId)
+                        if (objectId == view.roomGameObject.objectId)
                         {
                             foreach (var behaviour in view.eunBehaviourLst)
                             {
-                                if (behaviour != null) behaviour.OnEUNTransferOwnerGameObject(newOwner);
+                                if (behaviour != null) behaviour.onEUNTransferOwnerGameObject(newOwner);
                             }
                         }
                     }
@@ -49,9 +49,11 @@
                 for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
                     var behaviour = eunManagerBehaviourLst[i];
-                    if (behaviour != null) behaviour.OnEUNTransferOwnerGameObject(roomGameObject, newOwner);
+                    if (behaviour != null) behaviour.onEUNTransferOwnerGameObject(roomGameObject, newOwner);
                 }
             }
         }
+
     }
+
 }

@@ -8,11 +8,12 @@
     using System.Collections.Generic;
     using XmobiTea.EUN.Entity.Response;
 
-#if EUN
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client.factory;
 #endif
 
     using XmobiTea.EUN.Entity.Request;
+    using System.Linq;
 
     /// <summary>
     /// In this partial it will contains all function API
@@ -27,7 +28,7 @@
         /// <summary>
         /// The current room
         /// </summary>
-        internal Room room;
+        internal Room room { get; set; }
 
         /// <summary>
         /// The current player id in this room
@@ -37,12 +38,12 @@
         /// <summary>
         /// Dict of eunView
         /// </summary>
-        internal Dictionary<int, EUNView> eunViewDic;
+        internal Dictionary<int, EUNView> eunViewDict;
 
         /// <summary>
         /// The server timestamp as long
         /// </summary>
-        internal long tsServerTime => (long)serverTimeStamp;
+        internal long tsServerTime => (long)this.serverTimestamp;
 
         /// <summary>
         /// Is the EUN Network connect EUN Server?
@@ -55,14 +56,14 @@
         /// <returns></returns>
         internal List<RoomGameObject> getListGameObjectNeedCreate()
         {
-            if (room == null) return null;
+            if (this.room == null) return null;
 
             var removeLst = new List<int>();
             var createLst = new List<int>();
 
-            foreach (var c in room.GameObjectDic)
+            foreach (var c in this.room.gameObjectDict)
             {
-                if (eunViewDic.ContainsKey(c.Key))
+                if (this.eunViewDict.ContainsKey(c.Key))
                 {
                     if (c.Value == null)
                     {
@@ -76,15 +77,15 @@
                 }
             }
 
-            foreach (var c in eunViewDic)
+            foreach (var c in this.eunViewDict)
             {
-                if (!room.GameObjectDic.ContainsKey(c.Key))
+                if (!this.room.gameObjectDict.ContainsKey(c.Key))
                 {
                     if (!removeLst.Contains(c.Key)) removeLst.Add(c.Key);
 
                     if (c.Value != null)
                     {
-                        Destroy(c.Value.gameObject);
+                        UnityEngine.GameObject.Destroy(c.Value.gameObject);
                     }
                 }
             }
@@ -93,7 +94,7 @@
             {
                 foreach (var c in removeLst)
                 {
-                    eunViewDic.Remove(c);
+                    this.eunViewDict.Remove(c);
                 }
             }
 
@@ -103,7 +104,7 @@
             {
                 foreach (var c in createLst)
                 {
-                    roomGameObjectNeedCreateLst.Add(room.GameObjectDic[c]);
+                    roomGameObjectNeedCreateLst.Add(this.room.gameObjectDict[c]);
                 }
             }
 
@@ -116,15 +117,15 @@
         /// <param name="sendRate">Send rate for normal OperationRequest</param>
         /// <param name="sendRateSynchronizationData">Send rate for sync OperationRequest</param>
         /// <param name="sendRateVoiceChat">Send rate for voice chat OperationRequest</param>
-        internal void SetSendRate(int sendRate, int sendRateSynchronizationData, int sendRateVoiceChat)
+        internal void setSendRate(int sendRate, int sendRateSynchronizationData, int sendRateVoiceChat)
         {
             if (sendRate < 1) sendRate = 1;
             if (sendRateSynchronizationData < 1) sendRateSynchronizationData = 1;
             if (sendRateVoiceChat < 1) sendRateVoiceChat = 1;
 
-            perMsgTimer = 1f / sendRate;
-            perSyncMsgTimer = 1f / sendRateSynchronizationData;
-            perVoiceChatMsgTimer = 1f / sendRateVoiceChat;
+            this.perMsgTimer = 1f / sendRate;
+            this.perSyncMsgTimer = 1f / sendRateSynchronizationData;
+            this.perVoiceChatMsgTimer = 1f / sendRateVoiceChat;
         }
 
         /// <summary>
@@ -135,34 +136,34 @@
         /// <param name="password"></param>
         /// <param name="customData"></param>
         /// <exception cref="NullReferenceException"></exception>
-        internal void Connect(string username, string password, IEUNData customData)
+        internal void connect(string username, string password, IEUNData customData)
         {
             var eunServerSettings = EUNNetwork.eunServerSettings;
             if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
 
-            if (EUNNetwork.Mode == Config.EUNServerSettings.Mode.OfflineMode)
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
-                OnConnectionSuccessHandler();
+                this.onConnectionSuccessHandler();
 
                 var obj = new EUNArray.Builder()
-                .Add(null)
-                .Add(null)
-                .Add(
+                .add(null)
+                .add(null)
+                .add(
                     new EUNArray.Builder()
-                    .Add(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
-                    .Build())
-                .Build();
+                    .add(DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
+                    .build())
+                .build();
 
-                OnAppAccessHandler(obj);
+                this.onAppAccessHandler(obj);
             }
             else
             {
                 if (customData == null) customData = new EUNArray();
 
 #if !UNITY_EDITOR && UNITY_WEBGL
-                eunSocketObject.Connect(username, password, customData, eunServerSettings.webSocketHost, 0, 0);
+                this.eunSocketObject.connect(username, password, customData, eunServerSettings.webSocketHost, 0, 0);
 #else
-                eunSocketObject.Connect(username, password, customData, eunServerSettings.socketHost, eunServerSettings.socketTCPPort, eunServerSettings.socketUDPPort);
+                this.eunSocketObject.connect(username, password, customData, eunServerSettings.socketHost, eunServerSettings.socketTCPPort, eunServerSettings.socketUDPPort);
 #endif
             }
         }
@@ -170,311 +171,1074 @@
         /// <summary>
         /// Disconnect EUNNetwork to EUNServer
         /// </summary>
-        internal void Disconnect()
+        internal void disconnect()
         {
-            eunSocketObject.Disconnect();
+            this.eunSocketObject.disconnect();
         }
 
-        internal void SyncTs(Action<SyncTsOperationResponse> onResponse)
+        internal void syncTs(Action<SyncTsOperationResponse> onResponse)
         {
-            var request = new SyncTsOperationRequest().Builder();
+            var request = new SyncTsOperationRequest().build();
 
-            if (EUNNetwork.Mode == Config.EUNServerSettings.Mode.OfflineMode)
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
                 var responseEUNHashtable = new EUNHashtable.Builder()
-                    .Add(ParameterCode.Ts, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
-                    .Build();
+                    .add(ParameterCode.Ts, DateTimeOffset.UtcNow.ToUnixTimeMilliseconds())
+                    .build();
 
-                var response = new OperationResponse(request, (int)ReturnCode.Ok, string.Empty, responseEUNHashtable);
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+                response.setParameters(responseEUNHashtable);
 
-                SyncTsResponse(response, onResponse);
+                this.onSyncTsResponse(response, onResponse);
             }
             else
             {
-                Enqueue(request, response =>
+                this.enqueue(request, response =>
                 {
-                    SyncTsResponse(response, onResponse);
+                    this.onSyncTsResponse(response, onResponse);
                 });
             }
         }
 
-        private void SyncTsResponse(OperationResponse response, Action<SyncTsOperationResponse> onResponse)
+        private void onSyncTsResponse(OperationResponse response, Action<SyncTsOperationResponse> onResponse)
         {
             var syncTsOperationResponse = new SyncTsOperationResponse(response);
-            if (!syncTsOperationResponse.HasError)
+            if (!syncTsOperationResponse.hasError)
             {
-                serverTimeStamp = syncTsOperationResponse.ServerTimeStamp;
+                this.serverTimestamp = syncTsOperationResponse.serverTimeStamp;
             }
 
             onResponse?.Invoke(syncTsOperationResponse);
         }
 
-        internal void GetLobbyStatsLst(int skip, int limit, Action<GetLobbyStatsLstOperationResponse> onResponse)
+        internal void getLobbyStatsLst(int skip, int limit, Action<GetLobbyStatsLstOperationResponse> onResponse)
         {
-            var request = new GetLobbyStatsLstOperationRequest(skip, limit).Builder();
+            var request = new GetLobbyStatsLstOperationRequest(skip, limit).build();
 
-            if (EUNNetwork.Mode == Config.EUNServerSettings.Mode.OfflineMode)
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
                 var responseEUNHashtable = new EUNHashtable.Builder()
-                    .Add(ParameterCode.Data, new EUNArray())
-                    .Build();
+                    .add(ParameterCode.Data, new EUNArray())
+                    .build();
 
-                var response = new OperationResponse(request, (int)ReturnCode.Ok, string.Empty, responseEUNHashtable);
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+                response.setParameters(responseEUNHashtable);
 
-                GetLobbyStatsLstResponse(response, onResponse);
+                var getLobbyStatsLstOperationResponse = new GetLobbyStatsLstOperationResponse(response);
+                onResponse?.Invoke(getLobbyStatsLstOperationResponse);
             }
             else
             {
-                Enqueue(request, response =>
+                if (onResponse == null)
                 {
-                    GetLobbyStatsLstResponse(response, onResponse);
-                });
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var getLobbyStatsLstOperationResponse = new GetLobbyStatsLstOperationResponse(response);
+                        onResponse?.Invoke(getLobbyStatsLstOperationResponse);
+                    });
+                }
             }
         }
 
-        private void GetLobbyStatsLstResponse(OperationResponse response, Action<GetLobbyStatsLstOperationResponse> onResponse)
+        internal void getCurrentLobbyStats(int skip, int limit, Action<GetCurrentLobbyStatsOperationResponse> onResponse)
         {
-            var getLobbyStatsLstOperationResponse = new GetLobbyStatsLstOperationResponse(response);
-            onResponse?.Invoke(getLobbyStatsLstOperationResponse);
-        }
+            var request = new GetCurrentLobbyStatsOperationRequest(skip, limit).build();
 
-        internal void GetCurrentLobbyStats(int skip, int limit, Action<GetCurrentLobbyStatsOperationResponse> onResponse)
-        {
-            var request = new GetCurrentLobbyStatsOperationRequest(skip, limit).Builder();
-
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var responseEUNHashtable = new EUNHashtable.Builder()
+                    .add(ParameterCode.Data, new EUNArray.Builder().add(new EUNArray()).add(new EUNArray()).build())
+                    .build();
+
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+                response.setParameters(responseEUNHashtable);
+
                 var getCurrentLobbyStatsOperationResponse = new GetCurrentLobbyStatsOperationResponse(response);
                 onResponse?.Invoke(getCurrentLobbyStatsOperationResponse);
-            });
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var getCurrentLobbyStatsOperationResponse = new GetCurrentLobbyStatsOperationResponse(response);
+                        onResponse?.Invoke(getCurrentLobbyStatsOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void JoinLobby(int lobbyId, Action<JoinLobbyOperationResponse> onResponse)
+        internal void joinLobby(int lobbyId, Action<JoinLobbyOperationResponse> onResponse)
         {
-            var request = new JoinLobbyOperationRequest(lobbyId).Builder();
+            var request = new JoinLobbyOperationRequest(lobbyId).build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var joinLobbyOperationResponse = new JoinLobbyOperationResponse(response);
-
                 onResponse?.Invoke(joinLobbyOperationResponse);
-            });
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var joinLobbyOperationResponse = new JoinLobbyOperationResponse(response);
+                        onResponse?.Invoke(joinLobbyOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void LeaveLobby(Action<LeaveLobbyOperationResponse> onResponse = null)
+        internal void leaveLobby(Action<LeaveLobbyOperationResponse> onResponse)
         {
-            var request = new LeaveLobbyOperationRequest().Builder();
+            var request = new LeaveLobbyOperationRequest().build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var leaveLobbyOperationResponse = new LeaveLobbyOperationResponse(response);
                 onResponse?.Invoke(leaveLobbyOperationResponse);
-            });
-        }
-
-        internal void ChatAll(string message)
-        {
-            var request = new ChatAllOperationRequest(message).Builder();
-
-            Enqueue(request, null);
-        }
-
-        internal void ChatLobby(string message)
-        {
-            var request = new ChatLobbyOperationRequest(message).Builder();
-
-            Enqueue(request, null);
-        }
-
-        internal void ChatRoom(string message)
-        {
-            var request = new ChatRoomOperationRequest(message).Builder();
-
-            Enqueue(request, null);
-        }
-
-        internal void CreateRoom(RoomOption roomOption, Action<CreateRoomOperationResponse> onResponse)
-        {
-            var request = new CreateRoomOperationRequest(roomOption).Builder();
-
-            Enqueue(request, response =>
+            }
+            else
             {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var leaveLobbyOperationResponse = new LeaveLobbyOperationResponse(response);
+                        onResponse?.Invoke(leaveLobbyOperationResponse);
+                    });
+                }
+            }
+        }
+
+        internal void chatAll(string message, Action<ChatAllOperationResponse> onResponse)
+        {
+            var request = new ChatAllOperationRequest(message).build();
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
+            {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
+                var chatAllOperationResponse = new ChatAllOperationResponse(response);
+                onResponse?.Invoke(chatAllOperationResponse);
+
+                if (this.isSubscriberChatAll)
+                {
+                    var eventArray = new EUNArray.Builder()
+                    .add(EventCode.OnChatAll)
+                    .add(
+                        new EUNHashtable.Builder()
+                            .add(ParameterCode.Message, new EUNArray.Builder().add(EUNNetwork.userId).add(message).build())
+                            .build())
+                    .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var chatAllOperationResponse = new ChatAllOperationResponse(response);
+                        onResponse?.Invoke(chatAllOperationResponse);
+                    });
+                }
+            }
+        }
+
+        internal void chatLobby(string message, Action<ChatLobbyOperationResponse> onResponse)
+        {
+            var request = new ChatLobbyOperationRequest(message).build();
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
+            {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
+                var chatLobbyOperationResponse = new ChatLobbyOperationResponse(response);
+                onResponse?.Invoke(chatLobbyOperationResponse);
+
+                if (this.isSubscriberChatLobby)
+                {
+                    var eventArray = new EUNArray.Builder()
+                    .add(EventCode.OnChatLobby)
+                    .add(
+                        new EUNHashtable.Builder()
+                            .add(ParameterCode.Message, new EUNArray.Builder().add(EUNNetwork.userId).add(message).build())
+                            .build())
+                    .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var chatLobbyOperationResponse = new ChatLobbyOperationResponse(response);
+                        onResponse?.Invoke(chatLobbyOperationResponse);
+                    });
+                }
+            }
+        }
+
+        internal void chatRoom(string message, Action<ChatRoomOperationResponse> onResponse)
+        {
+            var request = new ChatRoomOperationRequest(message).build();
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
+            {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
+                var chatRoomOperationResponse = new ChatRoomOperationResponse(response);
+                onResponse?.Invoke(chatRoomOperationResponse);
+
+                if (this.room != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                    .add(EventCode.OnChatRoom)
+                    .add(
+                        new EUNHashtable.Builder()
+                            .add(ParameterCode.Message, new EUNArray.Builder().add(EUNNetwork.userId).add(message).build())
+                            .build())
+                    .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var chatRoomOperationResponse = new ChatRoomOperationResponse(response);
+                        onResponse?.Invoke(chatRoomOperationResponse);
+                    });
+                }
+            }
+
+        }
+
+        internal void createRoom(RoomOption roomOption, Action<CreateRoomOperationResponse> onResponse)
+        {
+            var request = new CreateRoomOperationRequest(roomOption).build();
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
+            {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var createRoomOperationResponse = new CreateRoomOperationResponse(response);
                 onResponse?.Invoke(createRoomOperationResponse);
-            });
+
+                if (this.room == null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnJoinRoom)
+                        .add(
+                            new EUNHashtable.Builder()
+                                .add(ParameterCode.Data, new EUNArray.Builder()
+                                    .add(UnityEngine.Random.Range(0, int.MaxValue))
+                                    .add(true)
+                                    .add(roomOption.maxPlayer)
+                                    .add(roomOption.password)
+                                    .add(
+                                        new EUNArray.Builder()
+                                            .add(new EUNArray.Builder()
+                                                    .add(1)
+                                                    .add(EUNNetwork.userId)
+                                                    .add(new EUNHashtable())
+                                                    .build()
+                                                )
+                                            .build()
+                                    )
+                                    .add(roomOption.customRoomProperties)
+                                    .add(roomOption.customRoomPropertiesForLobby)
+                                    .add(true)
+                                    .add(EUNNetwork.userId)
+                                    .add(serverTimestamp)
+                                    .add(roomOption.ttl)
+                                    .build())
+                                .build())
+                        .build();
+                    
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var createRoomOperationResponse = new CreateRoomOperationResponse(response);
+                        onResponse?.Invoke(createRoomOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void JoinOrCreateRoom(int targetExpectedCount, EUNHashtable expectedProperties, RoomOption roomOption, Action<JoinOrCreateRoomOperationResponse> onResponse)
+        internal void joinOrCreateRoom(int targetExpectedCount, EUNHashtable expectedProperties, RoomOption roomOption, Action<JoinOrCreateRoomOperationResponse> onResponse)
         {
-            var request = new JoinOrCreateRoomOperationRequest(targetExpectedCount, expectedProperties, roomOption).Builder();
+            var request = new JoinOrCreateRoomOperationRequest(targetExpectedCount, expectedProperties, roomOption).build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var joinOrCreateRoomOperationResponse = new JoinOrCreateRoomOperationResponse(response);
                 onResponse?.Invoke(joinOrCreateRoomOperationResponse);
-            });
+
+                if (this.room == null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnJoinRoom)
+                        .add(
+                            new EUNHashtable.Builder()
+                                .add(ParameterCode.Data, new EUNArray.Builder()
+                                    .add(UnityEngine.Random.Range(0, int.MaxValue))
+                                    .add(true)
+                                    .add(roomOption.maxPlayer)
+                                    .add(roomOption.password)
+                                    .add(
+                                        new EUNArray.Builder()
+                                            .add(new EUNArray.Builder()
+                                                    .add(1)
+                                                    .add(EUNNetwork.userId)
+                                                    .add(new EUNHashtable())
+                                                    .build()
+                                                )
+                                            .build()
+                                    )
+                                    .add(roomOption.customRoomProperties)
+                                    .add(roomOption.customRoomPropertiesForLobby)
+                                    .add(true)
+                                    .add(EUNNetwork.userId)
+                                    .add(serverTimestamp)
+                                    .add(roomOption.ttl)
+                                    .build())
+                                .build())
+                        .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var joinOrCreateRoomOperationResponse = new JoinOrCreateRoomOperationResponse(response);
+                        onResponse?.Invoke(joinOrCreateRoomOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void JoinRandomRoom(int targetExpectedCount, EUNHashtable expectedProperties, Action<JoinRandomRoomOperationResponse> onResponse)
+        internal void joinRandomRoom(int targetExpectedCount, EUNHashtable expectedProperties, Action<JoinRandomRoomOperationResponse> onResponse)
         {
-            var request = new JoinRandomRoomOperationRequest(targetExpectedCount, expectedProperties).Builder();
+            var request = new JoinRandomRoomOperationRequest(targetExpectedCount, expectedProperties).build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.OperationInvalid);
+                response.setDebugMessage(string.Empty);
+
                 var joinOrCreateRoomOperationResponse = new JoinRandomRoomOperationResponse(response);
                 onResponse?.Invoke(joinOrCreateRoomOperationResponse);
-            });
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var joinOrCreateRoomOperationResponse = new JoinRandomRoomOperationResponse(response);
+                        onResponse?.Invoke(joinOrCreateRoomOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void JoinRoom(int roomId, string password, Action<JoinRoomOperationResponse> onResponse)
+        internal void joinRoom(int roomId, string password, Action<JoinRoomOperationResponse> onResponse)
         {
-            var request = new JoinRoomOperationRequest(roomId, password).Builder();
+            var request = new JoinRoomOperationRequest(roomId, password).build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.OperationInvalid);
+                response.setDebugMessage(string.Empty);
+
                 var joinRoomOperationResponse = new JoinRoomOperationResponse(response);
                 onResponse?.Invoke(joinRoomOperationResponse);
-            });
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var joinRoomOperationResponse = new JoinRoomOperationResponse(response);
+                        onResponse?.Invoke(joinRoomOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void LeaveRoom(Action<LeaveRoomOperationResponse> onResponse)
+        internal void leaveRoom(Action<LeaveRoomOperationResponse> onResponse)
         {
-            var request = new LeaveRoomOperationRequest().Builder();
+            var request = new LeaveRoomOperationRequest().build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var leaveRoomOperationResponse = new LeaveRoomOperationResponse(response);
                 onResponse?.Invoke(leaveRoomOperationResponse);
-            });
+
+                if (this.room != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnLeftRoom)
+                        .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var leaveRoomOperationResponse = new LeaveRoomOperationResponse(response);
+                        onResponse?.Invoke(leaveRoomOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void ChangeLeaderClient(int leaderClientPlayerId, Action<ChangeLeaderClientOperationResponse> onResponse)
+        internal void changeLeaderClient(int leaderClientPlayerId, Action<ChangeLeaderClientOperationResponse> onResponse)
         {
-            var request = new ChangeLeaderClientOperationRequest(leaderClientPlayerId).Builder();
+            var request = new ChangeLeaderClientOperationRequest(leaderClientPlayerId).build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var changeLeaderClientOperationResponse = new ChangeLeaderClientOperationResponse(response);
                 onResponse?.Invoke(changeLeaderClientOperationResponse);
-            });
+
+                var localPlayer = EUNNetwork.localPlayer;
+                if (this.room != null && localPlayer != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnLeaderClientChange)
+                        .add(
+                            new EUNHashtable.Builder()
+                                .add(ParameterCode.Data, new EUNArray.Builder().add(playerId).add(EUNNetwork.userId).add(localPlayer.customProperties).build())
+                                .build())
+                        .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var changeLeaderClientOperationResponse = new ChangeLeaderClientOperationResponse(response);
+                        onResponse?.Invoke(changeLeaderClientOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void ChangeRoomInfo(EUNHashtable eunHashtable, Action<ChangeRoomInfoOperationResponse> onResponse)
+        internal void changeRoomInfo(EUNHashtable eunHashtable, Action<ChangeRoomInfoOperationResponse> onResponse)
         {
-            var request = new ChangeRoomInfoOperationRequest(eunHashtable).Builder();
+            var request = new ChangeRoomInfoOperationRequest(eunHashtable).build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var changeRoomInfoOperationResponse = new ChangeRoomInfoOperationResponse(response);
                 onResponse?.Invoke(changeRoomInfoOperationResponse);
-            });
+
+                if (this.room != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnRoomInfoChange)
+                        .add(eunHashtable)
+                        .build();
+                    
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var changeRoomInfoOperationResponse = new ChangeRoomInfoOperationResponse(response);
+                        onResponse?.Invoke(changeRoomInfoOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void SubscriberChatAll(bool isSubscribe, Action<SubscriberChatAllOperationResponse> onResponse)
+        private bool isSubscriberChatAll;
+        internal void subscriberChatAll(bool isSubscribe, Action<SubscriberChatAllOperationResponse> onResponse)
         {
-            var request = new SubscriberChatAllOperationRequest(isSubscribe).Builder();
+            this.isSubscriberChatAll = isSubscribe;
 
-            Enqueue(request, response =>
+            var request = new SubscriberChatAllOperationRequest(isSubscribe).build();
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var subscriberChatAllOperationResponse = new SubscriberChatAllOperationResponse(response);
                 onResponse?.Invoke(subscriberChatAllOperationResponse);
-            });
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var subscriberChatAllOperationResponse = new SubscriberChatAllOperationResponse(response);
+                        onResponse?.Invoke(subscriberChatAllOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void SubscriberChatLobby(bool isSubscribe, Action<SubscriberChatLobbyOperationResponse> onResponse)
+        private bool isSubscriberChatLobby;
+        internal void subscriberChatLobby(bool isSubscribe, Action<SubscriberChatLobbyOperationResponse> onResponse)
         {
-            var request = new SubscriberChatLobbyOperationRequest(isSubscribe).Builder();
+            this.isSubscriberChatLobby = isSubscribe;
 
-            Enqueue(request, response =>
+            var request = new SubscriberChatLobbyOperationRequest(isSubscribe).build();
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var subscriberChatLobbyOperationResponse = new SubscriberChatLobbyOperationResponse(response);
                 onResponse?.Invoke(subscriberChatLobbyOperationResponse);
-            });
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var subscriberChatLobbyOperationResponse = new SubscriberChatLobbyOperationResponse(response);
+                        onResponse?.Invoke(subscriberChatLobbyOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void ChangePlayerCustomProperties(int playerId, EUNHashtable customPlayerProperties, Action<ChangePlayerCustomPropertiesOperationResponse> onResponse)
+        internal void changePlayerCustomProperties(int playerId, EUNHashtable customPlayerProperties, Action<ChangePlayerCustomPropertiesOperationResponse> onResponse)
         {
-            var request = new ChangePlayerCustomPropertiesOperationRequest(playerId, customPlayerProperties).Builder();
+            var request = new ChangePlayerCustomPropertiesOperationRequest(playerId, customPlayerProperties).build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var changePlayerCustomPropertiesOperationResponse = new ChangePlayerCustomPropertiesOperationResponse(response);
                 onResponse?.Invoke(changePlayerCustomPropertiesOperationResponse);
-            });
-        }
 
-        internal void RpcGameObjectRoom(EUNTargets targets, int objectId, int eunRPCCommand, object rpcData)
-        {
-            var request = new RpcGameObjectRoomOperationRequest(targets, objectId, eunRPCCommand, rpcData).Builder();
+                if (this.room != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnPlayerCustomPropertiesChange)
+                        .add(
+                            new EUNHashtable.Builder()
+                                .add(ParameterCode.Data, new EUNArray.Builder().add(playerId).add(customPlayerProperties).build())
+                                .build())
+                        .build();
 
-            Enqueue(request, null);
-        }
-
-        internal void RpcGameObjectRoomTo(IList<int> targetPlayerIds, int objectId, int eunRPCCommand, object rpcData)
-        {
-            var request = new RpcGameObjectRoomToOperationRequest(targetPlayerIds, objectId, eunRPCCommand, rpcData).Builder();
-
-            Enqueue(request, null);
-        }
-
-        internal void CreateGameObjectRoom(string prefabPath, object initializeData, object synchronizationData, EUNHashtable customGameObjectProperties, Action<CreateGameObjectRoomOperationResponse> onResponse)
-        {
-            var request = new CreateGameObjectRoomOperationRequest(prefabPath, initializeData, synchronizationData, customGameObjectProperties).Builder();
-
-            Enqueue(request, response =>
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
             {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var changePlayerCustomPropertiesOperationResponse = new ChangePlayerCustomPropertiesOperationResponse(response);
+                        onResponse?.Invoke(changePlayerCustomPropertiesOperationResponse);
+                    });
+                }
+            }
+        }
+
+        internal void rpcGameObjectRoom(EUNTargets targets, int objectId, int eunRPCCommand, object rpcData, Action<RpcGameObjectRoomOperationResponse> onResponse)
+        {
+            var request = new RpcGameObjectRoomOperationRequest(targets, objectId, eunRPCCommand, rpcData).build();
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
+            {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
+                var rpcGameObjectRoomOperationResponse = new RpcGameObjectRoomOperationResponse(response);
+                onResponse?.Invoke(rpcGameObjectRoomOperationResponse);
+
+                if (this.room != null && targets != EUNTargets.Others)
+                {
+                    var eventArray = new EUNArray.Builder()
+                    .add(EventCode.OnRpcGameObject)
+                    .add(
+                        new EUNHashtable.Builder()
+                            .add(ParameterCode.Data, new EUNArray.Builder().add(objectId).add(eunRPCCommand).add(rpcData).build())
+                            .build())
+                    .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var rpcGameObjectRoomOperationResponse = new RpcGameObjectRoomOperationResponse(response);
+                        onResponse?.Invoke(rpcGameObjectRoomOperationResponse);
+                    });
+                }
+            }
+        }
+
+        internal void rpcGameObjectRoomTo(IList<int> targetPlayerIds, int objectId, int eunRPCCommand, object rpcData, Action<RpcGameObjectRoomToOperationResponse> onResponse)
+        {
+            var request = new RpcGameObjectRoomToOperationRequest(targetPlayerIds, objectId, eunRPCCommand, rpcData).build();
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
+            {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
+                var rpcGameObjectRoomToOperationResponse = new RpcGameObjectRoomToOperationResponse(response);
+                onResponse?.Invoke(rpcGameObjectRoomToOperationResponse);
+
+                if (this.room != null && targetPlayerIds.Contains(playerId))
+                {
+                    var eventArray = new EUNArray.Builder()
+                    .add(EventCode.OnRpcGameObject)
+                    .add(
+                        new EUNHashtable.Builder()
+                            .add(ParameterCode.Data, new EUNArray.Builder().add(objectId).add(eunRPCCommand).add(rpcData).build())
+                            .build())
+                    .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var rpcGameObjectRoomToOperationResponse = new RpcGameObjectRoomToOperationResponse(response);
+                        onResponse?.Invoke(rpcGameObjectRoomToOperationResponse);
+                    });
+                }
+            }
+        }
+
+        internal void createGameObjectRoom(string prefabPath, object initializeData, object synchronizationData, EUNHashtable customGameObjectProperties, Action<CreateGameObjectRoomOperationResponse> onResponse)
+        {
+            var request = new CreateGameObjectRoomOperationRequest(prefabPath, initializeData, synchronizationData, customGameObjectProperties).build();
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
+            {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var createGameObjectRoomOperationResponse = new CreateGameObjectRoomOperationResponse(response);
                 onResponse?.Invoke(createGameObjectRoomOperationResponse);
-            });
+
+                if (this.room != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnCreateGameObject)
+                        .add(
+                            new EUNHashtable.Builder()
+                                .add(ParameterCode.Data, new EUNArray.Builder().add(this.eunViewDict.Keys.Max() + 1).add(playerId).add(prefabPath).add(synchronizationData).add(initializeData).add(customGameObjectProperties).build())
+                                .build())
+                        .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var createGameObjectRoomOperationResponse = new CreateGameObjectRoomOperationResponse(response);
+                        onResponse?.Invoke(createGameObjectRoomOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void ChangeGameObjectCustomProperties(int objectId, EUNHashtable customGameObjectProperties, Action<ChangeGameObjectRoomOperationResponse> onResponse)
+        internal void changeGameObjectCustomProperties(int objectId, EUNHashtable customGameObjectProperties, Action<ChangeGameObjectRoomOperationResponse> onResponse)
         {
-            var request = new ChangeGameObjectCustomPropertiesOperationRequest(objectId, customGameObjectProperties).Builder();
+            var request = new ChangeGameObjectCustomPropertiesOperationRequest(objectId, customGameObjectProperties).build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var createGameObjectRoomOperationResponse = new ChangeGameObjectRoomOperationResponse(response);
                 onResponse?.Invoke(createGameObjectRoomOperationResponse);
-            });
+
+                if (this.room != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnGameObjectCustomPropertiesChange)
+                        .add(
+                            new EUNHashtable.Builder()
+                                .add(ParameterCode.Data, new EUNArray.Builder().add(objectId).add(customGameObjectProperties).build())
+                                .build())
+                        .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var createGameObjectRoomOperationResponse = new ChangeGameObjectRoomOperationResponse(response);
+                        onResponse?.Invoke(createGameObjectRoomOperationResponse);
+                    });
+                }
+            }
         }
 
-        internal void DestroyGameObjectRoom(int objectId, Action<DestroyGameObjectRoomRoomOperationResponse> onResponse)
+        internal void destroyGameObjectRoom(int objectId, Action<DestroyGameObjectRoomRoomOperationResponse> onResponse)
         {
-            var request = new DestroyGameObjectRoomOperationRequest(objectId).Builder();
+            var request = new DestroyGameObjectRoomOperationRequest(objectId).build();
 
-            Enqueue(request, response =>
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
             {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var destroyGameObjectRoomRoomOperationResponse = new DestroyGameObjectRoomRoomOperationResponse(response);
                 onResponse?.Invoke(destroyGameObjectRoomRoomOperationResponse);
-            });
-        }
 
-        internal void SynchronizationDataGameObjectRoom(int objectId, object synchronizationData)
-        {
-            var request = new SynchronizationDataGameObjectRoomOperationRequest(objectId, synchronizationData).Builder();
-            request.SetSynchronizationRequest(true);
+                if (this.room != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnDestroyGameObject)
+                        .add(
+                            new EUNHashtable.Builder()
+                                .add(ParameterCode.Data, new EUNArray.Builder().add(objectId).build())
+                                .build())
+                        .build();
 
-            Enqueue(request, null);
-        }
-
-        internal void VoiceChatRoom(int objectId, object voiceChatData)
-        {
-            var request = new VoiceChatOperationRequest(objectId, voiceChatData).Builder();
-            request.SetSynchronizationRequest(true);
-
-            Enqueue(request, null);
-        }
-
-        internal void TransferOwnerGameObjectRoom(int objectId, int ownerId, Action<TransferOwnerGameObjectRoomOperationResponse> onResponse)
-        {
-            var request = new TransferOwnerGameObjectRoomOperationRequest(objectId, ownerId).Builder();
-
-            Enqueue(request, response =>
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
             {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var destroyGameObjectRoomRoomOperationResponse = new DestroyGameObjectRoomRoomOperationResponse(response);
+                        onResponse?.Invoke(destroyGameObjectRoomRoomOperationResponse);
+                    });
+                }
+            }
+        }
+
+        internal void synchronizationDataGameObjectRoom(int objectId, object synchronizationData, Action<SynchronizationDataGameObjectRoomOperationResponse> onResponse)
+        {
+            var request = new SynchronizationDataGameObjectRoomOperationRequest(objectId, synchronizationData).build();
+            request.setSynchronizationRequest(true);
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
+            {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
+                var synchronizationDataGameObjectRoomOperationResponse = new SynchronizationDataGameObjectRoomOperationResponse(response);
+                onResponse?.Invoke(synchronizationDataGameObjectRoomOperationResponse);
+
+                if (this.room != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnSynchronizationDataGameObject)
+                        .add(
+                            new EUNHashtable.Builder()
+                                .add(ParameterCode.Data, new EUNArray.Builder().add(objectId).add(synchronizationData).build())
+                                .build())
+                        .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var synchronizationDataGameObjectRoomOperationResponse = new SynchronizationDataGameObjectRoomOperationResponse(response);
+                        onResponse?.Invoke(synchronizationDataGameObjectRoomOperationResponse);
+                    });
+                }
+            }
+        }
+
+        internal void voiceChatRoom(int objectId, object voiceChatData, Action<VoiceChatRoomOperationResponse> onResponse)
+        {
+            var request = new VoiceChatOperationRequest(objectId, voiceChatData).build();
+            request.setSynchronizationRequest(true);
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
+            {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
+                var voiceChatRoomOperationResponse = new VoiceChatRoomOperationResponse(response);
+                onResponse?.Invoke(voiceChatRoomOperationResponse);
+
+                if (this.room != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnVoiceChat)
+                        .add(
+                            new EUNHashtable.Builder()
+                                .add(ParameterCode.Data, new EUNArray.Builder().add(objectId).add(voiceChatData).build())
+                                .build())
+                        .build();
+
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var voiceChatRoomOperationResponse = new VoiceChatRoomOperationResponse(response);
+                        onResponse?.Invoke(voiceChatRoomOperationResponse);
+                    });
+                }
+            }
+        }
+
+        internal void transferOwnerGameObjectRoom(int objectId, int ownerId, Action<TransferOwnerGameObjectRoomOperationResponse> onResponse)
+        {
+            var request = new TransferOwnerGameObjectRoomOperationRequest(objectId, ownerId).build();
+
+            if (EUNNetwork.mode == Config.EUNServerSettings.Mode.OfflineMode)
+            {
+                var response = new OperationResponse(request.getOperationCode(), request.getRequestId());
+                response.setReturnCode(ReturnCode.Ok);
+                response.setDebugMessage(string.Empty);
+
                 var transferGameObjectRoomOperationResponse = new TransferOwnerGameObjectRoomOperationResponse(response);
                 onResponse?.Invoke(transferGameObjectRoomOperationResponse);
-            });
+
+                if (this.room != null)
+                {
+                    var eventArray = new EUNArray.Builder()
+                        .add(EventCode.OnTransferOwnerGameObject)
+                        .add(
+                            new EUNHashtable.Builder()
+                                .add(ParameterCode.Data, new EUNArray.Builder().add(objectId).add(ownerId).build())
+                                .build())
+                        .build();
+                    
+                    this.onEventHandler(eventArray);
+                }
+            }
+            else
+            {
+                if (onResponse == null)
+                {
+                    this.enqueue(request, null);
+                }
+                else
+                {
+                    this.enqueue(request, response =>
+                    {
+                        var transferGameObjectRoomOperationResponse = new TransferOwnerGameObjectRoomOperationResponse(response);
+                        onResponse?.Invoke(transferGameObjectRoomOperationResponse);
+                    });
+                }
+            }
         }
+
     }
+
 }

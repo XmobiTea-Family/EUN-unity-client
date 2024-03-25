@@ -6,50 +6,50 @@ namespace XmobiTea.EUN.Networking
     /// <summary>
     /// Handle if client inroom and someone inroom send ChangeGameObjectCustomProperties() request
     /// </summary>
-    internal class OnCustomGameObjectPropertiesChangeEventHandler : IServerEventHandler
+    internal class OnGameObjectCustomPropertiesChangeEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
-            return EventCode.OnCustomGameObjectPropertiesChange;
+            return EventCode.OnGameObjectCustomPropertiesChange;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             if (peer.room == null) return;
 
-            var parameters = operationEvent.GetParameters();
-            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
-            var objectId = eunArray.GetInt(0);
+            var parameters = operationEvent.getParameters();
+            var eunArray = parameters.getEUNArray(ParameterCode.Data);
+            var objectId = eunArray.getInt(0);
 
-            if (!peer.room.GameObjectDic.ContainsKey(objectId)) return;
+            if (!peer.room.gameObjectDict.ContainsKey(objectId)) return;
 
-            var roomGameObject = peer.room.GameObjectDic[objectId];
+            var roomGameObject = peer.room.gameObjectDict[objectId];
 
-            var customGameObjectProperties = eunArray.GetEUNHashtable(1);
-            var keySet = customGameObjectProperties.Keys();
+            var customGameObjectProperties = eunArray.getEUNHashtable(1);
+            var keySet = customGameObjectProperties.keys();
             foreach (int key in keySet)
             {
-                var value = customGameObjectProperties.GetObject(key);
+                var value = customGameObjectProperties.getObject(key);
 
                 if (value == null)
                 {
-                    if (roomGameObject.CustomProperties.ContainsKey(key))
+                    if (roomGameObject.customProperties.containsKey(key))
                     {
-                        roomGameObject.CustomProperties.Remove(key);
+                        roomGameObject.customProperties.remove(key);
                     }
                 }
-                else roomGameObject.CustomProperties.Add(key, value);
+                else roomGameObject.customProperties.add(key, value);
             }
 
             foreach (var view in peer.eunViewLst)
             {
                 if (view)
                 {
-                    if (objectId == view.RoomGameObject.ObjectId)
+                    if (objectId == view.roomGameObject.objectId)
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour != null) behaviour.OnEUNCustomGameObjectPropertiesChange(customGameObjectProperties);
+                            if (behaviour != null) behaviour.onEUNCustomGameObjectPropertiesChange(customGameObjectProperties);
                         }
                     }
                 }
@@ -59,8 +59,10 @@ namespace XmobiTea.EUN.Networking
             for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
                 var behaviour = eunManagerBehaviourLst[i];
-                if (behaviour != null) behaviour.OnEUNCustomGameObjectPropertiesChange(roomGameObject, customGameObjectProperties);
+                if (behaviour != null) behaviour.onEUNCustomGameObjectPropertiesChange(roomGameObject, customGameObjectProperties);
             }
         }
+
     }
+
 }

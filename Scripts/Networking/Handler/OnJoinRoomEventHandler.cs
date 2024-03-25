@@ -8,25 +8,25 @@
     /// </summary>
     internal class OnJoinRoomEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnJoinRoom;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-            var parameters = operationEvent.GetParameters();
-            var room = new Room(parameters.GetEUNArray(ParameterCode.Data));
+            var parameters = operationEvent.getParameters();
+            var room = new Room(parameters.getEUNArray(ParameterCode.Data));
             peer.room = room;
 
-            var roomPlayer = room.RoomPlayerLst.Find(x => x.UserId.Equals(EUNNetwork.UserId));
-            peer.playerId = roomPlayer == null ? -1 : roomPlayer.PlayerId;
+            var roomPlayer = room.roomPlayerLst.Find(x => x.userId.Equals(EUNNetwork.userId));
+            peer.playerId = roomPlayer == null ? -1 : roomPlayer.playerId;
 
             var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
             for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
                 var behaviour = eunManagerBehaviourLst[i];
-                if (behaviour != null) behaviour.OnEUNJoinRoom();
+                if (behaviour != null) behaviour.onEUNJoinRoom();
             }
 
             var roomGameObjectNeedCreateLst = peer.getListGameObjectNeedCreate();
@@ -39,16 +39,18 @@
                     {
                         foreach (var roomGameObject in roomGameObjectNeedCreateLst)
                         {
-                            var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
+                            var view = behaviour.onEUNViewNeedCreate(roomGameObject);
                             if (view != null)
                             {
-                                view.Init(roomGameObject);
-                                peer.eunViewDic[view.RoomGameObject.ObjectId] = view;
+                                view.init(roomGameObject);
+                                peer.eunViewDict[view.roomGameObject.objectId] = view;
                             }
                         }
                     }
                 }
             }
         }
+
     }
+
 }

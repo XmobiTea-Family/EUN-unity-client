@@ -1,113 +1,114 @@
 ﻿namespace XmobiTea.EUN.Entity
 {
-    using XmobiTea.EUN.Common;
     using System;
     using UnityEngine;
+    using XmobiTea.EUN.Common;
 
     [Serializable]
     public class RoomGameObject
     {
         [SerializeField]
-        private int objectId = -1;
+        private int _objectId = -1;
         /// <summary>
         /// The object id room game object
         /// </summary>
-        public int ObjectId
+        public int objectId
         {
-            get { return objectId; }
+            get { return this._objectId; }
             set
             {
-                objectId = value;
+                this._objectId = value;
             }
         }
 
         [SerializeField]
-        private int ownerId;
+        private int _ownerId;
         /// <summary>
         /// The owner player id for room game object
         /// </summary>
-        public int OwnerId
+        public int ownerId
         {
-            get { return ownerId; }
+            get { return this._ownerId; }
             set
             {
-                ownerId = value;
+                this._ownerId = value;
             }
         }
 
         [SerializeField]
-        private string prefabPath;
+        private string _prefabPath;
         /// <summary>
         /// The prefab path for this room game object
         /// </summary>
-        public string PrefabPath
+        public string prefabPath
         {
-            get { return prefabPath; }
+            get { return this._prefabPath; }
             set
             {
-                prefabPath = value;
+                this._prefabPath = value;
             }
         }
 
         [SerializeField]
-        private object synchronizationData;
+        private object _synchronizationData;
         /// <summary>
         /// The synchronization data
         /// </summary>
-        public object SynchronizationData
+        public object synchronizationData
         {
-            get { return synchronizationData; }
+            get { return this._synchronizationData; }
             set
             {
-                synchronizationData = value;
+                this._synchronizationData = value;
             }
         }
 
         [SerializeField]
-        private object initializeData;
+        private object _initializeData;
         /// <summary>
         /// The initialize data
         /// </summary>
-        public object InitializeData
+        public object initializeData
         {
-            get { return initializeData; }
+            get { return this._initializeData; }
             set
             {
-                initializeData = value;
+                this._initializeData = value;
             }
         }
 
         [SerializeField]
-        private EUNHashtable customProperties;
+        private EUNHashtable _customProperties;
         /// <summary>
         /// The room game object custom properties
         /// </summary>
-        public EUNHashtable CustomProperties
+        public EUNHashtable customProperties
         {
-            get { return customProperties; }
+            get { return this._customProperties; }
             set
             {
-                customProperties = value;
+                this._customProperties = value;
             }
         }
 
         public RoomGameObject(EUNArray eunArray)
         {
-            ObjectId = eunArray.GetInt(0);
-            OwnerId = eunArray.GetInt(1);
-            PrefabPath = eunArray.GetString(2);
-            SynchronizationData = eunArray.GetObject(3);
-            InitializeData = eunArray.GetObject(4);
-            CustomProperties = eunArray.GetEUNHashtable(5);
+            this.objectId = eunArray.getInt(0);
+            this.ownerId = eunArray.getInt(1);
+            this.prefabPath = eunArray.getString(2);
+            this.synchronizationData = eunArray.getObject(3);
+            this.initializeData = eunArray.getObject(4);
+            this.customProperties = eunArray.getEUNHashtable(5);
         }
 
         /// <summary>
         /// check the room game object is valid
         /// </summary>
         /// <returns></returns>
-        public bool IsValid()
+        public bool isValid()
         {
-            return objectId > -1;
+            return this._objectId > -1;
         }
     }
+
 }

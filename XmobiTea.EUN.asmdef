@@ -1,8 +1,9 @@
 {
     "name": "XmobiTea.EUN",
-    "rootNamespace": "",
+    "rootNamespace": "XmobiTea.EUN",
     "references": [
-        "ezyfox-server-csharp-client"
+        "ezyfox-server-csharp-client",
+        "XmobiTea.EUN.custom"
     ],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -8,33 +8,35 @@
     /// </summary>
     internal class OnRpcGameObjectEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnRpcGameObject;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             if (peer.room == null) return;
 
-            var parameters = operationEvent.GetParameters();
-            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
+            var parameters = operationEvent.getParameters();
+            var eunArray = parameters.getEUNArray(ParameterCode.Data);
 
-            var objectId = eunArray.GetInt(0);
-            var eunRPCCommand = eunArray.GetInt(1);
-            var rpcData = eunArray.GetEUNArray(2);
+            var objectId = eunArray.getInt(0);
+            var eunRPCCommand = eunArray.getInt(1);
+            var rpcData = eunArray.getEUNArray(2);
 
-            if (peer.eunViewDic.ContainsKey(objectId))
+            if (peer.eunViewDict.ContainsKey(objectId))
             {
-                var view = peer.eunViewDic[objectId];
+                var view = peer.eunViewDict[objectId];
                 if (view)
                 {
                     foreach (var behaviour in view.eunBehaviourLst)
                     {
-                        if (behaviour != null) behaviour.EUNRPC(eunRPCCommand, rpcData);
+                        if (behaviour != null) behaviour.eunRpc(eunRPCCommand, rpcData);
                     }
                 }
             }
         }
+
     }
+
 }

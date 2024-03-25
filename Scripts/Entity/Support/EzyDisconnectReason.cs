@@ -14,7 +14,9 @@ namespace XmobiTea.EUN.Entity.Support
 		MAX_REQUEST_SIZE = 7,
 		SERVER_ERROR = 8,
 		SERVER_NOT_RESPONDING = 400,
-		UNAUTHORIZED = 401
+		UNAUTHORIZED = 401,
+
 	}
+
 }
 #endif

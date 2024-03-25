@@ -8,25 +8,25 @@
     /// </summary>
     internal class OnDestroyGameObjectEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnDestroyGameObject;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             if (peer.room == null) return;
 
-            var parameters = operationEvent.GetParameters();
-            var eunArray = parameters.GetEUNArray(ParameterCode.Data);
-            var objectId = eunArray.GetInt(0);
+            var parameters = operationEvent.getParameters();
+            var eunArray = parameters.getEUNArray(ParameterCode.Data);
+            var objectId = eunArray.getInt(0);
 
             RoomGameObject roomGameObject = null;
 
-            if (peer.room.GameObjectDic.ContainsKey(objectId))
+            if (peer.room.gameObjectDict.ContainsKey(objectId))
             {
-                roomGameObject = peer.room.GameObjectDic[objectId];
-                peer.room.GameObjectDic.Remove(objectId);
+                roomGameObject = peer.room.gameObjectDict[objectId];
+                peer.room.gameObjectDict.Remove(objectId);
             }
 
             if (roomGameObject != null)
@@ -35,11 +35,11 @@
                 {
                     if (view)
                     {
-                        if (view.RoomGameObject.ObjectId == objectId)
+                        if (view.roomGameObject.objectId == objectId)
                         {
                             foreach (var behaviour in view.eunBehaviourLst)
                             {
-                                if (behaviour != null) behaviour.OnEUNDestroyGameObjectRoom();
+                                if (behaviour != null) behaviour.onEUNDestroyGameObjectRoom();
                             }
 
                             break;
@@ -51,9 +51,11 @@
                 for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
                     var behaviour = eunManagerBehaviourLst[i];
-                    if (behaviour != null) behaviour.OnEUNDestroyGameObjectRoom(roomGameObject);
+                    if (behaviour != null) behaviour.onEUNDestroyGameObjectRoom(roomGameObject);
                 }
             }
         }
+
     }
+
 }

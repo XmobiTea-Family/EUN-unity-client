@@ -7,41 +7,43 @@
         /// <summary>
         /// The room id
         /// </summary>
-        public int RoomId { get; private set; }
+        public int roomId { get; private set; }
 
         /// <summary>
         /// The room is open
         /// </summary>
-        public bool IsOpen { get; private set; }
+        public bool isOpen { get; private set; }
 
         /// <summary>
         /// The max player of room
         /// </summary>
-        public int MaxPlayer { get; private set; }
+        public int maxPlayer { get; private set; }
 
         /// <summary>
         /// The room has contains password
         /// </summary>
-        public bool HasPassword { get; private set; }
+        public bool hasPassword { get; private set; }
 
         /// <summary>
         /// The current player count in room
         /// </summary>
-        public int PlayerCount { get; private set; }
+        public int playerCount { get; private set; }
 
         /// <summary>
         /// The custom room properties can get in lobby
         /// </summary>
-        public EUNHashtable CustomRoomPropertiesForLobby { get; private set; }
+        public EUNHashtable customRoomPropertiesForLobby { get; private set; }
 
         public LobbyRoomStats(EUNArray eunArray)
         {
-            RoomId = eunArray.GetInt(0);
-            IsOpen = eunArray.GetBool(1);
-            MaxPlayer = eunArray.GetInt(2);
-            HasPassword = eunArray.GetBool(3);
-            PlayerCount = eunArray.GetInt(4);
-            CustomRoomPropertiesForLobby = eunArray.GetEUNHashtable(5);
+            this.roomId = eunArray.getInt(0);
+            this.isOpen = eunArray.getBool(1);
+            this.maxPlayer = eunArray.getInt(2);
+            this.hasPassword = eunArray.getBool(3);
+            this.playerCount = eunArray.getInt(4);
+            this.customRoomPropertiesForLobby = eunArray.getEUNHashtable(5);
         }
+
     }
+
 }

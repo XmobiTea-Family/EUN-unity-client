@@ -1,6 +1,6 @@
 ﻿namespace XmobiTea.EUN
 {
-#if EUN
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client.constant;
 #else
     using XmobiTea.EUN.Entity.Support;
@@ -11,48 +11,50 @@
 
     public interface IEUNManagerBehaviour
     {
-        void OnEUNCustomPlayerPropertiesChange(RoomPlayer player, EUNHashtable customPropertiesChange);
+        void onEUNCustomPlayerPropertiesChange(RoomPlayer player, EUNHashtable customPropertiesChange);
 
-        void OnEUNCustomRoomPropertiesChange(EUNHashtable customPropertiesChange);
+        void onEUNCustomRoomPropertiesChange(EUNHashtable customPropertiesChange);
 
-        void OnEUNCustomGameObjectPropertiesChange(RoomGameObject roomGameObject, EUNHashtable customPropertiesChange);
+        void onEUNCustomGameObjectPropertiesChange(RoomGameObject roomGameObject, EUNHashtable customPropertiesChange);
 
-        void OnEUNDestroyGameObjectRoom(RoomGameObject roomGameObject);
+        void onEUNDestroyGameObjectRoom(RoomGameObject roomGameObject);
 
-        void OnEUNZoneConnected();
+        void onEUNZoneConnected();
 
-        void OnEUNConnected();
+        void onEUNConnected();
 
-        void OnEUNLoginError();
+        void onEUNLoginError();
 
-        void OnEUNConnectionFailure(EzyConnectionFailedReason reason);
+        void onEUNConnectionFailure(EzyConnectionFailedReason reason);
 
-        void OnEUNDisconnected(EzyDisconnectReason reason);
+        void onEUNDisconnected(EzyDisconnectReason reason);
 
-        void OnEUNJoinLobby();
+        void onEUNJoinLobby();
 
-        void OnEUNLeftLobby();
+        void onEUNLeftLobby();
 
-        void OnEUNJoinRoom();
+        void onEUNJoinRoom();
 
-        void OnEUNLeaderClientChange(RoomPlayer newLeaderClientPlayer);
+        void onEUNLeaderClientChange(RoomPlayer newLeaderClientPlayer);
 
-        void OnEUNLeftRoom();
+        void onEUNLeftRoom();
 
-        void OnEUNOtherPlayerJoinRoom(RoomPlayer player);
+        void onEUNOtherPlayerJoinRoom(RoomPlayer player);
 
-        void OnEUNOtherPlayerLeftRoom(RoomPlayer player);
+        void onEUNOtherPlayerLeftRoom(RoomPlayer player);
 
-        void OnEUNReceiveChatAll(ChatMessage message);
+        void onEUNReceiveChatAll(ChatMessage message);
 
-        void OnEUNReceiveChatLobby(ChatMessage message);
+        void onEUNReceiveChatLobby(ChatMessage message);
 
-        void OnEUNReceiveChatRoom(ChatMessage message, RoomPlayer sender);
+        void onEUNReceiveChatRoom(ChatMessage message, RoomPlayer sender);
 
-        void OnEUNRoomInfoChange(EUNHashtable customPropertiesChange);
+        void onEUNRoomInfoChange(EUNHashtable customPropertiesChange);
 
-        EUNView OnEUNViewNeedCreate(RoomGameObject roomGameObject);
+        EUNView onEUNViewNeedCreate(RoomGameObject roomGameObject);
 
-        void OnEUNTransferOwnerGameObject(RoomGameObject roomGameObject, RoomPlayer newOwner);
+        void onEUNTransferOwnerGameObject(RoomGameObject roomGameObject, RoomPlayer newOwner);
+
     }
+
 }

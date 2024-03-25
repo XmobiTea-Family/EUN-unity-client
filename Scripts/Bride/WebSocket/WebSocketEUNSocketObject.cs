@@ -1,63 +1,61 @@
 ﻿namespace XmobiTea.EUN.Bride.WebSocket
 {
-#if EUN
-    using com.tvd12.ezyfoxserver.client.constant;
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client.entity;
+#if !UNITY_EDITOR && UNITY_WEBGL
     using com.tvd12.ezyfoxserver.client.factory;
+    using XmobiTea.EUN.Plugin.WebGL;
+    using XmobiTea.EUN.Helper;
+    using XmobiTea.EUN.Constant;
+#endif
 #else
     using XmobiTea.EUN.Entity.Support;
 #endif
 
     using XmobiTea.EUN.Common;
-    using XmobiTea.EUN.Constant;
-    using XmobiTea.EUN.Helper;
-    using XmobiTea.EUN.Plugin.WebGL;
-
-    using System.Collections.Generic;
 
     public class WebSocketEUNSocketObject : EUNSocketObject
     {
-        protected override void OnCustomStart()
+        public WebSocketEUNSocketObject() : base()
         {
-            base.OnCustomStart();
-
-#if EUN
-            EzyClientJsBride.EzyLibrary();
+#if EUN_USING_ONLINE && !UNITY_EDITOR && UNITY_WEBGL
+            EzyClientJsBride.ezyLibrary();
 #endif
         }
 
-        public override void Init(string _zoneName, string _appName)
+        public override void init(string _zoneName, string _appName)
         {
-            base.Init(_zoneName, _appName);
-#if EUN
-            EzyClientJsBride.EzyInit(this.gameObject.name, _zoneName, _appName);
+            base.init(_zoneName, _appName);
+#if EUN_USING_ONLINE && !UNITY_EDITOR && UNITY_WEBGL
+            EzyClientJsBride.ezyInit("[EUN] ServiceUpdate", _zoneName, _appName);
 #endif
         }
 
-        public override void Connect(string username, string password, IEUNData data, string host, int port, int udpPort)
+        public override void connect(string username, string password, IEUNData data, string host, int port, int udpPort)
         {
-            base.Connect(username, password, data, host, port, udpPort);
-#if EUN
-            var data1 = data == null ? EzyEntityFactory.EMPTY_ARRAY : data.ToEzyData();
+            base.connect(username, password, data, host, port, udpPort);
+#if EUN_USING_ONLINE && !UNITY_EDITOR && UNITY_WEBGL
+            var data1 = data == null ? com.tvd12.ezyfoxserver.client.factory.EzyEntityFactory.EMPTY_ARRAY : data.toEzyData();
 
-            EzyClientJsBride.EzyConnect(username, password, data1.ToString(), host);
+            EzyClientJsBride.ezyConnect(username, password, data1.ToString(), host);
 #endif
         }
 
-        public override void Disconnect()
+        public override void disconnect()
         {
-            base.Disconnect();
-#if EUN
-            EzyClientJsBride.EzyDisconnect();
+            base.disconnect();
+#if EUN_USING_ONLINE && !UNITY_EDITOR && UNITY_WEBGL
+            EzyClientJsBride.ezyDisconnect();
 #endif
         }
 
-#if EUN
-        public override void Send(EzyObject request, bool reliable = true)
+#if EUN_USING_ONLINE
+        public override void send(EzyObject request, bool reliable = true)
         {
-            base.Send(request, reliable);
-
-            if (EzyClientJsBride.EzySend(Serializer.Serialize(request.toDict<object, object>())))
+            base.send(request, reliable);
+            
+#if !UNITY_EDITOR && UNITY_WEBGL
+            if (EzyClientJsBride.ezySend(Serializer.Serialize(request.toDict<object, object>())))
             {
                 //if (reliable) app.send(Commands.RequestCmd, request);
                 //else app.udpSend(Commands.RequestCmd, request);
@@ -67,68 +65,31 @@
                 var data = request.get<EzyArray>(Commands.Data);
 
                 var eunArray = new EUNArray();
-                eunArray.Add((int)ReturnCode.AppNullRequest);
-                eunArray.Add((string)null);
-                if (data.size() > 2) eunArray.Add(data.get<int>(2));
+                eunArray.add((int)ReturnCode.AppNullRequest);
+                eunArray.add((string)null);
+                if (data.size() > 2) eunArray.add(data.get<int>(2));
 
                 onResponse?.Invoke(eunArray);
             }
+#endif
         }
 #endif
 
-        public override int GetPing()
+        public override int getPing()
         {
-            return base.GetPing();
+            return base.getPing();
         }
 
-        public override long GetTotalRecvBytes()
+        public override long getTotalRecvBytes()
         {
-            return base.GetTotalRecvBytes();
+            return base.getTotalRecvBytes();
         }
 
-        public override long GetTotalSendBytes()
+        public override long getTotalSendBytes()
         {
-            return base.GetTotalSendBytes();
+            return base.getTotalSendBytes();
         }
 
-        private void handleOnConnectionSuccess()
-        {
-            onConnectionSuccess?.Invoke();
-        }
-
-        private void handleOnDisconnection(int reason)
-        {
-            onDisconnection?.Invoke((EzyDisconnectReason)reason);
-        }
-
-        private void handleOnConnectionFailure(int reason)
-        {
-            onConnectionFailure.Invoke((EzyConnectionFailedReason)reason);
-        }
-
-        private void handleOnLoginError(string jsonArr)
-        {
-            onLoginError?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr) as System.Collections.IList).Build());
-        }
-
-        private void handleOnAppAccess(string jsonArr)
-        {
-            onAppAccess?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr) as System.Collections.IList).Build());
-        }
-
-        private void handleOnResponse(string jsonArr)
-        {
-            onResponse?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr) as System.Collections.IList).Build());
-        }
-
-        private void handleOnEvent(string jsonArr)
-        {
-            onEvent?.Invoke(new EUNArray.Builder().AddAll(getObjectLstFromJsonArr(jsonArr) as System.Collections.IList).Build());
-        }
-
-        private IList<object> getObjectLstFromJsonArr(string jsonArr)
-        {
-            return (IList<object>)Parser.Parse(jsonArr);
-        }
     }
+
 }

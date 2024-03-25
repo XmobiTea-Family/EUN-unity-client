@@ -9,23 +9,25 @@
     using UnityEngine;
     using XmobiTea.EUN.Entity;
     using XmobiTea.EUN.Logger;
+    using System.Threading.Tasks;
+    using XmobiTea.EUN.Unity;
 
     public static partial class EUNNetwork
     {
         /// <summary>
         /// The current version of EUN client
         /// </summary>
-        public const string Version = "1.2.1";
+        private const string EUN_VERSION = "1.2.2";
 
         /// <summary>
         /// The mode for connection EUN client
         /// </summary>
-        public static EUNServerSettings.Mode Mode => eunServerSettings != null ? eunServerSettings.mode : EUNServerSettings.Mode.OfflineMode;
+        public static EUNServerSettings.Mode mode => eunServerSettings != null ? eunServerSettings.mode : EUNServerSettings.Mode.OfflineMode;
 
         /// <summary>
         /// The current user id client has authenticated
         /// </summary>
-        public static string UserId { get; private set; }
+        public static string userId { get; private set; }
 
         /// <summary>
         /// The current ServerSettings
@@ -36,7 +38,7 @@
         /// <summary>
         /// The current peer of EUN client
         /// </summary>
-        private static NetworkingPeer peer;
+        internal static NetworkingPeer peer { get; private set; }
 
         /// <summary>
         /// The current peer statistics
@@ -45,20 +47,26 @@
 
         static EUNNetwork()
         {
-            InitServerSettings();
-            InitEUNDebug();
+            initServerSettings();
+            initEUNDebug();
             
             if (!Application.isPlaying) return;
 
-            InitEUNSocketObject();
-            InitEUNSocketStatisticsObject();
+            initEUNSocketObject();
+            initEUNSocketStatisticsObject();
         }
+
+        /// <summary>
+        /// Get the Client Sdk Version
+        /// </summary>
+        /// <returns></returns>
+        public static string getClientSdkVersion() => EUNNetwork.EUN_VERSION;
 
         /// <summary>
         /// Init server settings, load the EUNServerSettings in Resources folder
         /// </summary>
         /// <exception cref="NullReferenceException"></exception>
-        private static void InitServerSettings()
+        private static void initServerSettings()
         {
             eunServerSettings = Resources.Load(EUNServerSettings.ResourcesPath) as EUNServerSettings;
 
@@ -76,28 +84,33 @@
         /// Init Debug, settings for debug in the EUNServerSettings LogType
         /// </summary>
         /// <exception cref="NullReferenceException">EUNServerSettings not found</exception>
-        private static void InitEUNDebug()
+        private static void initEUNDebug()
         {
             if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
 
-            EUNDebug.Init(eunServerSettings.LogType);
+            EUNDebug.init(eunServerSettings.logType);
         }
 
         /// <summary>
         /// Init the socket object for EUN client
         /// </summary>
-        private static void InitEUNSocketObject()
+        private static void initEUNSocketObject()
         {
-            peer = new GameObject("EUN NetworkingPeer").AddComponent<NetworkingPeer>();
-            GameObject.DontDestroyOnLoad(peer.gameObject);
+            var peer = new NetworkingPeer();
+            peer.initPeer();
 
-            peer.InitPeer();
+            EUNNetwork.peer = peer;
+
+            var serviceUpdate = new GameObject("[EUN] ServiceUpdate").AddComponent<ServiceUpdate>();
+            GameObject.DontDestroyOnLoad(serviceUpdate.gameObject);
+
+            serviceUpdate.peer = peer;
         }
 
         /// <summary>
         /// Init the socket statistics object for EUN client
         /// </summary>
-        private static void InitEUNSocketStatisticsObject()
+        private static void initEUNSocketStatisticsObject()
         {
             peerStatistics = new NetworkingPeerStatistics(peer);
         }
@@ -108,19 +121,21 @@
         /// </summary>
         /// <param name="userId">The user id you want authenticated to server</param>
         /// <param name="customData">The custom data need send to EUN Server, like auth token, username or password</param>
-        public static void Connect(string userId, EUNArray customData = null)
+        public static void connect(string userId, EUNArray customData = null)
         {
-            UserId = userId;
+            if (eunServerSettings == null) throw new NullReferenceException("Null EUN Server Settings, please find it now");
 
-            peer.Connect(UserId, string.Empty, customData);
+            EUNNetwork.userId = userId;
+
+            peer.connect(EUNNetwork.userId, eunServerSettings.secretKey, customData);
         }
 
         /// <summary>
         /// Disconnect client
         /// </summary>
-        public static void Disconnect()
+        public static void disconnect()
         {
-            peer.Disconnect();
+            peer.disconnect();
         }
 
         /// <summary>
@@ -129,51 +144,65 @@
         /// </summary>
         /// <param name="request"></param>
         /// <param name="onResponse"></param>
-        public static void Send(OperationRequest request, Action<OperationResponse> onResponse = null)
+        public static void send(OperationRequest request, Action<OperationResponse> onResponse = null)
         {
-            peer.Enqueue(request, onResponse);
+            peer.enqueue(request, onResponse);
+        }
+
+        public static async Task<OperationResponse> sendAsync(OperationRequest request)
+        {
+            OperationResponse waitingResult = null;
+
+            send(request, response => waitingResult = response);
+
+            while (waitingResult == null)
+                await Task.Yield();
+
+            return waitingResult;
         }
 
         /// <summary>
         /// Get network statistics to get packet, bytes sent or received, success or not 
         /// </summary>
         /// <returns></returns>
-        public static NetworkingPeerStatistics GetPeerStatistics() { return peerStatistics; }
+        public static NetworkingPeerStatistics getPeerStatistics() { return peerStatistics; }
 
         /// <summary>
         /// Subscriber a IEUNManagerBehaviour
         /// </summary>
         /// <param name="behaviour">what a IEUNManagerBehaviour</param>
-        public static void SubscriberEUNManagerBehaviour(IEUNManagerBehaviour behaviour)
+        public static void subscriberEUNManagerBehaviour(IEUNManagerBehaviour behaviour)
         {
-            peer.SubscriberEUNManagerBehaviour(behaviour);
+            peer.subscriberEUNManagerBehaviour(behaviour);
         }
 
         /// <summary>
         /// Unsubscriber a IEUNManagerBehaviour
         /// </summary>
         /// <param name="behaviour">what a IEUNManagerBehaviour</param>
-        public static void UnSubscriberEUNManagerBehaviour(IEUNManagerBehaviour behaviour)
+        public static void unSubscriberEUNManagerBehaviour(IEUNManagerBehaviour behaviour)
         {
-            peer.UnSubscriberEUNManagerBehaviour(behaviour);
+            peer.unSubscriberEUNManagerBehaviour(behaviour);
         }
 
         /// <summary>
         /// Subscriber a EUNView
         /// </summary>
         /// <param name="view"></param>
-        internal static void SubscriberEUNView(EUNView view)
+        internal static void subscriberEUNView(EUNView view)
         {
-            peer.SubscriberEUNView(view);
+            peer.subscriberEUNView(view);
         }
 
         /// <summary>
         /// Unsubscriber a EUNView
         /// </summary>
         /// <param name="view"></param>
-        internal static void UnSubscriberEUNView(EUNView view)
+        internal static void unSubscriberEUNView(EUNView view)
         {
-            peer.UnSubscriberEUNView(view);
+            peer.unSubscriberEUNView(view);
         }
+
     }
+
 }

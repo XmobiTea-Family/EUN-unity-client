@@ -5,21 +5,23 @@
 
     public class ChangeGameObjectCustomPropertiesOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.ChangeGameObjectCustomProperties;
+        protected override int code => OperationCode.ChangeGameObjectCustomProperties;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// ChangeGameObjectCustomPropertiesOperationRequest
         /// </summary>
         /// <param name="objectId">The room game object need change</param>
         /// <param name="customGameObjectProperties">The custom properties need change</param>
-        public ChangeGameObjectCustomPropertiesOperationRequest(int objectId, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public ChangeGameObjectCustomPropertiesOperationRequest(int objectId, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.ObjectId, objectId)
-                .Add(ParameterCode.CustomGameObjectProperties, customGameObjectProperties)
-                .Build();
+            this.parameters = new EUNHashtable.Builder()
+                .add(ParameterCode.ObjectId, objectId)
+                .add(ParameterCode.CustomGameObjectProperties, customGameObjectProperties)
+                .build();
         }
+
     }
+
 }

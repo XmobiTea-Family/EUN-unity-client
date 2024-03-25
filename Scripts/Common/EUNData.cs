@@ -1,26 +1,26 @@
 ﻿namespace XmobiTea.EUN.Common
 {
-#if EUN
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client.entity;
 #endif
 
     using System;
     using System.Collections.Generic;
 
-    public class EUNData : IEUNData
+    public abstract class EUNData : IEUNData
     {
-        protected static object CreateUseDataFromOriginData(object value)
+        protected object createUseDataFromOriginData(object value)
         {
             if (value == null) return null;
 
-#if EUN
+#if EUN_USING_ONLINE
             if (value is EzyArray ezyArray)
             {
                 var answer = new EUNArray();
 
                 for (var i = 0; i < ezyArray.size(); i++)
                 {
-                    answer.Add(ezyArray.get<object>(i));
+                    answer.add(ezyArray.get<object>(i));
                 }
 
                 return answer;
@@ -29,8 +29,8 @@
             if (value is EzyObject ezyObject)
             {
                 var answer = new EUNHashtable.Builder()
-                    .AddAll(ezyObject.toDict<object, object>() as System.Collections.IDictionary)
-                    .Build();
+                    .addAll(ezyObject.toDict<object, object>() as System.Collections.IDictionary)
+                    .build();
 
                 return answer;
             }
@@ -52,7 +52,7 @@
 
                 for (var i = 0; i < list.Count; i++)
                 {
-                    answer.Add(list[i]);
+                    answer.add(list[i]);
                 }
 
                 return answer;
@@ -61,8 +61,8 @@
             if (value is System.Collections.IDictionary dict)
             {
                 var answer = new EUNHashtable.Builder()
-                    .AddAll(dict)
-                    .Build();
+                    .addAll(dict)
+                    .build();
 
                 return answer;
             }
@@ -70,13 +70,13 @@
             return value;
         }
 
-        protected static object CreateEUNDataFromUseData(object value)
+        protected object createEUNDataFromUseData(object value)
         {
             if (value == null) return null;
 
             if (value is IEUNData eunData)
             {
-                return eunData.ToEzyData();
+                return eunData.toEzyData();
             }
 
             return value;
@@ -85,20 +85,20 @@
         /// <summary>
         /// Clear all data in this EUNData
         /// </summary>
-        public virtual void Clear() { }
+        public virtual void clear() { }
 
         /// <summary>
         /// Remove a "k" in this EUNData
         /// </summary>
         /// <param name="k"></param>
         /// <returns>true if k exists</returns>
-        public virtual bool Remove(int k) { return false; }
+        public virtual bool remove(int k) { return false; }
 
         /// <summary>
         /// Size of this EUNData
         /// </summary>
         /// <returns>size of this EUNData</returns>
-        public virtual int Count() { return 0; }
+        public virtual int count() { return 0; }
 
         /// <summary>
         /// Get value as T at k pos
@@ -107,7 +107,7 @@
         /// <param name="k">k pos</param>
         /// <param name="defaultValue">default value if k not valid in EUNData</param>
         /// <returns></returns>
-        protected virtual object Get<T>(int k, T defaultValue = default(T))
+        protected virtual object get<T>(int k, T defaultValue = default(T))
         {
             return defaultValue;
         }
@@ -118,9 +118,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public byte GetByte(int k, byte defaultValue = 0)
+        public byte getByte(int k, byte defaultValue = 0)
         {
-            return Convert.ToByte(Get(k, defaultValue));
+            return Convert.ToByte(this.get(k, defaultValue));
         }
 
         /// <summary>
@@ -129,9 +129,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public sbyte GetSByte(int k, sbyte defaultValue = 0)
+        public sbyte getSByte(int k, sbyte defaultValue = 0)
         {
-            return Convert.ToSByte(Get(k, defaultValue));
+            return Convert.ToSByte(this.get(k, defaultValue));
         }
 
         /// <summary>
@@ -140,9 +140,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public short GetShort(int k, short defaultValue = 0)
+        public short getShort(int k, short defaultValue = 0)
         {
-            return Convert.ToInt16(Get(k, defaultValue));
+            return Convert.ToInt16(this.get(k, defaultValue));
         }
 
         /// <summary>
@@ -151,9 +151,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public int GetInt(int k, int defaultValue = 0)
+        public int getInt(int k, int defaultValue = 0)
         {
-            return Convert.ToInt32(Get(k, defaultValue));
+            return Convert.ToInt32(this.get(k, defaultValue));
         }
 
         /// <summary>
@@ -162,9 +162,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public float GetFloat(int k, float defaultValue = 0)
+        public float getFloat(int k, float defaultValue = 0)
         {
-            return Convert.ToSingle(Get(k, defaultValue));
+            return Convert.ToSingle(this.get(k, defaultValue));
         }
 
         /// <summary>
@@ -173,9 +173,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public long GetLong(int k, long defaultValue = 0)
+        public long getLong(int k, long defaultValue = 0)
         {
-            return Convert.ToInt64(Get(k, defaultValue));
+            return Convert.ToInt64(this.get(k, defaultValue));
         }
 
         /// <summary>
@@ -184,9 +184,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public double GetDouble(int k, double defaultValue = 0)
+        public double getDouble(int k, double defaultValue = 0)
         {
-            return Convert.ToDouble(Get(k, defaultValue));
+            return Convert.ToDouble(this.get(k, defaultValue));
         }
 
         /// <summary>
@@ -195,9 +195,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public bool GetBool(int k, bool defaultValue = false)
+        public bool getBool(int k, bool defaultValue = false)
         {
-            return Convert.ToBoolean(Get(k, defaultValue));
+            return Convert.ToBoolean(this.get(k, defaultValue));
         }
 
         /// <summary>
@@ -206,9 +206,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public string GetString(int k, string defaultValue = null)
+        public string getString(int k, string defaultValue = null)
         {
-            return Convert.ToString(Get(k, defaultValue));
+            return Convert.ToString(this.get(k, defaultValue));
         }
 
         /// <summary>
@@ -217,9 +217,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public object GetObject(int k, object defaultValue = null)
+        public object getObject(int k, object defaultValue = null)
         {
-            return Get(k, defaultValue);
+            return this.get(k, defaultValue);
         }
 
         /// <summary>
@@ -228,12 +228,12 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public T[] GetArray<T>(int k, T[] defaultValue = null)
+        public T[] getArray<T>(int k, T[] defaultValue = null)
         {
-            var value0 = GetEUNArray(k);
+            var value0 = this.getEUNArray(k);
             if (value0 != null)
             {
-                return value0.ToArray<T>();
+                return value0.toArray<T>();
             }
 
             return defaultValue;
@@ -245,12 +245,12 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public IList<T> GetList<T>(int k, IList<T> defaultValue = null)
+        public IList<T> getList<T>(int k, IList<T> defaultValue = null)
         {
-            var value0 = GetEUNArray(k);
+            var value0 = this.getEUNArray(k);
             if (value0 != null)
             {
-                return value0.ToList<T>();
+                return value0.toList<T>();
             }
 
             return defaultValue;
@@ -262,9 +262,9 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public EUNArray GetEUNArray(int k, EUNArray defaultValue = null)
+        public EUNArray getEUNArray(int k, EUNArray defaultValue = null)
         {
-            return (EUNArray)Get(k, defaultValue);
+            return (EUNArray)this.get(k, defaultValue);
         }
 
         /// <summary>
@@ -273,15 +273,18 @@
         /// <param name="k"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        public EUNHashtable GetEUNHashtable(int k, EUNHashtable defaultValue = null)
+        public EUNHashtable getEUNHashtable(int k, EUNHashtable defaultValue = null)
         {
-            return (EUNHashtable)Get(k, defaultValue);
+            return (EUNHashtable)this.get(k, defaultValue);
         }
 
         /// <summary>
         /// Get ezy data for this EUNData
         /// </summary>
         /// <returns></returns>
-        public virtual object ToEzyData() { return null; }
+        public abstract object toEzyData();
+
+        public abstract string toString();
     }
+
 }

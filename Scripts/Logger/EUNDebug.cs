@@ -9,7 +9,8 @@ namespace XmobiTea.EUN.Logger
         Exception,
         Error,
         Warning,
-        All
+        All,
+
     }
 
     /// <summary>
@@ -19,33 +20,35 @@ namespace XmobiTea.EUN.Logger
     {
         private static LogType logType;
 
-        public static void Init(LogType logType)
+        public static void init(LogType logType)
         {
             EUNDebug.logType = logType;
         }
 
-        public static void Log(object message)
+        public static void log(object message)
         {
             if (logType >= LogType.All)
                 Debug.Log(message);
         }
 
-        public static void LogException(Exception exception)
+        public static void logException(Exception exception)
         {
             if (logType >= LogType.Exception)
                 Debug.LogException(exception);
         }
 
-        public static void LogWarning(object message)
+        public static void logWarning(object message)
         {
             if (logType >= LogType.Warning)
                 Debug.LogWarning(message);
         }
 
-        public static void LogError(object message)
+        public static void logError(object message)
         {
             if (logType >= LogType.Error)
                 Debug.LogError(message);
         }
+
     }
+
 }

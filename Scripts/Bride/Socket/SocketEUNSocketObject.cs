@@ -1,6 +1,6 @@
 ﻿namespace XmobiTea.EUN.Bride.Socket
 {
-#if EUN
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client;
     using com.tvd12.ezyfoxserver.client.config;
     using com.tvd12.ezyfoxserver.client.constant;
@@ -20,7 +20,7 @@
     /// </summary>
     public class SocketEUNSocketObject : EUNSocketObject
     {
-#if EUN
+#if EUN_USING_ONLINE
         private EzyClient socketClient;
 #endif
 
@@ -29,13 +29,13 @@
         /// </summary>
         internal static int udpPort;
 
-        public override void Init(string _zoneName, string _appName)
+        public override void init(string _zoneName, string _appName)
         {
-            base.Init(_zoneName, _appName);
-#if EUN
+            base.init(_zoneName, _appName);
+#if EUN_USING_ONLINE
             var config = EzyClientConfig.builder().clientName(zoneName).build();
 
-            socketClient = new EzyUTClient(config);
+            this.socketClient = new EzyUTClient(config);
 
             var setup = socketClient.setup();
             setup.addEventHandler(EzyEventType.CONNECTION_SUCCESS, new ConnectionSuccessHandler());
@@ -51,87 +51,87 @@
             appSetup.addDataHandler(Commands.ResponseCmd, new ResponseHandler());
             appSetup.addDataHandler(Commands.EventCmd, new EventHandler());
 
-            EzyClients.getInstance().addClient(socketClient);
+            EzyClients.getInstance().addClient(this.socketClient);
 #endif
         }
 
-        public override void Connect(string username, string password, IEUNData data, string host, int port, int udpPort)
+        public override void connect(string username, string password, IEUNData data, string host, int port, int udpPort)
         {
-            base.Connect(username, password, data, host, port, udpPort);
+            base.connect(username, password, data, host, port, udpPort);
 
             SocketEUNSocketObject.udpPort = udpPort;
-#if EUN
-            socketClient.connect(host, port);
+#if EUN_USING_ONLINE
+            this.socketClient.connect(host, port);
 #endif
         }
 
-        public override void Disconnect()
+        public override void disconnect()
         {
-            base.Disconnect();
+            base.disconnect();
 
-#if EUN
-            socketClient.disconnect((int)EzyDisconnectReason.CLOSE);
+#if EUN_USING_ONLINE
+            this.socketClient.disconnect((int)EzyDisconnectReason.CLOSE);
 #endif
         }
 
-        public override int GetPing()
+        public override int getPing()
         {
-            return base.GetPing();
+            return base.getPing();
         }
 
-        public override long GetTotalRecvBytes()
+        public override long getTotalRecvBytes()
         {
-#if EUN
-            var networkStats = socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
+#if EUN_USING_ONLINE
+            var networkStats = this.socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
 
             return networkStats.getReadBytes();
 #else
-            return base.GetTotalRecvBytes();
+            return base.getTotalRecvBytes();
 #endif
         }
 
-        public override long GetTotalSendBytes()
+        public override long getTotalSendBytes()
         {
-#if EUN
-            var networkStats = socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
+#if EUN_USING_ONLINE
+            var networkStats = this.socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
 
             return networkStats.getWrittenBytes();
 #else
-            return base.GetTotalSendBytes();
+            return base.getTotalSendBytes();
 #endif
         }
 
-        public override long GetTotalRecvPackets()
+        public override long getTotalRecvPackets()
         {
-#if EUN
-            var networkStats = socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
+#if EUN_USING_ONLINE
+            var networkStats = this.socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
 
             return networkStats.getReadPackets();
 #else
-            return base.GetTotalRecvPackets();
+            return base.getTotalRecvPackets();
 #endif
         }
 
-        public override long GetTotalSendPackets()
+        public override long getTotalSendPackets()
         {
-#if EUN
-            var networkStats = socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
+#if EUN_USING_ONLINE
+            var networkStats = this.socketClient.getNetworkStatistics().getSocketStats().getNetworkStats();
 
             return networkStats.getWrittenPackets();
 #else
-            return base.GetTotalSendPackets();
+            return base.getTotalSendPackets();
 #endif
         }
 
-#if EUN
-        public override void Send(EzyObject request, bool reliable = true)
+#if EUN_USING_ONLINE
+        public override void send(EzyObject request, bool reliable = true)
         {
-            base.Send(request, reliable);
+            base.send(request, reliable);
 
-            var app = socketClient.getApp();
+            var app = this.socketClient.getApp();
             if (app != null)
             {
-                if (!reliable && socketClient.isUdpConnected()) app.udpSend(Commands.RequestCmd, request);
+                if (!reliable && this.socketClient.isUdpConnected()) app.udpSend(Commands.RequestCmd, request);
                 else app.send(Commands.RequestCmd, request);
             }
             else
@@ -139,28 +139,30 @@
                 var data = request.get<EzyArray>(Commands.Data);
 
                 var eunArray = new EUNArray();
-                eunArray.Add((int)ReturnCode.AppNullRequest);
-                eunArray.Add((string)null);
-                if (data.size() > 2) eunArray.Add(data.get<int>(2));
+                eunArray.add((int)ReturnCode.AppNullRequest);
+                eunArray.add((string)null);
+                if (data.size() > 2) eunArray.add(data.get<int>(2));
 
                 onResponse?.Invoke(eunArray);
             }
         }
 #endif
 
-#if EUN
-        void Update()
+        public override void service()
         {
-            if (socketClient != null) socketClient.processEvents();
-        }
-#endif
+            base.service();
 
-#if EUN
+#if EUN_USING_ONLINE
+            if (this.socketClient != null) this.socketClient.processEvents();
+#endif
+        }
+
+#if EUN_USING_ONLINE
         internal class ResponseHandler : EzyAbstractAppDataHandler<EzyArray>
         {
             protected override void process(EzyApp app, EzyArray data)
             {
-                onResponse?.Invoke(new EUNArray.Builder().AddAll(data.toList<object>()).Build());
+                onResponse?.Invoke(new EUNArray.Builder().addAll(data.toList<object>()).build());
             }
         }
 
@@ -168,7 +170,7 @@
         {
             protected override void process(EzyApp app, EzyArray data)
             {
-                onEvent?.Invoke(new EUNArray.Builder().AddAll(data.toList<object>()).Build());
+                onEvent?.Invoke(new EUNArray.Builder().addAll(data.toList<object>()).build());
             }
         }
 
@@ -210,7 +212,7 @@
                     zoneName,
                     username,
                     password,
-                    (EzyData)data.ToEzyData());
+                    (EzyData)data.toEzyData());
             }
         }
 
@@ -218,7 +220,7 @@
         {
             protected override void handleLoginSuccess(EzyData responseData)
             {
-                client.udpConnect(udpPort);
+                this.client.udpConnect(udpPort);
             }
         }
 
@@ -227,7 +229,7 @@
             protected override void onAuthenticated(EzyArray data)
             {
                 var request = new EzyAppAccessRequest(appName);
-                client.send(request);
+                this.client.send(request);
             }
         }
 
@@ -237,7 +239,7 @@
             {
                 base.handleLoginError(data);
 
-                onLoginError?.Invoke(new EUNArray.Builder().AddAll(data.toList<object>()).Build());
+                onLoginError?.Invoke(new EUNArray.Builder().addAll(data.toList<object>()).build());
             }
         }
 
@@ -245,9 +247,11 @@
         {
             protected override void postHandle(EzyApp app, EzyArray data)
             {
-                onAppAccess?.Invoke(new EUNArray.Builder().AddAll(data.toList<object>()).Build());
+                onAppAccess?.Invoke(new EUNArray.Builder().addAll(data.toList<object>()).build());
             }
         }
+
 #endif
     }
+
 }

@@ -4,20 +4,22 @@
 
     public class GetLobbyStatsLstOperationResponse : CustomOperationResponse
     {
-        public LobbyStats[] LobbyStatss { get; private set; }
+        public LobbyStats[] lobbyStatss { get; private set; }
 
         public GetLobbyStatsLstOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
-            if (!HasError)
+            if (!this.hasError)
             {
-                var parameters = operationResponse.GetParameters();
+                var parameters = operationResponse.getParameters();
 
-                var array = parameters.GetEUNArray(ParameterCode.Data);
+                var array = parameters.getEUNArray(ParameterCode.Data);
 
-                var array0 = array.GetEUNArray(0);
-                LobbyStatss = new LobbyStats[array0.Count()];
-                for (var i = 0; i < LobbyStatss.Length; i++) LobbyStatss[i] = new LobbyStats(array0.GetEUNArray(i));
+                var array0 = array.getEUNArray(0);
+                this.lobbyStatss = new LobbyStats[array0.count()];
+                for (var i = 0; i < this.lobbyStatss.Length; i++) this.lobbyStatss[i] = new LobbyStats(array0.getEUNArray(i));
             }
         }
+
     }
+
 }

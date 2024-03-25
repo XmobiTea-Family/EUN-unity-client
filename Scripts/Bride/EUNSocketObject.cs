@@ -1,7 +1,6 @@
 ﻿namespace XmobiTea.EUN.Bride
 {
-    using UnityEngine;
-#if EUN
+#if EUN_USING_ONLINE
     using com.tvd12.ezyfoxserver.client.entity;
     using com.tvd12.ezyfoxserver.client.constant;
     using com.tvd12.ezyfoxserver.client.logger;
@@ -14,7 +13,7 @@
     using System;
     using XmobiTea.EUN.Common;
 
-    public class EUNSocketObject : MonoBehaviour, IEUNSocketObject
+    public abstract class EUNSocketObject : IEUNSocketObject
     {
         internal static Action onConnectionSuccess;
         internal static Action<EzyConnectionFailedReason> onConnectionFailure;
@@ -30,14 +29,9 @@
         internal static string password;
         internal static IEUNData data;
 
-        void Start()
+        public EUNSocketObject()
         {
-            OnCustomStart();
-        }
-
-        protected virtual void OnCustomStart()
-        {
-#if EUN
+#if EUN_DEBUG_EZYFOX
             EzyLoggerFactory.setLoggerSupply(type => new UnityLogger(type));
 #endif
         }
@@ -51,7 +45,7 @@
         /// <param name="host"></param>
         /// <param name="port"></param>
         /// <param name="udpPort"></param>
-        public virtual void Connect(string username, string password, IEUNData data, string host, int port, int udpPort)
+        public virtual void connect(string username, string password, IEUNData data, string host, int port, int udpPort)
         {
             EUNSocketObject.username = username;
             EUNSocketObject.password = password;
@@ -61,99 +55,101 @@
         /// <summary>
         /// Disconnect current connection ezyfox server (EUN Server)
         /// </summary>
-        public virtual void Disconnect() { }
+        public virtual void disconnect() { }
 
         /// <summary>
         /// Init EUN Network
         /// </summary>
         /// <param name="_zoneName">the zone name in EUN Server settings</param>
         /// <param name="_appName">the app name and plugin name in EUN Server settings</param>
-        public virtual void Init(string _zoneName, string _appName)
+        public virtual void init(string _zoneName, string _appName)
         {
-            zoneName = _zoneName;
-            appName = _appName;
+            EUNSocketObject.zoneName = _zoneName;
+            EUNSocketObject.appName = _appName;
         }
 
         /// <summary>
         /// Subscriber an app access handler callback
         /// </summary>
         /// <param name="_onAppAccess"></param>
-        public void SubscriberAppAccessHandler(Action<EUNArray> _onAppAccess)
+        public void subscriberAppAccessHandler(Action<EUNArray> _onAppAccess)
         {
-            onAppAccess = _onAppAccess;
+            EUNSocketObject.onAppAccess = _onAppAccess;
         }
 
         /// <summary>
         /// Subscriber a connection failure handler callback
         /// </summary>
         /// <param name="_onConnectionFailure"></param>
-        public void SubscriberConnectionFailureHandler(Action<EzyConnectionFailedReason> _onConnectionFailure)
+        public void subscriberConnectionFailureHandler(Action<EzyConnectionFailedReason> _onConnectionFailure)
         {
-            onConnectionFailure = _onConnectionFailure;
+            EUNSocketObject.onConnectionFailure = _onConnectionFailure;
         }
 
         /// <summary>
         /// Subscriber a connection success handler callback
         /// </summary>
         /// <param name="_onConnectionSuccess"></param>
-        public void SubscriberConnectionSuccessHandler(Action _onConnectionSuccess)
+        public void subscriberConnectionSuccessHandler(Action _onConnectionSuccess)
         {
-            onConnectionSuccess = _onConnectionSuccess;
+            EUNSocketObject.onConnectionSuccess = _onConnectionSuccess;
         }
 
         /// <summary>
         /// Subscriber a disconnection handler callback
         /// </summary>
         /// <param name="_onDisconnection"></param>
-        public void SubscriberDisconnectionHandler(Action<EzyDisconnectReason> _onDisconnection)
+        public void subscriberDisconnectionHandler(Action<EzyDisconnectReason> _onDisconnection)
         {
-            onDisconnection = _onDisconnection;
+            EUNSocketObject.onDisconnection = _onDisconnection;
         }
 
         /// <summary>
         /// Subscriber a login error handler callback
         /// </summary>
         /// <param name="_onLoginError"></param>
-        public void SubscriberLoginErrorHandler(Action<EUNArray> _onLoginError)
+        public void subscriberLoginErrorHandler(Action<EUNArray> _onLoginError)
         {
-            onLoginError = _onLoginError;
+            EUNSocketObject.onLoginError = _onLoginError;
         }
 
         /// <summary>
         /// Subscriber event handler callback
         /// </summary>
         /// <param name="_onEvent"></param>
-        public void SubscriberEventHandler(Action<EUNArray> _onEvent)
+        public void subscriberEventHandler(Action<EUNArray> _onEvent)
         {
-            onEvent = _onEvent;
+            EUNSocketObject.onEvent = _onEvent;
         }
 
         /// <summary>
         /// Subscriber response handler callback
         /// </summary>
         /// <param name="_onResponse"></param>
-        public void SubscriberResponseHandler(Action<EUNArray> _onResponse)
+        public void subscriberResponseHandler(Action<EUNArray> _onResponse)
         {
-            onResponse = _onResponse;
+            EUNSocketObject.onResponse = _onResponse;
         }
 
-#if EUN
+#if EUN_USING_ONLINE
         /// <summary>
         /// Send EzyObject request to ezyfox server
         /// </summary>
         /// <param name="request"></param>
         /// <param name="reliable"></param>
-        public virtual void Send(EzyObject request, bool reliable = true)
+        public virtual void send(EzyObject request, bool reliable = true)
         {
 
         }
 #endif
 
+        public virtual void service() { }
+
         /// <summary>
         /// Get current ping
         /// </summary>
         /// <returns></returns>
-        public virtual int GetPing()
+        public virtual int getPing()
         {
             return -500;
         }
@@ -162,7 +158,7 @@
         /// Get total bytes sent
         /// </summary>
         /// <returns></returns>
-        public virtual long GetTotalSendBytes()
+        public virtual long getTotalSendBytes()
         {
             return 0;
         }
@@ -171,7 +167,7 @@
         /// Get total bytes recv
         /// </summary>
         /// <returns></returns>
-        public virtual long GetTotalRecvBytes()
+        public virtual long getTotalRecvBytes()
         {
             return 0;
         }
@@ -180,7 +176,7 @@
         /// Get total packets sent
         /// </summary>
         /// <returns></returns>
-        public virtual long GetTotalSendPackets()
+        public virtual long getTotalSendPackets()
         {
             return 0;
         }
@@ -189,9 +185,11 @@
         /// Get total packets recv
         /// </summary>
         /// <returns></returns>
-        public virtual long GetTotalRecvPackets()
+        public virtual long getTotalRecvPackets()
         {
             return 0;
         }
+
     }
+
 }

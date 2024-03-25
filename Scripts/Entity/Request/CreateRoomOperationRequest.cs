@@ -5,26 +5,28 @@
 
     public class CreateRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.CreateRoom;
+        protected override int code => OperationCode.CreateRoom;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// CreateRoomOperationRequest
         /// </summary>
         /// <param name="roomOption">The room option for new room</param>
         /// <param name="timeout"></param>
-        public CreateRoomOperationRequest(RoomOption roomOption, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public CreateRoomOperationRequest(RoomOption roomOption, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.MaxPlayer, roomOption.MaxPlayer)
-                .Add(ParameterCode.CustomRoomProperties, roomOption.CustomRoomProperties)
-                .Add(ParameterCode.IsVisible, roomOption.IsVisible)
-                .Add(ParameterCode.IsOpen, roomOption.IsOpen)
-                .Add(ParameterCode.CustomRoomPropertiesForLobby, roomOption.CustomRoomPropertiesForLobby)
-                .Add(ParameterCode.Password, roomOption.Password)
-                .Add(ParameterCode.Ttl, roomOption.Ttl)
-                .Build();
+            this.parameters = new EUNHashtable.Builder()
+                .add(ParameterCode.MaxPlayer, roomOption.maxPlayer)
+                .add(ParameterCode.CustomRoomProperties, roomOption.customRoomProperties)
+                .add(ParameterCode.IsVisible, roomOption.isVisible)
+                .add(ParameterCode.IsOpen, roomOption.isOpen)
+                .add(ParameterCode.CustomRoomPropertiesForLobby, roomOption.customRoomPropertiesForLobby)
+                .add(ParameterCode.Password, roomOption.password)
+                .add(ParameterCode.Ttl, roomOption.ttl)
+                .build();
         }
+
     }
+
 }

@@ -5,17 +5,19 @@
 
     public class LeaveRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.LeaveRoom;
+        protected override int code => OperationCode.LeaveRoom;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// LeaveRoomOperationRequest
         /// </summary>
         /// <param name="timeout"></param>
-        public LeaveRoomOperationRequest(int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public LeaveRoomOperationRequest(int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-
+            this.parameters = null;
         }
+
     }
+
 }

@@ -2,14 +2,16 @@
 {
     public class CreateRoomOperationResponse : CustomOperationResponse
     {
-        public bool Success { get; private set; }
+        public bool success { get; private set; }
 
         public CreateRoomOperationResponse(OperationResponse operationResponse) : base(operationResponse)
         {
-            if (!HasError)
+            if (!this.hasError)
             {
-                Success = true;
+                this.success = true;
             }
         }
+
     }
+
 }

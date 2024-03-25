@@ -8,34 +8,34 @@
     /// </summary>
     internal class OnRoomInfoChangeEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnRoomInfoChange;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             if (peer.room == null) return;
             var currentRoom = peer.room;
 
-            var parameters = operationEvent.GetParameters();
+            var parameters = operationEvent.getParameters();
 
-            if (parameters.ContainsKey(ParameterCode.CustomRoomProperties))
+            if (parameters.containsKey(ParameterCode.CustomRoomProperties))
             {
-                var data = parameters.GetEUNHashtable(ParameterCode.CustomRoomProperties);
-                var keySet = data.Keys();
+                var data = parameters.getEUNHashtable(ParameterCode.CustomRoomProperties);
+                var keySet = data.keys();
                 foreach (int key in keySet)
                 {
-                    var value = data.GetObject(key);
+                    var value = data.getObject(key);
 
                     if (value == null)
                     {
-                        if (currentRoom.CustomRoomProperties.ContainsKey(key))
+                        if (currentRoom.customRoomProperties.containsKey(key))
                         {
-                            currentRoom.CustomRoomProperties.Remove(key);
+                            currentRoom.customRoomProperties.remove(key);
                         }
                     }
-                    else currentRoom.CustomRoomProperties.Add(key, value);
+                    else currentRoom.customRoomProperties.add(key, value);
                 }
 
                 foreach (var view in peer.eunViewLst)
@@ -44,7 +44,7 @@
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour != null) behaviour.OnEUNCustomRoomPropertiesChange(data);
+                            if (behaviour != null) behaviour.onEUNCustomRoomPropertiesChange(data);
                         }
                     }
                 }
@@ -53,64 +53,64 @@
                 for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
                     var behaviour = eunManagerBehaviourLst[i];
-                    if (behaviour != null) behaviour.OnEUNCustomRoomPropertiesChange(data);
+                    if (behaviour != null) behaviour.onEUNCustomRoomPropertiesChange(data);
                 }
 
-                parameters.Remove(ParameterCode.CustomRoomProperties);
+                parameters.remove(ParameterCode.CustomRoomProperties);
             }
 
             var canNotify = false;
 
-            if (parameters.ContainsKey(ParameterCode.CustomRoomPropertiesForLobby))
+            if (parameters.containsKey(ParameterCode.CustomRoomPropertiesForLobby))
             {
-                var data = parameters.GetEUNArray(ParameterCode.CustomRoomPropertiesForLobby);
-                currentRoom.CustomRoomPropertiesForLobby.Clear();
+                var data = parameters.getEUNArray(ParameterCode.CustomRoomPropertiesForLobby);
+                currentRoom.customRoomPropertiesForLobby.Clear();
                 {
-                    for (var i = 0; i < data.Count(); i++)
+                    for (var i = 0; i < data.count(); i++)
                     {
-                        currentRoom.CustomRoomPropertiesForLobby.Add(data.GetInt(i));
+                        currentRoom.customRoomPropertiesForLobby.Add(data.getInt(i));
                     }
                 }
 
                 canNotify = true;
             }
 
-            if (parameters.ContainsKey(ParameterCode.MaxPlayer))
+            if (parameters.containsKey(ParameterCode.MaxPlayer))
             {
-                var data = parameters.GetInt(ParameterCode.MaxPlayer);
-                currentRoom.MaxPlayer = data;
+                var data = parameters.getInt(ParameterCode.MaxPlayer);
+                currentRoom.maxPlayer = data;
 
                 canNotify = true;
             }
 
-            if (parameters.ContainsKey(ParameterCode.IsOpen))
+            if (parameters.containsKey(ParameterCode.IsOpen))
             {
-                var data = parameters.GetBool(ParameterCode.IsOpen);
-                currentRoom.IsOpen = data;
+                var data = parameters.getBool(ParameterCode.IsOpen);
+                currentRoom.isOpen = data;
 
                 canNotify = true;
             }
 
-            if (parameters.ContainsKey(ParameterCode.IsVisible))
+            if (parameters.containsKey(ParameterCode.IsVisible))
             {
-                var data = parameters.GetBool(ParameterCode.IsVisible);
-                currentRoom.IsVisible = data;
+                var data = parameters.getBool(ParameterCode.IsVisible);
+                currentRoom.isVisible = data;
 
                 canNotify = true;
             }
 
-            if (parameters.ContainsKey(ParameterCode.Password))
+            if (parameters.containsKey(ParameterCode.Password))
             {
-                var data = parameters.GetString(ParameterCode.Password);
-                currentRoom.Password = data;
+                var data = parameters.getString(ParameterCode.Password);
+                currentRoom.password = data;
 
                 canNotify = true;
             }
 
-            if (parameters.ContainsKey(ParameterCode.Ttl))
+            if (parameters.containsKey(ParameterCode.Ttl))
             {
-                var data = parameters.GetInt(ParameterCode.Ttl);
-                currentRoom.Ttl = data;
+                var data = parameters.getInt(ParameterCode.Ttl);
+                currentRoom.ttl = data;
 
                 canNotify = true;
             }
@@ -123,7 +123,7 @@
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour != null) behaviour.OnEUNRoomInfoChange(parameters);
+                            if (behaviour != null) behaviour.onEUNRoomInfoChange(parameters);
                         }
                     }
                 }
@@ -132,9 +132,11 @@
                 for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
                     var behaviour = eunManagerBehaviourLst[i];
-                    if (behaviour != null) behaviour.OnEUNRoomInfoChange(parameters);
+                    if (behaviour != null) behaviour.onEUNRoomInfoChange(parameters);
                 }
             }
         }
+
     }
+
 }

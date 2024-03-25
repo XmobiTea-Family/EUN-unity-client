@@ -11,48 +11,48 @@
         /// <summary>
         /// The custom room properties
         /// </summary>
-        public EUNHashtable CustomRoomProperties { get; private set; }
+        public EUNHashtable customRoomProperties { get; private set; }
 
         /// <summary>
         /// The custom room property keys for lobby
         /// </summary>
-        public List<int> CustomRoomPropertiesForLobby { get; private set; }
+        public List<int> customRoomPropertiesForLobby { get; private set; }
 
         /// <summary>
         /// The password room
         /// </summary>
-        public string Password { get; private set; }
+        public string password { get; private set; }
 
         /// <summary>
         /// The max player for this room
         /// </summary>
-        public int MaxPlayer { get; private set; }
+        public int maxPlayer { get; private set; }
 
         /// <summary>
         /// The room isVisible for this room
         /// </summary>
-        public bool IsVisible { get; private set; }
+        public bool isVisible { get; private set; }
 
         /// <summary>
         /// The room isOpen for this room
         /// </summary>
-        public bool IsOpen { get; private set; }
+        public bool isOpen { get; private set; }
 
         /// <summary>
         /// Time to live mean time client can rejoin for this room after they disconnect
         /// When nobody in this room after they disconnect, and end time to live, the room will remove in lobby, and nobody can continue join this room
         /// </summary>
-        public int Ttl { get; private set; }
+        public int ttl { get; private set; }
 
         private RoomOption(Builder builder)
         {
-            this.CustomRoomProperties = builder.customRoomProperties;
-            this.CustomRoomPropertiesForLobby = builder.customRoomPropertiesForLobby;
-            this.Password = builder.password;
-            this.MaxPlayer = builder.maxPlayer;
-            this.IsVisible = builder.isVisible;
-            this.IsOpen = builder.isOpen;
-            this.Ttl = builder.ttl;
+            this.customRoomProperties = builder.customRoomProperties;
+            this.customRoomPropertiesForLobby = builder.customRoomPropertiesForLobby;
+            this.password = builder.password;
+            this.maxPlayer = builder.maxPlayer;
+            this.isVisible = builder.isVisible;
+            this.isOpen = builder.isOpen;
+            this.ttl = builder.ttl;
         }
 
         private RoomOption() { }
@@ -72,7 +72,7 @@
             /// </summary>
             /// <param name="customRoomProperties"></param>
             /// <returns></returns>
-            public Builder SetCustomRoomProperties(EUNHashtable customRoomProperties)
+            public Builder setCustomRoomProperties(EUNHashtable customRoomProperties)
             {
                 this.customRoomProperties = customRoomProperties;
                 return this;
@@ -83,7 +83,7 @@
             /// </summary>
             /// <param name="customRoomPropertiesForLobby"></param>
             /// <returns></returns>
-            public Builder SetCustomRoomPropertiesForLobby(List<int> customRoomPropertiesForLobby)
+            public Builder setCustomRoomPropertiesForLobby(List<int> customRoomPropertiesForLobby)
             {
                 this.customRoomPropertiesForLobby = customRoomPropertiesForLobby;
                 return this;
@@ -94,7 +94,7 @@
             /// </summary>
             /// <param name="password"></param>
             /// <returns></returns>
-            public Builder SetPassword(string password)
+            public Builder setPassword(string password)
             {
                 this.password = password;
                 return this;
@@ -105,7 +105,7 @@
             /// </summary>
             /// <param name="maxPlayer"></param>
             /// <returns></returns>
-            public Builder SetMaxPlayer(int maxPlayer)
+            public Builder setMaxPlayer(int maxPlayer)
             {
                 this.maxPlayer = maxPlayer;
                 return this;
@@ -116,7 +116,7 @@
             /// </summary>
             /// <param name="isVisible"></param>
             /// <returns></returns>
-            public Builder SetVisible(bool isVisible)
+            public Builder setVisible(bool isVisible)
             {
                 this.isVisible = isVisible;
                 return this;
@@ -127,7 +127,7 @@
             /// </summary>
             /// <param name="isOpen"></param>
             /// <returns></returns>
-            public Builder SetOpen(bool isOpen)
+            public Builder setOpen(bool isOpen)
             {
                 this.isOpen = isOpen;
                 return this;
@@ -139,7 +139,7 @@
             /// </summary>
             /// <param name="ttl"></param>
             /// <returns></returns>
-            public Builder SetTtl(int ttl)
+            public Builder setTtl(int ttl)
             {
                 this.ttl = ttl;
                 return this;
@@ -149,10 +149,12 @@
             /// Build the RoomOption
             /// </summary>
             /// <returns></returns>
-            public RoomOption Build()
+            public RoomOption build()
             {
                 return new RoomOption(this);
             }
         }
+
     }
+
 }

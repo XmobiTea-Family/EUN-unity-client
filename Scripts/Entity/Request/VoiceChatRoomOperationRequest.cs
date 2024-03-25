@@ -5,9 +5,9 @@
 
     public class VoiceChatOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.VoiceChat;
+        protected override int code => OperationCode.VoiceChat;
 
-        protected override bool Reliable => false;
+        protected override bool reliable => false;
 
         /// <summary>
         /// VoiceChatOperationRequest
@@ -15,12 +15,14 @@
         /// <param name="objectId">The object id room game object</param>
         /// <param name="voiceChatData">The voice chat data for room game object</param>
         /// <param name="timeout"></param>
-        public VoiceChatOperationRequest(int objectId, object voiceChatData, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public VoiceChatOperationRequest(int objectId, object voiceChatData, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.ObjectId, objectId)
-                .Add(ParameterCode.SynchronizationData, voiceChatData)
-                .Build();
+            this.parameters = new EUNHashtable.Builder()
+                .add(ParameterCode.ObjectId, objectId)
+                .add(ParameterCode.SynchronizationData, voiceChatData)
+                .build();
         }
+
     }
+
 }

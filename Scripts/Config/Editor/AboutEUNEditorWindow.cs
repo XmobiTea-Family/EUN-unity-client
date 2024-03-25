@@ -15,12 +15,14 @@ namespace XmobiTea.EUN.Config.Editor
         void OnGUI()
         {
             GUILayout.Space(2);
-            GUILayout.Label("EUN Version: " + EUNNetwork.Version);
+            GUILayout.Label("EUN Version: " + EUNNetwork.getClientSdkVersion());
 
             GUILayout.Space(5);
-            GUILayout.Label("Copyright 2022 XmobiTea Family");
+            GUILayout.Label("Copyright ©2022 XmobiTea Family");
             GUILayout.Label("EUN (Ezy Unity Networking) use the core of Ezyfox server.");
         }
+
     }
+
 }
 #endif

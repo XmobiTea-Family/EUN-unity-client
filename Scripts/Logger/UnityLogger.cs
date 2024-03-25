@@ -4,7 +4,7 @@
     using UnityEngine;
 
     public class UnityLogger
-#if EUN
+#if EUN_USING_ONLINE
         : com.tvd12.ezyfoxserver.client.logger.EzyLogger
 #endif
     {

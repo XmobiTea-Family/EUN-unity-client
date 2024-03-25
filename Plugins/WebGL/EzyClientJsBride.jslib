@@ -1,5 +1,5 @@
 mergeInto(LibraryManager.library, {
-    EzyLibrary: function() {
+    ezyLibrary: function() {
         var ezyClientJs = window.document.getElementById("ezyclientjs");
 
         if (!ezyClientJs) {
@@ -16,7 +16,7 @@ mergeInto(LibraryManager.library, {
         }
     },
 
-    EzyInit: function(gameObjectName, zoneName, appName) {
+    ezyInit: function(gameObjectName, zoneName, appName) {
         gameObjectName = Pointer_stringify(gameObjectName);
         zoneName = Pointer_stringify(zoneName);
         appName = Pointer_stringify(appName);
@@ -128,7 +128,7 @@ mergeInto(LibraryManager.library, {
         else window.onEzyClientJsLoaded = afterInitDone;
 	},
 
-    EzyConnect: function(username, password, dataJson, host) {
+    ezyConnect: function(username, password, dataJson, host) {
         username = Pointer_stringify(username);
         password = Pointer_stringify(password);
         dataJson = Pointer_stringify(dataJson);
@@ -147,11 +147,11 @@ mergeInto(LibraryManager.library, {
         else window.onEzyClientLoaded = afterInitDone;
 	},
 	
-	EzyDisconnect: function() {
+	ezyDisconnect: function() {
 		if (window.ezyClient != null) window.ezyClient.disconnect(-1);
 	},
 
-    EzySend: function(requestData) {
+    ezySend: function(requestData) {
         var client = window.ezyClient;
         if (client == null) return false;
 

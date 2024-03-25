@@ -5,20 +5,22 @@
 
     public class ChatRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.ChatRoom;
+        protected override int code => OperationCode.ChatRoom;
 
-        protected override bool Reliable => false;
+        protected override bool reliable => false;
 
         /// <summary>
         /// ChatRoomOperationRequest
         /// </summary>
         /// <param name="message">The message content need send</param>
         /// <param name="timeout"></param>
-        public ChatRoomOperationRequest(string message, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public ChatRoomOperationRequest(string message, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.Message, message)
-                .Build();
+            this.parameters = new EUNHashtable.Builder()
+                .add(ParameterCode.Message, message)
+                .build();
         }
+
     }
+
 }

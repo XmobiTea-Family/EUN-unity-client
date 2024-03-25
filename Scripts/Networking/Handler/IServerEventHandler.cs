@@ -11,13 +11,15 @@
         /// The event code
         /// </summary>
         /// <returns></returns>
-        int GetEventCode();
+        int getEventCode();
 
         /// <summary>
         /// This Handle automatic call if EUN Server call SendEvent to this client
         /// </summary>
         /// <param name="operationEvent"></param>
         /// <param name="peer"></param>
-        void Handle(OperationEvent operationEvent, NetworkingPeer peer);
+        void handle(OperationEvent operationEvent, NetworkingPeer peer);
+
     }
+
 }

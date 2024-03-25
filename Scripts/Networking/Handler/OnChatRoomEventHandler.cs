@@ -8,19 +8,19 @@
     /// </summary>
     internal class OnChatRoomEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnChatRoom;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             if (peer.room == null) return;
 
-            var parameters = operationEvent.GetParameters();
-            var message = new ChatMessage(parameters.GetEUNArray(ParameterCode.Message));
+            var parameters = operationEvent.getParameters();
+            var message = new ChatMessage(parameters.getEUNArray(ParameterCode.Message));
 
-            var thisRoomPlayer = peer.room.RoomPlayerLst.Find(x => x.UserId.Equals(message.SenderId));
+            var thisRoomPlayer = peer.room.roomPlayerLst.Find(x => x.userId.Equals(message.senderId));
             if (thisRoomPlayer != null)
             {
                 foreach (var view in peer.eunViewLst)
@@ -29,7 +29,7 @@
                     {
                         foreach (var behaviour in view.eunBehaviourLst)
                         {
-                            if (behaviour != null) behaviour.OnEUNReceiveChatRoom(message, thisRoomPlayer);
+                            if (behaviour != null) behaviour.onEUNReceiveChatRoom(message, thisRoomPlayer);
                         }
                     }
                 }
@@ -38,9 +38,11 @@
                 for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
                 {
                     var behaviour = eunManagerBehaviourLst[i];
-                    if (behaviour != null) behaviour.OnEUNReceiveChatRoom(message, thisRoomPlayer);
+                    if (behaviour != null) behaviour.onEUNReceiveChatRoom(message, thisRoomPlayer);
                 }
             }
         }
+
     }
+
 }

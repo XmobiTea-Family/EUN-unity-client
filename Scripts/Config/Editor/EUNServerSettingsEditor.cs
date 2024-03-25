@@ -5,7 +5,6 @@ namespace XmobiTea.EUN.Config.Editor
     using System.Collections.Generic;
     using System.Diagnostics;
     using System.Linq;
-    using System.Text;
 
     using UnityEditor;
     using UnityEditor.Callbacks;
@@ -21,7 +20,7 @@ namespace XmobiTea.EUN.Config.Editor
         private const string EUNRPC_Path = EUNRPC_Parent_Path + "/EUNRPCCommand.cs";
         private const string EUNRPC_Disable_Path = "/EUN-unity-client/Scripts/Constant/EUNRPCCommand.cs";
         private const string EUNServerSettings_Path = "Assets/EUN-unity-client-custom/Resources";
-        private const string ezyfoxserverCsharpClientLink = "https://github.com/XmobiTea-Family/ezyfox-server-csharp-client.git";
+        private const string EzyfoxServerCsharpClientRepoUrl = "https://github.com/XmobiTea-Family/ezyfox-server-csharp-client.git";
 
         Vector2 scrollPos = new Vector2(0, 0);
 
@@ -31,6 +30,7 @@ namespace XmobiTea.EUN.Config.Editor
         SerializedProperty webSocketHost;
         SerializedProperty zoneName;
         SerializedProperty appName;
+        SerializedProperty secretKey;
         SerializedProperty sendRate;
         SerializedProperty sendRateSynchronizationData;
         SerializedProperty sendRateVoiceChat;
@@ -51,20 +51,21 @@ namespace XmobiTea.EUN.Config.Editor
 
         private void OnEnable()
         {
-            socketHost = serializedObject.FindProperty("_socketHost");
-            socketTCPPort = serializedObject.FindProperty("_socketTCPPort");
-            socketUDPPort = serializedObject.FindProperty("_socketUDPPort");
-            webSocketHost = serializedObject.FindProperty("_webSocketHost");
-            zoneName = serializedObject.FindProperty("_zoneName");
-            appName = serializedObject.FindProperty("_appName");
-            sendRate = serializedObject.FindProperty("_sendRate");
-            sendRateSynchronizationData = serializedObject.FindProperty("_sendRateSynchronizationData");
-            sendRateVoiceChat = serializedObject.FindProperty("_sendRateVoiceChat");
-            mode = serializedObject.FindProperty("_mode");
-            logType = serializedObject.FindProperty("_logType");
-            useVoiceChat = serializedObject.FindProperty("_useVoiceChat");
-            
-            useVoiceChatLastValue = useVoiceChat.boolValue;
+            this.socketHost = this.serializedObject.FindProperty("_socketHost");
+            this.socketTCPPort = this.serializedObject.FindProperty("_socketTCPPort");
+            this.socketUDPPort = this.serializedObject.FindProperty("_socketUDPPort");
+            this.webSocketHost = this.serializedObject.FindProperty("_webSocketHost");
+            this.zoneName = this.serializedObject.FindProperty("_zoneName");
+            this.appName = this.serializedObject.FindProperty("_appName");
+            this.secretKey = this.serializedObject.FindProperty("_secretKey");
+            this.sendRate = this.serializedObject.FindProperty("_sendRate");
+            this.sendRateSynchronizationData = this.serializedObject.FindProperty("_sendRateSynchronizationData");
+            this.sendRateVoiceChat = this.serializedObject.FindProperty("_sendRateVoiceChat");
+            this.mode = this.serializedObject.FindProperty("_mode");
+            this.logType = this.serializedObject.FindProperty("_logType");
+            this.useVoiceChat = this.serializedObject.FindProperty("_useVoiceChat");
+
+            this.useVoiceChatLastValue = this.useVoiceChat.boolValue;
         }
 
         public override void OnInspectorGUI()
@@ -75,52 +76,55 @@ namespace XmobiTea.EUN.Config.Editor
             var italicStyle = new GUIStyle();
             italicStyle.fontStyle = FontStyle.Italic;
 
-            if (!IsEUNSetup())
+            if (!isEUNSetup())
             {
                 if (GUILayout.Button("Setup EUN"))
                 {
-                    SetupEUN();
+                    setupEUN();
                 }
             }
 
-            serializedObject.Update();
+            this.serializedObject.Update();
 
-            EditorGUILayout.PropertyField(logType);
-            EditorGUILayout.PropertyField(mode);
+            EditorGUILayout.PropertyField(this.logType);
+            EditorGUILayout.PropertyField(this.mode);
 
-            var eunMode = (EUNServerSettings.Mode)mode.intValue;
+            var eunMode = (EUNServerSettings.Mode)this.mode.intValue;
             if (eunMode == EUNServerSettings.Mode.SelfHost)
             {
                 EditorGUILayout.LabelField("This is online mode, you will connect to your host with info:", italicStyle);
                 EditorGUILayout.Space(2);
 
-                EditorGUILayout.PropertyField(socketHost);
-                EditorGUILayout.PropertyField(socketTCPPort);
-                EditorGUILayout.PropertyField(socketUDPPort);
-                EditorGUILayout.PropertyField(webSocketHost);
-                EditorGUILayout.PropertyField(zoneName);
-                EditorGUILayout.PropertyField(appName);
-                EditorGUILayout.PropertyField(sendRate);
-                EditorGUILayout.PropertyField(sendRateSynchronizationData);
+                EditorGUILayout.PropertyField(this.socketHost);
+                EditorGUILayout.PropertyField(this.socketTCPPort);
+                EditorGUILayout.PropertyField(this.socketUDPPort);
+                EditorGUILayout.PropertyField(this.webSocketHost);
+                EditorGUILayout.PropertyField(this.zoneName);
+                EditorGUILayout.PropertyField(this.appName);
+                EditorGUILayout.PropertyField(this.secretKey);
 
                 EditorGUILayout.Space(2);
-                EditorGUILayout.PropertyField(useVoiceChat);
-                if (useVoiceChat.boolValue)
+                EditorGUILayout.PropertyField(this.sendRate);
+                EditorGUILayout.PropertyField(this.sendRateSynchronizationData);
+
+                EditorGUILayout.Space(2);
+                EditorGUILayout.PropertyField(this.useVoiceChat);
+                if (this.useVoiceChat.boolValue)
                 {
-                    if (useVoiceChatLastValue != useVoiceChat.boolValue)
+                    if (this.useVoiceChatLastValue != this.useVoiceChat.boolValue)
                     {
-                        useVoiceChatLastValue = useVoiceChat.boolValue;
-                        SetScriptingDefineSymbols("EUN_VOICE_CHAT");
+                        this.useVoiceChatLastValue = this.useVoiceChat.boolValue;
+                        setScriptingDefineSymbols("EUN_USING_VOICE_CHAT");
                     }
 
                     EditorGUILayout.PropertyField(sendRateVoiceChat);
                 }
                 else
                 {
-                    if (useVoiceChatLastValue != useVoiceChat.boolValue)
+                    if (this.useVoiceChatLastValue != this.useVoiceChat.boolValue)
                     {
-                        useVoiceChatLastValue = useVoiceChat.boolValue;
-                        RemoveScriptingDefineSymbols("EUN_VOICE_CHAT");
+                        this.useVoiceChatLastValue = this.useVoiceChat.boolValue;
+                        removeScriptingDefineSymbols("EUN_USING_VOICE_CHAT");
                     }
                 }
             }
@@ -129,14 +133,14 @@ namespace XmobiTea.EUN.Config.Editor
                 EditorGUILayout.LabelField("This is offline mode, you can not play with other player.", italicStyle);
             }
 
-            serializedObject.ApplyModifiedProperties();
+            this.serializedObject.ApplyModifiedProperties();
 
             var eunRPCCommandValues = Enum.GetValues(typeof(EUNRPCCommand));
 
             EditorGUILayout.Space(20);
             EditorGUILayout.LabelField("All EUNRPC Command (" + eunRPCCommandValues.Length + ")", boldStyle);
             EditorGUILayout.Space(5);
-            scrollPos = EditorGUILayout.BeginScrollView(scrollPos, false, true, GUILayout.Height(150));
+            this.scrollPos = EditorGUILayout.BeginScrollView(this.scrollPos, false, true, GUILayout.Height(150));
             EditorGUILayout.BeginVertical();
 
             foreach (EUNRPCCommand eunRPCCommandValue in eunRPCCommandValues)
@@ -153,8 +157,8 @@ namespace XmobiTea.EUN.Config.Editor
             EditorGUILayout.EndScrollView();
         }
 
-        [MenuItem("EUN/EUN Settings")]
-        private static void OpenEUNServerSettings()
+        [MenuItem("XmobiTea EUN/EUN Settings")]
+        private static void openEUNServerSettings()
         {
             var eunServerSettings = Resources.Load(EUNServerSettings.ResourcesPath) as EUNServerSettings;
             if (eunServerSettings == null)
@@ -172,56 +176,56 @@ namespace XmobiTea.EUN.Config.Editor
             Selection.SetActiveObjectWithContext(eunServerSettings, eunServerSettings);
         }
 
-        [MenuItem("EUN/About Ezyfox")]
-        private static void AboutEzyfox()
+        [MenuItem("XmobiTea EUN/About Ezyfox")]
+        private static void aboutEzyfox()
         {
             Application.OpenURL("https://youngmonkeys.org/ezyfox-sever/");
         }
 
-        [MenuItem("EUN/Go to EUN-server")]
-        private static void GotoEUNserver()
+        [MenuItem("XmobiTea EUN/Go to EUN-server")]
+        private static void gotoEUNserver()
         {
             Application.OpenURL("https://github.com/XmobiTea-Family/EUN-server");
         }
 
-        [MenuItem("EUN/About")]
-        private static void OpenAbout()
+        [MenuItem("XmobiTea EUN/About")]
+        private static void openAbout()
         {
             EditorWindow.GetWindow(typeof(AboutEUNEditorWindow));
         }
 
-        [MenuItem("EUN/Setup EUN")]
-        private static void SetupEUN()
+        [MenuItem("XmobiTea EUN/Setup EUN")]
+        private static void setupEUN()
         {
             if (EditorUtility.DisplayDialog("Confirm", "Setup EUN", "Yes", "No"))
             {
-                if (IsEUNSetup())
+                if (isEUNSetup())
                 {
                     EditorUtility.DisplayDialog("Notice", "EUN has setup!", "Ok");
 
                     return;
                 }
 
-                if (!CloneEzyfoxserverCsharpClient())
+                if (!cloneEzyfoxServerCsharpClient())
                 {
-                    EditorUtility.DisplayDialog("Error", "Please use terminal to execute on the Assets path: git clone " + ezyfoxserverCsharpClientLink, "Ok");
+                    EditorUtility.DisplayDialog("Error", "Please use terminal to execute on the Assets path: git clone " + EzyfoxServerCsharpClientRepoUrl, "Ok");
 
                     return;
                 }
 
-                SetScriptingDefineSymbols("EUN");
+                setScriptingDefineSymbols("EUN_USING_ONLINE");
 
                 EditorUtility.DisplayDialog("Notice", "EUN setup successfully!", "Ok");
             }
         }
 
-        private static bool CloneEzyfoxserverCsharpClient()
+        private static bool cloneEzyfoxServerCsharpClient()
         {
-            if (!IsezyfoxserverCsharpClone())
+            if (!isEzyfoxServerCsharpClone())
             {
                 if (Application.platform == RuntimePlatform.WindowsEditor)
                 {
-                    CommandOutput("git clone " + ezyfoxserverCsharpClientLink, Application.dataPath);
+                    commandOutput("git clone " + EzyfoxServerCsharpClientRepoUrl, Application.dataPath);
 
                     AssetDatabase.Refresh();
 
@@ -236,52 +240,52 @@ namespace XmobiTea.EUN.Config.Editor
             return true;
         }
 
-        private static bool IsEUNSetup()
+        private static bool isEUNSetup()
         {
             foreach (var buildTargetGroup in buildTargetGroups)
             {
-                if (!HasScriptingDefineSymbols(buildTargetGroup, "EUN")) return false;
+                if (!hasScriptingDefineSymbols(buildTargetGroup, "EUN")) return false;
             }
 
-            if (!IsezyfoxserverCsharpClone()) return false;
+            if (!isEzyfoxServerCsharpClone()) return false;
 
             return true;
         }
 
-        private static bool HasScriptingDefineSymbols(BuildTargetGroup buildTargetGroup, string symbol)
+        private static bool hasScriptingDefineSymbols(BuildTargetGroup buildTargetGroup, string symbol)
         {
             var scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
             return scriptingDefineSymbols.Equals(symbol) || scriptingDefineSymbols.Contains(symbol + ";") || scriptingDefineSymbols.Contains(";" + symbol);
         }
 
-        private static void SetScriptingDefineSymbols(string symbol)
+        private static void setScriptingDefineSymbols(string symbol)
         {
             foreach (var buildTargetGroup in buildTargetGroups)
             {
-                SetScriptingDefineSymbols(buildTargetGroup, symbol);
+                setScriptingDefineSymbols(buildTargetGroup, symbol);
             }
         }
 
-        private static void RemoveScriptingDefineSymbols(string symbol)
+        private static void removeScriptingDefineSymbols(string symbol)
         {
             foreach (var buildTargetGroup in buildTargetGroups)
             {
-                RemoveScriptingDefineSymbols(buildTargetGroup, symbol);
+                removeScriptingDefineSymbols(buildTargetGroup, symbol);
             }
         }
 
-        private static void SetScriptingDefineSymbols(BuildTargetGroup buildTargetGroup, string symbol)
+        private static void setScriptingDefineSymbols(BuildTargetGroup buildTargetGroup, string symbol)
         {
-            if (HasScriptingDefineSymbols(buildTargetGroup, symbol)) return;
+            if (hasScriptingDefineSymbols(buildTargetGroup, symbol)) return;
 
             var scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
             scriptingDefineSymbols += ";" + symbol + ";";
             PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, scriptingDefineSymbols);
         }
 
-        private static void RemoveScriptingDefineSymbols(BuildTargetGroup buildTargetGroup, string symbol)
+        private static void removeScriptingDefineSymbols(BuildTargetGroup buildTargetGroup, string symbol)
         {
-            if (!HasScriptingDefineSymbols(buildTargetGroup, symbol)) return;
+            if (!hasScriptingDefineSymbols(buildTargetGroup, symbol)) return;
 
             var scriptingDefineSymbols = PlayerSettings.GetScriptingDefineSymbolsForGroup(buildTargetGroup);
             if (scriptingDefineSymbols.Equals(symbol))
@@ -300,13 +304,13 @@ namespace XmobiTea.EUN.Config.Editor
             PlayerSettings.SetScriptingDefineSymbolsForGroup(buildTargetGroup, scriptingDefineSymbols);
         }
 
-        private static bool IsezyfoxserverCsharpClone()
+        private static bool isEzyfoxServerCsharpClone()
         {
             var ezyfoxServerCsharpClient = Application.dataPath + "/ezyfox-server-csharp-client";
             return System.IO.Directory.Exists(ezyfoxServerCsharpClient);
         }
 
-        private static string CommandOutput(string command, string workingDirectory = null)
+        private static string commandOutput(string command, string workingDirectory = null)
         {
             try
             {
@@ -324,7 +328,7 @@ namespace XmobiTea.EUN.Config.Editor
                 proc.StartInfo = procStartInfo;
                 proc.Start();
 
-                var sb = new StringBuilder();
+                var sb = new System.Text.StringBuilder();
                 proc.OutputDataReceived += delegate (object sender, DataReceivedEventArgs e)
                 {
                     sb.AppendLine(e.Data);
@@ -346,14 +350,14 @@ namespace XmobiTea.EUN.Config.Editor
         }
 
         [DidReloadScripts]
-        public static void OnCompileScripts()
+        public static void onCompileScripts()
         {
-            UpdateEUNRPCCommand();
+            updateEUNRPCCommand();
         }
 
-        private static void UpdateEUNRPCCommand()
+        private static void updateEUNRPCCommand()
         {
-            var assemblies = System.AppDomain.CurrentDomain.GetAssemblies();
+            var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
             var types = new List<Type>();
 
@@ -364,7 +368,7 @@ namespace XmobiTea.EUN.Config.Editor
 
             var methodNameLst = new List<string>();
 
-            var dic = new Dictionary<int, string>();
+            var dict = new Dictionary<int, string>();
 
             foreach (var type in types)
             {
@@ -382,21 +386,21 @@ namespace XmobiTea.EUN.Config.Editor
 
             foreach (EUNRPCCommand eunRPCCommandValue in eunRPCCommandValues)
             {
-                if (methodNameLst.Contains(eunRPCCommandValue.ToString())) dic.Add((int)eunRPCCommandValue, eunRPCCommandValue.ToString());
+                if (methodNameLst.Contains(eunRPCCommandValue.ToString())) dict.Add((int)eunRPCCommandValue, eunRPCCommandValue.ToString());
                 else if (!needModifier) needModifier = true;
             }
 
             foreach (var methodName in methodNameLst)
             {
-                var dicValues = dic.Values.ToList();
+                var dictValues = dict.Values.ToList();
 
-                if (!dicValues.Contains(methodName))
+                if (!dictValues.Contains(methodName))
                 {
-                    var dicKeys = dic.Keys.ToList();
+                    var dictKeys = dict.Keys.ToList();
                     
-                    var key = dicKeys.Max() + 1;
+                    var key = dictKeys.Max() + 1;
 
-                    dic.Add(key, methodName);
+                    dict.Add(key, methodName);
 
                     if (!needModifier) needModifier = true;
                 }
@@ -406,14 +410,14 @@ namespace XmobiTea.EUN.Config.Editor
 
             if (needModifier)
             {
-                var enableStringBuilder = new StringBuilder();
-                var disableStringBuilder = new StringBuilder();
+                var enableStringBuilder = new System.Text.StringBuilder();
+                var disableStringBuilder = new System.Text.StringBuilder();
 
-                enableStringBuilder.AppendLine("#if EUN");
-                disableStringBuilder.AppendLine("#if !EUN");
+                enableStringBuilder.AppendLine("#if EUN_USING_ONLINE");
+                disableStringBuilder.AppendLine("#if !EUN_USING_ONLINE");
 
-                enableStringBuilder.AppendLine("// dont modifier this, this file will auto generate by EUN");
-                disableStringBuilder.AppendLine("// dont modifier this, this file will auto generate by EUN");
+                enableStringBuilder.AppendLine("// dont modifier this, this file will auto generate by XmobiTea EUN");
+                disableStringBuilder.AppendLine("// dont modifier this, this file will auto generate by XmobiTea EUN");
                 
                 enableStringBuilder.AppendLine("public enum EUNRPCCommand");
                 disableStringBuilder.AppendLine("public enum EUNRPCCommand");
@@ -421,7 +425,7 @@ namespace XmobiTea.EUN.Config.Editor
                 enableStringBuilder.AppendLine("{");
                 disableStringBuilder.AppendLine("{");
 
-                foreach (var c in dic)
+                foreach (var c in dict)
                 {
                     enableStringBuilder.AppendLine("    " + c.Value + " = " + c.Key + ",");
                     disableStringBuilder.AppendLine("    " + c.Value + " = " + c.Key + ",");

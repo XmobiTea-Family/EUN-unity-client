@@ -7,7 +7,9 @@ namespace XmobiTea.EUN.Entity.Support
 		NETWORK_UNREACHABLE = 1,
 		UNKNOWN_HOST = 2,
 		CONNECTION_REFUSED = 3,
-		UNKNOWN = 4
+		UNKNOWN = 4,
+
 	}
+
 }
 #endif

@@ -1,5 +1,5 @@
 mergeInto(LibraryManager.library, { 
-    SetCookie: function(cname, cvalue, expiredMs) {
+    setCookie: function(cname, cvalue, expiredMs) {
         cname = Pointer_stringify(cname);
         cvalue = Pointer_stringify(cvalue);
 
@@ -9,7 +9,7 @@ mergeInto(LibraryManager.library, {
         window.document.cookie = cname + "=" + cvalue + "; " + expires + "/";
     },
 
-    GetCookie: function(cname) {
+    getCookie: function(cname) {
         cname = Pointer_stringify(cname);
         var name = cname + "=";
         var cArr = window.document.cookie.split(';');
@@ -21,7 +21,7 @@ mergeInto(LibraryManager.library, {
         return "";
     },
 
-    DeleteCookie: function(cname) {
+    deleteCookie: function(cname) {
         cname = Pointer_stringify(cname);
         var d = new Date();
         d.setTime(d.getTime() - (1000 * 60 * 60 * 24 * 30 * 12));

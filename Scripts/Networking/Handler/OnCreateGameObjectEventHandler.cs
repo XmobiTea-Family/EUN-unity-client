@@ -8,18 +8,18 @@
     /// </summary>
     internal class OnCreateGameObjectEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnCreateGameObject;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
             if (peer.room == null) return;
-            var parameters = operationEvent.GetParameters();
+            var parameters = operationEvent.getParameters();
 
-            var roomGameObject = new RoomGameObject(parameters.GetEUNArray(ParameterCode.Data));
-            peer.room.GameObjectDic[roomGameObject.ObjectId] = roomGameObject;
+            var roomGameObject = new RoomGameObject(parameters.getEUNArray(ParameterCode.Data));
+            peer.room.gameObjectDict[roomGameObject.objectId] = roomGameObject;
             
             var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
             for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
@@ -27,14 +27,16 @@
                 var behaviour = eunManagerBehaviourLst[i];
                 if (behaviour != null)
                 {
-                    var view = behaviour.OnEUNViewNeedCreate(roomGameObject);
+                    var view = behaviour.onEUNViewNeedCreate(roomGameObject);
                     if (view != null)
                     {
-                        view.Init(roomGameObject);
-                        peer.eunViewDic[view.RoomGameObject.ObjectId] = view;
+                        view.init(roomGameObject);
+                        peer.eunViewDict[view.roomGameObject.objectId] = view;
                     }
                 }
             }
         }
+
     }
+
 }

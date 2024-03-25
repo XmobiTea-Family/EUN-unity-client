@@ -5,9 +5,9 @@
 
     public class CreateGameObjectRoomOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.CreateGameObjectRoom;
+        protected override int code => OperationCode.CreateGameObjectRoom;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// CreateGameObjectRoomOperationRequest
@@ -17,14 +17,16 @@
         /// <param name="synchronizationData">The sync data of game object</param>
         /// <param name="customGameObjectProperties">The custom game object properties</param>
         /// <param name="timeout"></param>
-        public CreateGameObjectRoomOperationRequest(string prefabPath, object initializeData, object synchronizationData, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public CreateGameObjectRoomOperationRequest(string prefabPath, object initializeData, object synchronizationData, EUNHashtable customGameObjectProperties, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.PrefabPath, prefabPath)
-                .Add(ParameterCode.InitializeData, initializeData)
-                .Add(ParameterCode.SynchronizationData, synchronizationData)
-                .Add(ParameterCode.CustomGameObjectProperties, customGameObjectProperties)
-                .Build();
+            this.parameters = new EUNHashtable.Builder()
+                .add(ParameterCode.PrefabPath, prefabPath)
+                .add(ParameterCode.InitializeData, initializeData)
+                .add(ParameterCode.SynchronizationData, synchronizationData)
+                .add(ParameterCode.CustomGameObjectProperties, customGameObjectProperties)
+                .build();
         }
+
     }
+
 }

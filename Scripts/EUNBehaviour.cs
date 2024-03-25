@@ -20,7 +20,7 @@
         /// <summary>
         /// All method info dict
         /// </summary>
-        private static Dictionary<Type, MethodInfo[]> methodInfoDic = new Dictionary<Type, MethodInfo[]>();
+        private static Dictionary<Type, MethodInfo[]> methodInfoDict = new Dictionary<Type, MethodInfo[]>();
 
         /// <summary>
         /// The eunView for this EUN Behaviour
@@ -29,49 +29,49 @@
 
         void Awake()
         {
-            OnCustomAwake();
+            this.onCustomAwake();
         }
 
         void Start()
         {
-            OnCustomStart();
+            this.onCustomStart();
         }
 
         void OnEnable()
         {
-            OnCustomEnable();
+            this.onCustomEnable();
         }
 
         void OnDisable()
         {
-            OnCustomDisable();
+            this.onCustomDisable();
         }
 
         void OnDestroy()
         {
-            OnCustomDestroy();
+            this.onCustomDestroy();
         }
 
         /// <summary>
         /// This is a MonoBehaviour.Awake()
         /// </summary>
-        protected virtual void OnCustomAwake()
+        protected virtual void onCustomAwake()
         {
-            if (eunView == null) eunView = GetComponent<EUNView>();
+            if (this.eunView == null) this.eunView = GetComponent<EUNView>();
         }
 
         /// <summary>
         /// This is a MonoBehaviour.Start()
         /// </summary>
-        protected virtual void OnCustomStart()
+        protected virtual void onCustomStart()
         {
-            if (eunView != null) eunView.SubscriberEUNBehaviour(this);
+            if (this.eunView != null) this.eunView.subscriberEUNBehaviour(this);
         }
 
         /// <summary>
         /// This is a MonoBehaviour.OnEnable()
         /// </summary>
-        protected virtual void OnCustomEnable()
+        protected virtual void onCustomEnable()
         {
 
         }
@@ -79,7 +79,7 @@
         /// <summary>
         /// This is a MonoBehaviour.OnDisable()
         /// </summary>
-        protected virtual void OnCustomDisable()
+        protected virtual void onCustomDisable()
         {
 
         }
@@ -87,9 +87,9 @@
         /// <summary>
         /// This is a MonoBehaviour.OnDestroy()
         /// </summary>
-        protected virtual void OnCustomDestroy()
+        protected virtual void onCustomDestroy()
         {
-            if (eunView != null) eunView.UnSubscriberEUNBehaviour(this);
+            if (this.eunView != null) this.eunView.unSubscriberEUNBehaviour(this);
         }
 
         /// <summary>
@@ -97,20 +97,20 @@
         /// </summary>
         /// <param name="eunRPCCommand"></param>
         /// <param name="rpcDataArray"></param>
-        internal void EUNRPC(int eunRPCCommand, EUNArray rpcDataArray)
+        internal void eunRpc(int eunRPCCommand, EUNArray rpcDataArray)
         {
             var type = GetType();
 
             MethodInfo[] methodInfos;
             
-            if (methodInfoDic.ContainsKey(type))
+            if (methodInfoDict.ContainsKey(type))
             {
-                methodInfos = methodInfoDic[type];
+                methodInfos = methodInfoDict[type];
             }
             else
             {
                 methodInfos = type.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.Public).Where(x => x.GetCustomAttributes(typeof(EUNRPCAttribute), true).Length > 0).ToArray();
-                methodInfoDic[type] = methodInfos;
+                methodInfoDict[type] = methodInfos;
             }
 
             var eunRPCMethodName = ((EUNRPCCommand)eunRPCCommand).ToString();
@@ -118,169 +118,192 @@
             MethodInfo method = null;
             object[] parameters = null;// = rpcData != null ? rpcData.toList<object>().ToArray() : new object[0];
 
-            foreach (var methodInfo in methodInfos)
+            var methodCorrectInfos = methodInfos.Where(x => x.Name.Equals(eunRPCMethodName));
+
+            foreach (var methodInfo in methodCorrectInfos)
             {
-                if (methodInfo.Name.Equals(eunRPCMethodName))
+                var parameterInfos = methodInfo.GetParameters();
+
+                if (parameterInfos.Length == rpcDataArray.count())
                 {
-                    var parameterInfos = methodInfo.GetParameters();
-
-                    if (parameterInfos.Length == rpcDataArray.Count())
+                    if (parameterInfos.Length == 0)
                     {
-                        if (parameterInfos.Length == 0)
-                        {
-                            parameters = new object[] { };
-                        }
-                        else
-                        {
-                            var tempParameters = new object[parameterInfos.Length];
+                        parameters = new object[] { };
+                    }
+                    else
+                    {
+                        var tempParameters = new object[parameterInfos.Length];
 
-                            try
+                        try
+                        {
+                            for (var i = 0; i < parameterInfos.Length; i++)
                             {
-                                for (var i = 0; i < parameterInfos.Length; i++)
+                                var parameterInfo = parameterInfos[i];
+
+                                if (parameterInfo.ParameterType == typeof(EUNView) || parameterInfo.ParameterType == typeof(RoomGameObject))
                                 {
-                                    var parameterInfo = parameterInfos[i];
+                                    var viewId = rpcDataArray.getInt(i);
 
-                                    if (parameterInfo.ParameterType == typeof(bool))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetBool(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(sbyte))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetSByte(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(byte))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetByte(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(int))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetInt(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(short))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetShort(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(long))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetLong(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(float))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetFloat(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(double))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetDouble(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(string))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetString(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(EUNArray))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetEUNArray(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(EUNHashtable))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetEUNHashtable(i);
-                                    }
+                                    EUNNetwork.peer.eunViewDict.TryGetValue(viewId, out var view);
 
-                                    else if (parameterInfo.ParameterType == typeof(bool[]))
+                                    if (view != null)
                                     {
-                                        tempParameters[i] = rpcDataArray.GetArray<bool>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(sbyte[]))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetArray<sbyte>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(byte[]))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetArray<byte>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(int[]))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetArray<int>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(short[]))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetArray<short>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(long[]))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetArray<long>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(float[]))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetArray<float>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(double[]))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetArray<double>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(string[]))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetArray<string>(i);
-                                    }
-
-                                    else if (parameterInfo.ParameterType == typeof(IList<bool>))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetList<bool>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(IList<sbyte>))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetList<sbyte>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(IList<byte>))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetList<byte>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(IList<int>))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetList<int>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(IList<short>))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetList<short>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(IList<long>))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetList<long>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(IList<float>))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetList<float>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(IList<double>))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetList<double>(i);
-                                    }
-                                    else if (parameterInfo.ParameterType == typeof(IList<string>))
-                                    {
-                                        tempParameters[i] = rpcDataArray.GetList<string>(i);
+                                        if (parameterInfo.ParameterType == typeof(EUNView)) tempParameters[i] = view;
+                                        else tempParameters[i] = view.roomGameObject;
                                     }
                                     else continue;
                                 }
+                                else if (parameterInfo.ParameterType == typeof(RoomPlayer))
+                                {
+                                    var playerId = rpcDataArray.getInt(i);
 
-                                parameters = tempParameters;
-                            }
-                            catch (Exception ex)
-                            {
-                                EUNDebug.LogException(ex);
+                                    var roomPlayer = EUNNetwork.roomPlayerLst.Find(x => x.playerId == playerId);
+                                    if (roomPlayer != null)
+                                    {
+                                        tempParameters[i] = roomPlayer;
+                                    }
+                                    else continue;
+                                }
+                                else if (parameterInfo.ParameterType == typeof(bool))
+                                {
+                                    tempParameters[i] = rpcDataArray.getBool(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(sbyte))
+                                {
+                                    tempParameters[i] = rpcDataArray.getSByte(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(byte))
+                                {
+                                    tempParameters[i] = rpcDataArray.getByte(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(int))
+                                {
+                                    tempParameters[i] = rpcDataArray.getInt(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(short))
+                                {
+                                    tempParameters[i] = rpcDataArray.getShort(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(long))
+                                {
+                                    tempParameters[i] = rpcDataArray.getLong(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(float))
+                                {
+                                    tempParameters[i] = rpcDataArray.getFloat(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(double))
+                                {
+                                    tempParameters[i] = rpcDataArray.getDouble(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(string))
+                                {
+                                    tempParameters[i] = rpcDataArray.getString(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(EUNArray))
+                                {
+                                    tempParameters[i] = rpcDataArray.getEUNArray(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(EUNHashtable))
+                                {
+                                    tempParameters[i] = rpcDataArray.getEUNHashtable(i);
+                                }
 
-                                continue;
+                                else if (parameterInfo.ParameterType == typeof(bool[]))
+                                {
+                                    tempParameters[i] = rpcDataArray.getArray<bool>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(sbyte[]))
+                                {
+                                    tempParameters[i] = rpcDataArray.getArray<sbyte>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(byte[]))
+                                {
+                                    tempParameters[i] = rpcDataArray.getArray<byte>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(int[]))
+                                {
+                                    tempParameters[i] = rpcDataArray.getArray<int>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(short[]))
+                                {
+                                    tempParameters[i] = rpcDataArray.getArray<short>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(long[]))
+                                {
+                                    tempParameters[i] = rpcDataArray.getArray<long>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(float[]))
+                                {
+                                    tempParameters[i] = rpcDataArray.getArray<float>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(double[]))
+                                {
+                                    tempParameters[i] = rpcDataArray.getArray<double>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(string[]))
+                                {
+                                    tempParameters[i] = rpcDataArray.getArray<string>(i);
+                                }
+
+                                else if (parameterInfo.ParameterType == typeof(IList<bool>))
+                                {
+                                    tempParameters[i] = rpcDataArray.getList<bool>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(IList<sbyte>))
+                                {
+                                    tempParameters[i] = rpcDataArray.getList<sbyte>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(IList<byte>))
+                                {
+                                    tempParameters[i] = rpcDataArray.getList<byte>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(IList<int>))
+                                {
+                                    tempParameters[i] = rpcDataArray.getList<int>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(IList<short>))
+                                {
+                                    tempParameters[i] = rpcDataArray.getList<short>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(IList<long>))
+                                {
+                                    tempParameters[i] = rpcDataArray.getList<long>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(IList<float>))
+                                {
+                                    tempParameters[i] = rpcDataArray.getList<float>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(IList<double>))
+                                {
+                                    tempParameters[i] = rpcDataArray.getList<double>(i);
+                                }
+                                else if (parameterInfo.ParameterType == typeof(IList<string>))
+                                {
+                                    tempParameters[i] = rpcDataArray.getList<string>(i);
+                                }
+                                else continue;
                             }
+
+                            parameters = tempParameters;
                         }
+                        catch (Exception ex)
+                        {
+                            EUNDebug.logException(ex);
 
-                        method = methodInfo;
-                        break;
+                            continue;
+                        }
                     }
+
+                    method = methodInfo;
+                    break;
                 }
             }
 
             if (method != null) method.Invoke(this, parameters);
             else
             {
-                EUNDebug.LogError("Method " + eunRPCMethodName + " with parameters " + parameters + " not found");
+                EUNDebug.logError("Method " + eunRPCMethodName + " with parameters " + parameters + " not found");
             }
         }
 
@@ -295,78 +318,80 @@
         /// </summary>
         /// <param name="player"></param>
         /// <param name="customPropertiesChange">The player custom properties change</param>
-        public virtual void OnEUNCustomPlayerPropertiesChange(RoomPlayer player, EUNHashtable customPropertiesChange) { }
+        public virtual void onEUNCustomPlayerPropertiesChange(RoomPlayer player, EUNHashtable customPropertiesChange) { }
 
         /// <summary>
         /// Callback if custom game object properties change
         /// </summary>
         /// <param name="customPropertiesChange">The room game object custom properties change</param>
-        public virtual void OnEUNCustomGameObjectPropertiesChange(EUNHashtable customPropertiesChange) { }
+        public virtual void onEUNCustomGameObjectPropertiesChange(EUNHashtable customPropertiesChange) { }
 
         /// <summary>
         /// Callback if this room game object need destroy
         /// </summary>
-        public virtual void OnEUNDestroyGameObjectRoom() { }
+        public virtual void onEUNDestroyGameObjectRoom() { }
 
         /// <summary>
         /// Callback if custom room properties change
         /// </summary>
         /// <param name="customPropertiesChange">The custom room properties change</param>
-        public virtual void OnEUNCustomRoomPropertiesChange(EUNHashtable customPropertiesChange) { }
+        public virtual void onEUNCustomRoomPropertiesChange(EUNHashtable customPropertiesChange) { }
 
         /// <summary>
         /// Callback if leader client change
         /// </summary>
         /// <param name="newLeaderClientPlayer">The new leader client</param>
-        public virtual void OnEUNLeaderClientChange(RoomPlayer newLeaderClientPlayer) { }
+        public virtual void onEUNLeaderClientChange(RoomPlayer newLeaderClientPlayer) { }
 
         /// <summary>
         /// Callback if other player join room
         /// </summary>
         /// <param name="player">The player join this room</param>
-        public virtual void OnEUNOtherPlayerJoinRoom(RoomPlayer player) { }
+        public virtual void onEUNOtherPlayerJoinRoom(RoomPlayer player) { }
 
         /// <summary>
         /// Callback if other player left room
         /// </summary>
         /// <param name="player">The player left this room</param>
-        public virtual void OnEUNOtherPlayerLeftRoom(RoomPlayer player) { }
+        public virtual void onEUNOtherPlayerLeftRoom(RoomPlayer player) { }
 
         /// <summary>
         /// Callback if has chat room
         /// </summary>
         /// <param name="message">The message chat receive</param>
         /// <param name="sender">The sender of message</param>
-        public virtual void OnEUNReceiveChatRoom(ChatMessage message, RoomPlayer sender) { }
+        public virtual void onEUNReceiveChatRoom(ChatMessage message, RoomPlayer sender) { }
 
         /// <summary>
         /// Callback if room info change
         /// </summary>
         /// <param name="customPropertiesChange">The custom properties change</param>
-        public virtual void OnEUNRoomInfoChange(EUNHashtable customPropertiesChange) { }
+        public virtual void onEUNRoomInfoChange(EUNHashtable customPropertiesChange) { }
 
         /// <summary>
         /// Callback if init room game object
         /// </summary>
         /// <param name="initializeData">The init data, it should as EUNArray</param>
-        public virtual void OnEUNInitialize(object initializeData) { }
+        public virtual void onEUNInitialize(object initializeData) { }
 
         /// <summary>
         /// Callback if sync request sent success from other client from room game object
         /// </summary>
         /// <param name="synchronizationData">The sync data, it should as EUNArray</param>
-        public virtual void OnEUNSynchronization(object synchronizationData) { }
+        public virtual void onEUNSynchronization(object synchronizationData) { }
 
         /// <summary>
         /// Callback if EUN Client need get sync request for EUNBehaviour
         /// </summary>
         /// <returns>null to dont send this sync request</returns>
-        public virtual object GetSynchronizationData() { return null; }
+        public virtual object getSynchronizationData() { return null; }
 
         /// <summary>
         /// Callback if the owner room game object EUNView was change
         /// </summary>
         /// <param name="newOwner">The new owner for this eunView</param>
-        public virtual void OnEUNTransferOwnerGameObject(RoomPlayer newOwner) { }
+        public virtual void onEUNTransferOwnerGameObject(RoomPlayer newOwner) { }
+
     }
+
 }

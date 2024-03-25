@@ -5,9 +5,9 @@
 
     public class GetCurrentLobbyStatsOperationRequest : CustomOperationRequest
     {
-        protected override int Code => OperationCode.GetCurrentLobbyStats;
+        protected override int code => OperationCode.GetCurrentLobbyStats;
 
-        protected override bool Reliable => true;
+        protected override bool reliable => true;
 
         /// <summary>
         /// GetCurrentLobbyStatsOperationRequest
@@ -15,12 +15,14 @@
         /// <param name="skip">The room count need skip</param>
         /// <param name="limit">The room count need get</param>
         /// <param name="timeout"></param>
-        public GetCurrentLobbyStatsOperationRequest(int skip, int limit, int timeout = OperationRequest.DefaultTimeOut) : base(timeout)
+        public GetCurrentLobbyStatsOperationRequest(int skip, int limit, int timeout = OperationRequest.defaultTimeout) : base(timeout)
         {
-            Parameters = new EUNHashtable.Builder()
-                .Add(ParameterCode.Skip, skip)
-                .Add(ParameterCode.Limit, limit)
-                .Build();
+            this.parameters = new EUNHashtable.Builder()
+                .add(ParameterCode.Skip, skip)
+                .add(ParameterCode.Limit, limit)
+                .build();
         }
+
     }
+
 }

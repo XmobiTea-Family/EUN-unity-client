@@ -8,22 +8,24 @@
     /// </summary>
     internal class OnChatLobbyEventHandler : IServerEventHandler
     {
-        public int GetEventCode()
+        public int getEventCode()
         {
             return EventCode.OnChatLobby;
         }
 
-        public void Handle(OperationEvent operationEvent, NetworkingPeer peer)
+        public void handle(OperationEvent operationEvent, NetworkingPeer peer)
         {
-            var parameters = operationEvent.GetParameters();
-            var message = new ChatMessage(parameters.GetEUNArray(ParameterCode.Message));
+            var parameters = operationEvent.getParameters();
+            var message = new ChatMessage(parameters.getEUNArray(ParameterCode.Message));
 
             var eunManagerBehaviourLst = peer.eunManagerBehaviourLst;
             for (var i = 0; i < eunManagerBehaviourLst.Count; i++)
             {
                 var behaviour = eunManagerBehaviourLst[i];
-                if (behaviour != null) behaviour.OnEUNReceiveChatLobby(message);
+                if (behaviour != null) behaviour.onEUNReceiveChatLobby(message);
             }
         }
+
     }
+
 }
